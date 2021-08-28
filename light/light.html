@@ -1,0 +1,51 @@
+<!-- node definition -->
+<script type="text/javascript">
+    RED.nodes.registerType('lightswitch',{
+        category: 'Smart Home',
+        color: '#FDF0C2',
+        defaults: {
+            name: {value:""},
+            topicButton: {value:"", required: true},
+            topicFeedback: {value:"", required: true},
+            topicMotion: {value:"", required: false}
+        },
+        inputs:1,
+        inputLabels: "All the inputs needed",
+        outputs:4,
+        outputLabels: ["Control output","UI output","Status feedback","Debug output"],
+        icon: "font-awesome/fa-lightbulb-o",
+        label: "Light switch",
+        paletteLabel: "Light switch"
+    });
+</script>
+
+<!-- edit template -->
+<script type="text/html" data-template-name="lightswitch">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <h2>Topics configuration</h2>
+    <div class="form-row">
+        <label for="node-input-topicButton"><i class="fa fa-tasks"></i> Button</label>
+        <input type="text" id="node-input-topicButton" placeholder="Button Topic">
+    </div>
+    <div class="form-tips"><b>Tip:</b> The button message must contain a topic as defined above
+        together with payload of true when pressed.</div><br>
+    <div class="form-row">
+        <label for="node-input-topicFeedback"><i class="fa fa-tasks"></i> Feedback</label>
+        <input type="text" id="node-input-topicFeedback" placeholder="Device Feedback Topic">
+    </div>
+</script>
+
+<!-- help text -->
+<script type="text/html" data-help-name="lightswitch">
+    <p>Light switch with optoinal motion detector</p>
+    <h3>Outputs</h3>
+        <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string | buffer</span>
+        </dt>
+    <h3>Details</h3>
+    <p>Some more information about the node.</p>
+</script>
