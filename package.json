@@ -6,7 +6,7 @@
   "license": "ISC",
   "node-red" : {
     "nodes": {
-        "lower-case": "light/light.js"
+        "lower-case": "lightswitch/lightswitch.js"
     }
   }
 }
