@@ -6,7 +6,9 @@
   "license": "ISC",
   "node-red" : {
     "nodes": {
-        "lower-case": "lightswitch/lightswitch.js"
+        "powerswitch": "nodes/powerswitch.js",
+        "mytemplate": "nodes/mytemplate.js",
+        "sandbox": "nodes/sandbox.js"
     }
   }
 }

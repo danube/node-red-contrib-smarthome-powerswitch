@@ -1,0 +1,81 @@
+<!-- node definition -->
+<script type="text/javascript">
+    RED.nodes.registerType('powerswitch',{
+        category: 'Smart Home',
+        color: '#FDF0C2',
+        defaults: {
+            name: {value:""},
+            topicButton: {value:""},
+            expectFeedback: {value:""},
+            topicFeedback: {value:""},
+            topicForce: {value: ""},
+            topicMotion: {value:""},
+            timeoutValue: {value: "0", required: true, validate:RED.validators.number()}  // TODO must be number!
+        },
+        inputs:1,
+        inputLabels: "All the inputs needed",
+        outputs:1,
+        outputLabels: "Control output",
+        icon: "font-awesome/fa-lightbulb-o",
+        label: "Power Switch",
+    });
+</script>
+
+
+
+
+<!-- edit template
+
+    TODO hide feedback topic configuration if checkbox is disabled, https://www.w3schools.com/howto/howto_js_display_checkbox_text.asp
+
+-->
+<script type="text/html" data-template-name="powerswitch">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label> <!-- Beim Ändern des Namens ändert sich der nicht am Drawboard -->
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <h2>Incoming topics configuration</h2>
+    <div class="form-row">
+        <label for="node-input-topicButton"><i class="fa fa-tasks"></i> Button</label>
+        <input type="text" id="node-input-topicButton" placeholder="Configure or leave blank to use default">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-expectFeedback"><i class="fa fa-tasks"></i> Feedback</label>
+        <input type="checkbox" id="node-input-expectFeedback" style="margin-left:0px; width:auto !important">
+        <input type="text" id="node-input-topicFeedback" placeholder="Configure or leave blank to use default">
+    </div>
+
+    <div class="form-row">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-topicForce"><i class="fa fa-tasks"></i> Force</label>
+        <input type="text" id="node-input-topicForce" placeholder="Configure or leave blank to use default">
+    </div>
+
+    <h2>Behaviour configuration</h2>
+    <div class="form-row">
+        <label for="node-input-timeoutValue"><i class="fa fa-sliders"></i> Timeout [s]</label>
+        <input type="text" id="node-input-timeoutValue" placeholder="Disabled if '0'">
+    </div>
+
+</script>
+
+
+
+
+
+<!-- help text -->
+<script type="text/html" data-help-name="powerswitch">
+    <p>Power switch with optoinal motion detector</p>
+    <h3>Outputs</h3>
+        <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">string | buffer</span>
+        </dt>
+    <h3>Details</h3>
+    <p>Some more information about the node.</p>
+</script>

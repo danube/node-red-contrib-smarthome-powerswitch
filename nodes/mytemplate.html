@@ -1,0 +1,53 @@
+<!--
+
+    supported font awesome icons: https://fontawesome.com/v4.7/icons/
+-->
+
+<!-- node definition -->
+<script type="text/javascript">
+    RED.nodes.registerType('mytemplate',{
+        category: 'Smart Home',
+        color: '#FDF0C2',
+        defaults: {
+            name: {value:""},
+        },
+        inputs:1,
+        outputs:2,
+        outputLabels: ["Control output","Debug output"],
+        icon: "font-awesome/fa-lightbulb-o",
+        label: "Template",
+    });
+</script>
+
+
+
+
+<!-- edit template
+
+    input types: https://www.w3schools.com/html/html_form_input_types.asp
+
+-->
+
+<script type="text/html" data-template-name="mytemplate">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+</script>
+
+
+
+
+<!-- help text -->
+<script type="text/html" data-help-name="mytemplate">
+    <p>Some help text</p>
+    <h3>A h3 header</h3>
+        <dl class="message-properties">
+        <dt>thing to describe
+            <span class="property-type">string | buffer</span>
+        </dt>
+    <h3>Details</h3>
+    <p>Some more information about the node.</p>
+</script>
