@@ -1,0 +1,6 @@
+# This package contains the following functions
+## powerswitch
+See the detailled readme here: [nodes/powerswitch.md](nodes/powerswitch.md).
+
+# List of open points
+- Put correct license in package.json!!!

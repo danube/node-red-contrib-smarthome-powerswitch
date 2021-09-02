@@ -5,61 +5,62 @@
         color: '#FDF0C2',
         defaults: {
             name: {value:""},
-            topicButton: {value:""},
-            expectFeedback: {value:""},
-            topicFeedback: {value:""},
-            topicForce: {value: ""},
-            topicMotion: {value:""},
-            timeoutValue: {value: "0", required: true, validate:RED.validators.number()}  // TODO must be number!
+            buttonTopic: {value:""},
+            op1: {value:"1", validate: RED.validators.typedInput("op1type")}, // buttonMessage
+            op1type: {value:"val"}, // buttonMessageType
+            buttonMessageType: {value:"val"},
+            feedbackActive: {value:""},
+            feedbackTopic: {value:""},
+            forceTopic: {value: ""},
+            timeoutValue: {value: "0", required: true, validate:RED.validators.number()}
         },
         inputs:1,
-        inputLabels: "All the inputs needed",
         outputs:1,
         outputLabels: "Control output",
         icon: "font-awesome/fa-lightbulb-o",
-        label: "Power Switch",
+        label: function() {
+            return this.name || "Power Switch"
+        }
     });
 </script>
 
 
 
 
-<!-- edit template
-
-    TODO hide feedback topic configuration if checkbox is disabled, https://www.w3schools.com/howto/howto_js_display_checkbox_text.asp
-
--->
+<!-- edit template -->
 <script type="text/html" data-template-name="powerswitch">
 
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label> <!-- Beim Ändern des Namens ändert sich der nicht am Drawboard -->
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Power Switch">
     </div>
 
-    <h2>Incoming topics configuration</h2>
+    <h3>Toggle button</h3>
     <div class="form-row">
-        <label for="node-input-topicButton"><i class="fa fa-tasks"></i> Button</label>
-        <input type="text" id="node-input-topicButton" placeholder="Configure or leave blank to use default">
+        <label for="node-input-buttonTopic"><i class="fa fa-tasks"></i> Button topic</label>
+        <input type="text" id="node-input-buttonTopic" placeholder="button">
+    </div>
+    <div class="form-row">
+        <label for="node-input-buttonMessage"><i class="fa fa-tasks"></i> Button message</label>
+        <input type="text" id="node-input-buttonMessage" placeholder="message">
+    </div>
+
+    <h3>Actuator feedback</h3>
+    <div class="form-row">
+        <label for="node-input-feedbackActive"><i class="fa fa-tasks"></i> Feedback</label>
+        <input type="checkbox" id="node-input-feedbackActive" style="margin-left:0px; width:auto !important">
+        <input type="text" id="node-input-feedbackTopic" placeholder="feedback">
     </div>
 
     <div class="form-row">
-        <label for="node-input-expectFeedback"><i class="fa fa-tasks"></i> Feedback</label>
-        <input type="checkbox" id="node-input-expectFeedback" style="margin-left:0px; width:auto !important">
-        <input type="text" id="node-input-topicFeedback" placeholder="Configure or leave blank to use default">
-    </div>
-
-    <div class="form-row">
-    </div>
-
-    <div class="form-row">
-        <label for="node-input-topicForce"><i class="fa fa-tasks"></i> Force</label>
-        <input type="text" id="node-input-topicForce" placeholder="Configure or leave blank to use default">
+        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Force</label>
+        <input type="text" id="node-input-forceTopic" placeholder="force">
     </div>
 
     <h2>Behaviour configuration</h2>
     <div class="form-row">
         <label for="node-input-timeoutValue"><i class="fa fa-sliders"></i> Timeout [s]</label>
-        <input type="text" id="node-input-timeoutValue" placeholder="Disabled if '0'">
+        <input type="text" id="node-input-timeoutValue" placeholder="'0' to disable'">
     </div>
 
 </script>
@@ -67,15 +68,40 @@
 
 
 
-
 <!-- help text -->
 <script type="text/html" data-help-name="powerswitch">
-    <p>Power switch with optoinal motion detector</p>
-    <h3>Outputs</h3>
-        <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">string | buffer</span>
-        </dt>
-    <h3>Details</h3>
-    <p>Some more information about the node.</p>
+    <p>Power switch for lights, smart plugs or anything else handling on/off commands.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload<span class="property-type">string | buffer</span></dt>
+        <dd>the payload of the message to publish.</dd>
+        <dt>topic<span class="property-type">string</span></dt>
+        <dd>the MQTT topic to publish to.</dd>
+    </dl>
+
+    <h3>Output</h3>
+    <dl class="message-properties">
+        <dt>topic<span class="property-type">string | buffer</span></dt>
+        <dd>this is the topic</dd>
+        <dt>payload<span class="property-type">string | buffer</span></dt>
+        <dd>this is the payload</dd>
+    </dl>
+    
+<h3>Details</h3>
+    <p><code>msg.payload</code> is used as the payload of the published message.
+    If it contains an Object it will be converted to a JSON string before being sent.
+    If it contains a binary Buffer the message will be published as-is.</p>
+    <p>The topic used can be configured in the node or, if left blank, can be set
+    by <code>msg.topic</code>.</p>
+    <p>Likewise the QoS and retain values can be configured in the node or, if left
+    blank, set by <code>msg.qos</code> and <code>msg.retain</code> respectively.</p>
+
+<h3>References</h3>
+    <ul>
+        <li><a>Twitter API docs</a> - full description of <code>msg.tweet</code> property</li>
+        <li><a>GitHub</a> - the nodes github repository</li>
+
+    </ul>
+</script>
 </script>

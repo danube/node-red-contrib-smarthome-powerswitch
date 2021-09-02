@@ -1,15 +1,8 @@
-/* TODO
-- motion detector
-*/
-
 module.exports = function(RED) {
 	function PowerSwitchNode(config) {
-
 		RED.nodes.createNode(this,config);
-
 		var nodeContext = this.context();
-
-		var nodeThis = this;	// TODO prettify
+		var nodeThis = this;
 		var err = false;
 		var timeout;
 		var timeoutValue = config.timeoutValue * 1000;
@@ -17,24 +10,24 @@ module.exports = function(RED) {
 
 		this.on('input', function(msg,send,done) {
 
-			config.topicButton = config.topicButton || "button";
-			config.topicFeedback = config.topicFeedback || "feedback";
-			config.topicForce = config.topicForce || "force";
+			config.buttonTopic = config.buttonTopic || "button";
+			config.feedbackTopic = config.feedbackTopic || "feedback";
+			config.forceTopic = config.forceTopic || "force";
 			
 			function timeoutFunc() {
 				sendMsgCmdFunc(nodeContext.lightSetOn = false);
-				if (!config.expectFeedback) {
+				if (!config.feedbackActive) {
 					setNodeState();
 				}
 			}
 
 			function sendMsgCmdFunc(command) {
 				msgCmd = {
-					topic: "command",		// TODO make this configurable
+					topic: "command",
 					payload: command,
 				}
 				nodeThis.send(msgCmd);
-				if (!config.expectFeedback) {
+				if (!config.feedbackActive) {
 					nodeContext.lightIsOn = command;
 					setNodeState();
 				}
@@ -56,11 +49,11 @@ module.exports = function(RED) {
 				}
 			}
 
-			if (msg.topic === config.topicButton && msg.payload === true) {
-				sendMsgCmdFunc(nodeContext.lightSetOn = !nodeContext.lightIsOn);    // TODO What happens on initial setup?
-			} else if (msg.topic === config.topicForce) {
+			if (msg.topic === config.buttonTopic && msg.payload === true) {
+				sendMsgCmdFunc(nodeContext.lightSetOn = !nodeContext.lightIsOn);
+			} else if (msg.topic === config.forceTopic) {
 				sendMsgCmdFunc(nodeContext.lightSetOn = msg.payload);
-			} else if (msg.topic === config.topicFeedback && config.expectFeedback) {
+			} else if (msg.topic === config.feedbackTopic && config.feedbackActive) {
 				nodeContext.lightIsOn = msg.payload;
 				nodeContext.lightSetOn = nodeContext.lightIsOn;
 			}
