@@ -56,7 +56,7 @@ module.exports = function(RED) {
 				}
 			}
 
-			if (msg.topic === config.topicButton) {
+			if (msg.topic === config.topicButton && msg.payload === true) {
 				sendMsgCmdFunc(nodeContext.lightSetOn = !nodeContext.lightIsOn);    // TODO What happens on initial setup?
 			} else if (msg.topic === config.topicForce) {
 				sendMsgCmdFunc(nodeContext.lightSetOn = msg.payload);
