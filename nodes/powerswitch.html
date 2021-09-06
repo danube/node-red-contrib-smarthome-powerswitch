@@ -1,32 +1,3 @@
-<!-- node definition -->
-<script type="text/javascript">
-    RED.nodes.registerType('powerswitch',{
-        category: 'Smart Home',
-        color: '#FDF0C2',
-        defaults: {
-            name: {value:""},
-            buttonTopic: {value:""},
-            op1: {value:"1", validate: RED.validators.typedInput("op1type")}, // buttonMessage
-            op1type: {value:"val"}, // buttonMessageType
-            buttonMessageType: {value:"val"},
-            feedbackActive: {value:""},
-            feedbackTopic: {value:""},
-            forceTopic: {value: ""},
-            timeoutValue: {value: "0", required: true, validate:RED.validators.number()}
-        },
-        inputs:1,
-        outputs:1,
-        outputLabels: "Control output",
-        icon: "font-awesome/fa-lightbulb-o",
-        label: function() {
-            return this.name || "Power Switch"
-        }
-    });
-</script>
-
-
-
-
 <!-- edit template -->
 <script type="text/html" data-template-name="powerswitch">
 
@@ -35,29 +6,55 @@
         <input type="text" id="node-input-name" placeholder="Power Switch">
     </div>
 
-    <h3>Toggle button</h3>
+    <h3>Toggle message</h3>
     <div class="form-row">
-        <label for="node-input-buttonTopic"><i class="fa fa-tasks"></i> Button topic</label>
-        <input type="text" id="node-input-buttonTopic" placeholder="button">
+        <label for="node-input-toggleTopic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-toggleTopic" placeholder="Expecting 'toggle' if left blank">
     </div>
     <div class="form-row">
-        <label for="node-input-buttonMessage"><i class="fa fa-tasks"></i> Button message</label>
-        <input type="text" id="node-input-buttonMessage" placeholder="message">
-    </div>
-
-    <h3>Actuator feedback</h3>
-    <div class="form-row">
-        <label for="node-input-feedbackActive"><i class="fa fa-tasks"></i> Feedback</label>
-        <input type="checkbox" id="node-input-feedbackActive" style="margin-left:0px; width:auto !important">
-        <input type="text" id="node-input-feedbackTopic" placeholder="feedback">
+        <label for="node-input-toggleMessage"><i class="fa fa-tag"></i> Payload</label>
+        <input type="hidden" id="node-input-toggleMessageType">
+        <input style="width:70%" type="text" id="node-input-toggleMessage">
     </div>
 
+    <h3>Actuator feedback message</h3>
+    <div class="form-row">
+        <label><i class="fa fa-power-off"></i> Enable</label>
+        <input type="checkbox" id="node-input-feedbackActive" style="display:inline-block; width:auto;" onclick="feedbackActiveCbFunction()">
+    </div>
+    <div id="feedbackConfig" style="display: none">
+        <div class="form-row">
+            <label for="node-input-feedbackTopic"><i class="fa fa-tasks"></i> Topic</label>
+            <input type="text" id="node-input-feedbackTopic" placeholder="Expecting 'feedback' if left blank">
+        </div>
+        <div class="form-row">
+            <label for="node-input-feedbackMessageOn"><i class="fa fa-tag"></i> On payload</label>
+            <input type="hidden" id="node-input-feedbackMessageOnType">
+            <input style="width:70%" type="text" id="node-input-feedbackMessageOn">
+        </div>
+        <div class="form-row">
+            <label for="node-input-feedbackMessageOff"><i class="fa fa-tag"></i> Off payload</label>
+            <input type="hidden" id="node-input-feedbackMessageOffType">
+            <input style="width:70%" type="text" id="node-input-feedbackMessageOff">
+        </div>
+    </div>
+    <h3>Force message</h3>
     <div class="form-row">
         <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Force</label>
-        <input type="text" id="node-input-forceTopic" placeholder="force">
+        <input type="text" id="node-input-forceTopic" placeholder="Expecting 'force' if left blank">
+    </div>
+    <div class="form-row">
+        <label for="node-input-forceMessageOn"><i class="fa fa-tag"></i> On payload</label>
+        <input type="hidden" id="node-input-forceMessageOnType">
+        <input style="width:70%" type="text" id="node-input-forceMessageOn">
+    </div>
+    <div class="form-row">
+        <label for="node-input-forceMessageOff"><i class="fa fa-tag"></i> Off payload</label>
+        <input type="hidden" id="node-input-forceMessageOffType">
+        <input style="width:70%" type="text" id="node-input-forceMessageOff">
     </div>
 
-    <h2>Behaviour configuration</h2>
+    <h3>Behaviour configuration</h3>
     <div class="form-row">
         <label for="node-input-timeoutValue"><i class="fa fa-sliders"></i> Timeout [s]</label>
         <input type="text" id="node-input-timeoutValue" placeholder="'0' to disable'">
@@ -67,17 +64,112 @@
 
 
 
+<!-- node definition -->
+<script type="text/javascript">
+    RED.nodes.registerType('powerswitch',{
+        category: 'Smart Home',
+        color: '#FDF0C2',
+        defaults: {
+            name: {value:""},
+            toggleTopic: {value:""},
+            toggleMessage: {value:"", validate: RED.validators.typedInput("toggleMessageType")},
+            toggleMessageType: {value:"initval"},
+            feedbackActive: {value: ""},
+            feedbackTopic: {value:""},
+            feedbackMessageOn: {value:true},
+            feedbackMessageOnType: {value:"initval"},
+            feedbackMessageOff: {value:false},
+            feedbackMessageOffType: {value:"initval"},
+            forceTopic: {value: ""},
+            forceMessageOn: {value: true},
+            forceMessageOnType: {value: "initval"},
+            forceMessageOff: {value: false},
+            forceMessageOffType: {value: "initval"},
+            timeoutValue: {value: "0", required: true, validate:RED.validators.number()}
+        },
+        inputs:1,
+        outputs:1,
+        outputLabels: "Control output",
+        icon: "font-awesome/fa-lightbulb-o",
+        label: function() {
+            return this.name || "Power Switch"
+        },
+        oneditprepare: function() {
+            if (this.toggleMessageType === 'initval') {
+                $("#node-input-toggleMessageType").val('bool');
+            }
+            if (this.feedbackMessageOnType === 'initval') {
+                $("#node-input-feedbackMessageOnType").val('bool');
+            }
+            if (this.feedbackMessageOffType === 'initval') {
+                $("#node-input-feedbackMessageOffType").val('bool');
+            }
+            if (this.forceMessageOnType === 'initval') {
+                $("#node-input-forceMessageOnType").val('bool');
+            }
+            if (this.forceMessageOffType === 'initval') {
+                $("#node-input-forceMessageOffType").val('bool');
+            }
+            $("#node-input-toggleMessage").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-toggleMessageType"),
+                types:['str','num','bool','json','bin']
+            });
+
+            $("#node-input-feedbackMessageOn").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-feedbackMessageOnType"),
+                types:['str','num','bool','json','bin']
+            });
+            $("#node-input-feedbackMessageOff").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-feedbackMessageOffType"),
+                types:['str','num','bool','json','bin']
+            });
+            $("#node-input-forceMessageOn").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-forceMessageOnType"),
+                types:['str','num','bool','json','bin']
+            });
+            $("#node-input-forceMessageOff").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-forceMessageOffType"),
+                types:['str','num','bool','json','bin']
+            });
+
+            // hide feedback config area
+            if ($("#node-input-feedbackActive")[0].checked) {
+                $('#feedbackConfig').show();
+            }
+            $("#node-input-feedbackActive").on('change', function(){
+                if ($("#node-input-feedbackActive")[0].checked) {
+                $('#feedbackConfig').show(500);
+            } else {
+                $('#feedbackConfig').hide('fast');
+            }})
+        }
+    });
+</script>
+
+
+
+
+
+
+
 
 <!-- help text -->
 <script type="text/html" data-help-name="powerswitch">
     <p>Power switch for lights, smart plugs or anything else handling on/off commands.</p>
+    <p>Control the output with pushbuttons, motion detectors, over the web or anything else.</p>
 
-    <h3>Inputs</h3>
+    <h3>Input</h3>
     <dl class="message-properties">
-        <dt>payload<span class="property-type">string | buffer</span></dt>
-        <dd>the payload of the message to publish.</dd>
-        <dt>topic<span class="property-type">string</span></dt>
-        <dd>the MQTT topic to publish to.</dd>
+        <dt>topic<span class="property-type">as configured</span></dt>
+        <dd>Can be a toggle, actuator feedback or force command. It must meet either the
+            defaults or the configured string. Defaults are described in the input fields if blank.</dd>
+        <dt>payload<span class="property-type">as configured</span></dt>
+        <dd>Must meet the setting in the configuration editor. Defaults are <code>true</code> and <code>false</code>.</dd>
     </dl>
 
     <h3>Output</h3>
@@ -88,20 +180,13 @@
         <dd>this is the payload</dd>
     </dl>
     
-<h3>Details</h3>
-    <p><code>msg.payload</code> is used as the payload of the published message.
-    If it contains an Object it will be converted to a JSON string before being sent.
-    If it contains a binary Buffer the message will be published as-is.</p>
-    <p>The topic used can be configured in the node or, if left blank, can be set
-    by <code>msg.topic</code>.</p>
-    <p>Likewise the QoS and retain values can be configured in the node or, if left
-    blank, set by <code>msg.qos</code> and <code>msg.retain</code> respectively.</p>
-
-<h3>References</h3>
-    <ul>
-        <li><a>Twitter API docs</a> - full description of <code>msg.tweet</code> property</li>
-        <li><a>GitHub</a> - the nodes github repository</li>
-
-    </ul>
-</script>
+<h3>Configuration</h3>
+    <h4>Name</h4>
+    <p>Defines the node name, which will also be shown on the drawpad.</p>
+    <h4>Toggle message</h4>
+    <p>The values 'Topic' and 'Message' define the expected content of the incoming message for a toggling event.</p>
+    The Control output then will be inverted to the previous command or, if actuator feedback is enabled, to the
+    recently received feedback state.</p>
+    <h4>Actuator feedback message</h4>
+    
 </script>
