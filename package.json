@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This node contains several functions to set up your smart home.",
   "author": "Thomas Astleitner",
-  "license": "ISC",
+  "license": "EUPL",
   "node-red" : {
     "nodes": {
         "powerswitch": "nodes/powerswitch.js"
