@@ -20,9 +20,9 @@
     <h3>Actuator feedback message</h3>
     <div class="form-row">
         <label><i class="fa fa-power-off"></i> Enable</label>
-        <input type="checkbox" id="node-input-feedbackActive" style="display:inline-block; width:auto;" onclick="feedbackActiveCbFunction()">
+        <input type="checkbox" id="node-input-feedbackActive" style="display:inline-block; width:auto;">
     </div>
-    <div id="feedbackConfig" style="display: none">
+    <div id="feedbackConfig">
         <div class="form-row">
             <label for="node-input-feedbackTopic"><i class="fa fa-tasks"></i> Topic</label>
             <input type="text" id="node-input-feedbackTopic" placeholder="Expecting 'feedback' if left blank">
@@ -40,7 +40,7 @@
     </div>
     <h3>Force message</h3>
     <div class="form-row">
-        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Force</label>
+        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Topic</label>
         <input type="text" id="node-input-forceTopic" placeholder="Expecting 'force' if left blank">
     </div>
     <div class="form-row">
@@ -55,10 +55,28 @@
     </div>
 
     <h3>Behaviour configuration</h3>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for="node-input-timeoutValue"><i class="fa fa-sliders"></i> Timeout [s]</label>
         <input type="text" id="node-input-timeoutValue" placeholder="'0' to disable'">
+    </div> -->
+
+
+    <div class="form-row">
+        <label><i class="fa fa-sliders"></i> Timeout</label>
+        <input type="checkbox" id="node-input-timeoutActive" style="display:inline-block; width:auto;">
     </div>
+    <div id="timeoutConfig">
+        <div class="form-row">
+            <label></label>
+            <input type="number" id="node-input-timeoutValue" style="text-align:end; width:70px !important">
+            <select id="node-input-timeoutUnit" style="width:140px !important">
+                <option value="s">Seconds</option>
+                <option value="m">Minutes</option>
+                <option value="h">Hours</option>
+            </select>
+        </div>
+    </div>
+
 
 </script>
 
@@ -76,16 +94,18 @@
             toggleMessageType: {value:"initval"},
             feedbackActive: {value: ""},
             feedbackTopic: {value:""},
-            feedbackMessageOn: {value:true},
+            feedbackMessageOn: {value: true},
             feedbackMessageOnType: {value:"initval"},
-            feedbackMessageOff: {value:false},
+            feedbackMessageOff: {value: false},
             feedbackMessageOffType: {value:"initval"},
             forceTopic: {value: ""},
             forceMessageOn: {value: true},
             forceMessageOnType: {value: "initval"},
             forceMessageOff: {value: false},
             forceMessageOffType: {value: "initval"},
-            timeoutValue: {value: "0", required: true, validate:RED.validators.number()}
+            timeoutActive: {value: false},
+            timeoutValue: {value: "0", required: true, validate:RED.validators.number()},
+            timeoutUnit: {value: "m"}
         },
         inputs:1,
         outputs:1,
@@ -138,15 +158,24 @@
             });
 
             // hide feedback config area
-            if ($("#node-input-feedbackActive")[0].checked) {
-                $('#feedbackConfig').show();
-            }
             $("#node-input-feedbackActive").on('change', function(){
                 if ($("#node-input-feedbackActive")[0].checked) {
-                $('#feedbackConfig').show(500);
-            } else {
-                $('#feedbackConfig').hide('fast');
-            }})
+                    $('#feedbackConfig').show('fast');
+                } else {
+                    $('#feedbackConfig').hide('fast');
+                }
+            })
+
+            // hide timeout config area
+            $("#node-input-timeoutActive").on('change', function(){
+                if ($("#node-input-timeoutActive")[0].checked) {
+                    $('#timeoutConfig').show('fast');
+                } else {
+                    $('#timeoutConfig').hide('fast');
+                }
+            })
+
+
         }
     });
 </script>
@@ -180,13 +209,20 @@
         <dd>this is the payload</dd>
     </dl>
     
-<h3>Configuration</h3>
-    <h4>Name</h4>
-    <p>Defines the node name, which will also be shown on the drawpad.</p>
-    <h4>Toggle message</h4>
-    <p>The values 'Topic' and 'Message' define the expected content of the incoming message for a toggling event.</p>
-    The Control output then will be inverted to the previous command or, if actuator feedback is enabled, to the
-    recently received feedback state.</p>
-    <h4>Actuator feedback message</h4>
+    <h3>Configuration</h3>
+        <h4 style="font-weight: bolder;">Name</h4>
+        <p>Defines the node name, which will also be shown on the drawpad.</p>
+
+        <h4 style="font-weight: bolder;">Toggle message</h4>
+        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for a toggling event. The Control output then will be inverted to the previous command or, if actuator feedback is enabled, to the recently received feedback state. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Topic'. If the configuration field 'Topic' is empty, the value <code>topic</code> is expected as <code>msg.topic</code>.</p>
+        
+        <h4 style="font-weight: bolder;">Actuator feedback message</h4>
+        <p>If whatever device you control sends a feedback, enable the option and connect the feedback signal to the node. If this option is disabled, the node thinks the device is turned on or off, depending on the outgoing command signal. If this option is turned on, the node waits for the feedback signal. Use the fields to configure, how your feedback signal is constructed.</p>
+
+        <h4 style="font-weight: bolder;">Force message</h4>
+        <p>If you want the device to turn on or off, you either use a button to toggle the device state or force the device to change to that state you want to have it. For example, if you want to control a lamp with a motion detector, the lamp must go on, if motion has been detected. Hence, let the motion detector send a message with the configured Topic as <code>msg.topic</code> (or 'force' if left blank) and the corresponding 'On payload'. Use 'Timeout' to set the delay, until the light should be turned off. Another example is some house leaving button, with which you might want to turn off all lights in your environment. Let the button send the relevant 'Topic' and 'Off payload'.</p>
+
+        <h4 style="font-weight: bolder;">Behaviour configuration</h4>
+        <p>'Timeout' must initially be enabled. It defines a time, until a turned on device will be turned off. Use this for motion detectors or to turn off lights you may have forgotten to turn off.</p>
     
 </script>
