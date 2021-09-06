@@ -3,7 +3,7 @@ module.exports = function(RED) {
 		RED.nodes.createNode(this,config);
 		var nodeThis = this;
 		var err = false;
-		var timeout;
+		var timeoutHandle, timeoutValue;
 		var msgCmd = null;
 
 		this.on('input', function(msg,send,done) {
@@ -13,13 +13,13 @@ module.exports = function(RED) {
 			config.forceTopic = config.forceTopic || "force";
 			
 			if (config.timeoutActive && config.timeoutUnit === "h") {
-				config.timeoutValue = config.timeoutValue * 3600000
+				timeoutValue = config.timeoutValue * 3600000
 			} else if (config.timeoutActive && config.timeoutUnit === "m") {
-				config.timeoutValue = config.timeoutValue * 60000
+				timeoutValue = config.timeoutValue * 60000
 			} else if (config.timeoutActive && config.timeoutUnit === "s") {
-				config.timeoutValue = config.timeoutValue * 1000
+				timeoutValue = config.timeoutValue * 1000
 			} else {
-				config.timeoutValue = 0
+				timeoutValue = 0
 			}
 			
 			function timeoutFunc() {
@@ -46,33 +46,32 @@ module.exports = function(RED) {
 					nodeThis.status({fill:"red",shape:"ring",text:"powering off"});
 				} else if (nodeThis.context.lightIsOn && nodeThis.context.lightSetOn) {
 					nodeThis.status({fill:"green",shape:"dot",text:"on"});
-					if (config.timeoutValue > 0) {
-						timeout = setTimeout(timeoutFunc, config.timeoutValue);
+					if (timeoutValue > 0) {
+						timeoutHandle = setTimeout(timeoutFunc, timeoutValue);
 					}
 				} else if (!nodeThis.context.lightIsOn && !nodeThis.context.lightSetOn) {
 					nodeThis.status({fill:"red",shape:"dot",text:"off"});
-					clearTimeout(timeout);
+					clearTimeout(timeoutHandle);
 				} else if (!nodeThis.context.lightIsOn && nodeThis.context.lightSetOn) {
 					nodeThis.status({fill:"green",shape:"ring",text:"powering on"});
 				}
 			}
 
-			if (msg.topic === config.buttonTopic && msg.payload === true) {
+			if (msg.topic === config.toggleTopic && msg.payload === config.toggleMessage) {
 				sendMsgCmdFunc(nodeThis.context.lightSetOn = !nodeThis.context.lightIsOn);
-			} else if (msg.topic === config.forceTopic) {
-				sendMsgCmdFunc(nodeThis.context.lightSetOn = msg.payload);
-			} else if (msg.topic === config.feedbackTopic && config.feedbackActive) {
-				nodeThis.context.lightIsOn = msg.payload;
-				nodeThis.context.lightSetOn = nodeThis.context.lightIsOn;
+			} else if (msg.topic === config.forceTopic && msg.payload === config.forceMessageOn) {
+				sendMsgCmdFunc(nodeThis.context.lightSetOn = true);
+			} else if (msg.topic === config.forceTopic && msg.payload === config.forceMessageOff) {
+				sendMsgCmdFunc(nodeThis.context.lightSetOn = false);
+			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === config.feedbackMessageOn) {
+				nodeThis.context.lightIsOn = true;
+				nodeThis.context.lightSetOn = true;
+			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === config.feedbackMessageOff) {
+				nodeThis.context.lightIsOn = false;
+				nodeThis.context.lightSetOn = false;
 			}
-			
+
 			setNodeState();
-
-
-
-
-
-
 
 			if (err) {
 				if (done) {
@@ -87,7 +86,6 @@ module.exports = function(RED) {
 			this.context = nodeThis.context;
 
 		});
-
 
 	}
 
