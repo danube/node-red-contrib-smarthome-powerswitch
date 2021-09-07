@@ -64,19 +64,13 @@
     <div class="form-row">
         <label><i class="fa fa-sliders"></i> Timeout</label>
         <input type="checkbox" id="node-input-timeoutActive" style="display:inline-block; width:auto;">
+        <input type="number" id="node-input-timeoutValue" style="text-align: end; width: 70px !important; margin-left: 5px">
+        <select id="node-input-timeoutUnit" style="width:140px !important">
+            <option value="s">Seconds</option>
+            <option value="m">Minutes</option>
+            <option value="h">Hours</option>
+        </select>
     </div>
-    <div id="timeoutConfig">
-        <div class="form-row">
-            <label></label>
-            <input type="number" id="node-input-timeoutValue" style="text-align:end; width:70px !important">
-            <select id="node-input-timeoutUnit" style="width:140px !important">
-                <option value="s">Seconds</option>
-                <option value="m">Minutes</option>
-                <option value="h">Hours</option>
-            </select>
-        </div>
-    </div>
-
 
 </script>
 
@@ -169,12 +163,13 @@
             // hide timeout config area
             $("#node-input-timeoutActive").on('change', function(){
                 if ($("#node-input-timeoutActive")[0].checked) {
-                    $('#timeoutConfig').show('fast');
+                    $('#node-input-timeoutValue').prop('disabled', false);
+                    $('#node-input-timeoutUnit').prop('disabled', false);
                 } else {
-                    $('#timeoutConfig').hide('fast');
+                    $('#node-input-timeoutValue').prop('disabled', true);
+                    $('#node-input-timeoutUnit').prop('disabled', true);
                 }
             })
-
 
         }
     });
