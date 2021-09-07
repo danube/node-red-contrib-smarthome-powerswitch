@@ -12,9 +12,9 @@
         <input type="text" id="node-input-toggleTopic" placeholder="Expecting 'toggle' if left blank">
     </div>
     <div class="form-row">
-        <label for="node-input-toggleMessage"><i class="fa fa-tag"></i> Payload</label>
-        <input type="hidden" id="node-input-toggleMessageType">
-        <input style="width:70%" type="text" id="node-input-toggleMessage">
+        <label for="node-input-togglePayload"><i class="fa fa-tag"></i> Payload</label>
+        <input type="hidden" id="node-input-togglePayloadType">
+        <input style="width:70%" type="text" id="node-input-togglePayload">
     </div>
 
     <h3>Actuator feedback message</h3>
@@ -28,14 +28,14 @@
             <input type="text" id="node-input-feedbackTopic" placeholder="Expecting 'feedback' if left blank">
         </div>
         <div class="form-row">
-            <label for="node-input-feedbackMessageOn"><i class="fa fa-tag"></i> On payload</label>
-            <input type="hidden" id="node-input-feedbackMessageOnType">
-            <input style="width:70%" type="text" id="node-input-feedbackMessageOn">
+            <label for="node-input-feedbackPayloadOn"><i class="fa fa-tag"></i> On payload</label>
+            <input type="hidden" id="node-input-feedbackPayloadOnType">
+            <input style="width:70%" type="text" id="node-input-feedbackPayloadOn">
         </div>
         <div class="form-row">
-            <label for="node-input-feedbackMessageOff"><i class="fa fa-tag"></i> Off payload</label>
-            <input type="hidden" id="node-input-feedbackMessageOffType">
-            <input style="width:70%" type="text" id="node-input-feedbackMessageOff">
+            <label for="node-input-feedbackPayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+            <input type="hidden" id="node-input-feedbackPayloadOffType">
+            <input style="width:70%" type="text" id="node-input-feedbackPayloadOff">
         </div>
     </div>
     <h3>Force message</h3>
@@ -44,27 +44,21 @@
         <input type="text" id="node-input-forceTopic" placeholder="Expecting 'force' if left blank">
     </div>
     <div class="form-row">
-        <label for="node-input-forceMessageOn"><i class="fa fa-tag"></i> On payload</label>
-        <input type="hidden" id="node-input-forceMessageOnType">
-        <input style="width:70%" type="text" id="node-input-forceMessageOn">
+        <label for="node-input-forcePayloadOn"><i class="fa fa-tag"></i> On payload</label>
+        <input type="hidden" id="node-input-forcePayloadOnType">
+        <input style="width:70%" type="text" id="node-input-forcePayloadOn">
     </div>
     <div class="form-row">
-        <label for="node-input-forceMessageOff"><i class="fa fa-tag"></i> Off payload</label>
-        <input type="hidden" id="node-input-forceMessageOffType">
-        <input style="width:70%" type="text" id="node-input-forceMessageOff">
+        <label for="node-input-forcePayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+        <input type="hidden" id="node-input-forcePayloadOffType">
+        <input style="width:70%" type="text" id="node-input-forcePayloadOff">
     </div>
 
     <h3>Behaviour configuration</h3>
-    <!-- <div class="form-row">
-        <label for="node-input-timeoutValue"><i class="fa fa-sliders"></i> Timeout [s]</label>
-        <input type="text" id="node-input-timeoutValue" placeholder="'0' to disable'">
-    </div> -->
-
-
     <div class="form-row">
         <label><i class="fa fa-sliders"></i> Timeout</label>
         <input type="checkbox" id="node-input-timeoutActive" style="display:inline-block; width:auto;">
-        <input type="number" id="node-input-timeoutValue" style="text-align: end; width: 70px !important; margin-left: 5px">
+        <input type="number" id="node-input-timeoutValue" min="1" style="text-align: end; width: 70px !important; margin-left: 5px">
         <select id="node-input-timeoutUnit" style="width:140px !important">
             <option value="s">Seconds</option>
             <option value="m">Minutes</option>
@@ -82,73 +76,73 @@
         category: 'Smart Home',
         color: '#FDF0C2',
         defaults: {
-            name: {value:""},
-            toggleTopic: {value:""},
-            toggleMessage: {value:"", validate: RED.validators.typedInput("toggleMessageType")},
-            toggleMessageType: {value:"initval"},
+            name: {value: ""},
+            toggleTopic: {value: ""},
+            togglePayload: {value: "", validate: RED.validators.typedInput("togglePayloadType")},
+            togglePayloadType: {value: "initval"},
             feedbackActive: {value: ""},
-            feedbackTopic: {value:""},
-            feedbackMessageOn: {value: true},
-            feedbackMessageOnType: {value:"initval"},
-            feedbackMessageOff: {value: false},
-            feedbackMessageOffType: {value:"initval"},
+            feedbackTopic: {value: ""},
+            feedbackPayloadOn: {value: true, validate: RED.validators.typedInput("feedbackPayloadOnType")},
+            feedbackPayloadOnType: {value: "initval"},
+            feedbackPayloadOff: {value: false, validate: RED.validators.typedInput("feedbackPayloadOffType")},
+            feedbackPayloadOffType: {value: "initval"},
             forceTopic: {value: ""},
-            forceMessageOn: {value: true},
-            forceMessageOnType: {value: "initval"},
-            forceMessageOff: {value: false},
-            forceMessageOffType: {value: "initval"},
+            forcePayloadOn: {value: true, validate: RED.validators.typedInput("forcePayloadOnType")},
+            forcePayloadOnType: {value: "initval"},
+            forcePayloadOff: {value: false, validate: RED.validators.typedInput("forcePayloadOffType")},
+            forcePayloadOffType: {value: "initval"},
             timeoutActive: {value: false},
-            timeoutValue: {value: "0", required: true, validate:RED.validators.number()},
+            timeoutValue: {value: "2", required: true, validate:RED.validators.number()},
             timeoutUnit: {value: "m"}
         },
-        inputs:1,
-        outputs:1,
+        inputs: 1,
+        outputs: 1,
         outputLabels: "Control output",
         icon: "font-awesome/fa-lightbulb-o",
         label: function() {
             return this.name || "Power Switch"
         },
         oneditprepare: function() {
-            if (this.toggleMessageType === 'initval') {
-                $("#node-input-toggleMessageType").val('bool');
+            if (this.togglePayloadType === 'initval') {
+                $("#node-input-togglePayloadType").val('bool');
             }
-            if (this.feedbackMessageOnType === 'initval') {
-                $("#node-input-feedbackMessageOnType").val('bool');
+            if (this.feedbackPayloadOnType === 'initval') {
+                $("#node-input-feedbackPayloadOnType").val('bool');
             }
-            if (this.feedbackMessageOffType === 'initval') {
-                $("#node-input-feedbackMessageOffType").val('bool');
+            if (this.feedbackPayloadOffType === 'initval') {
+                $("#node-input-feedbackPayloadOffType").val('bool');
             }
-            if (this.forceMessageOnType === 'initval') {
-                $("#node-input-forceMessageOnType").val('bool');
+            if (this.forcePayloadOnType === 'initval') {
+                $("#node-input-forcePayloadOnType").val('bool');
             }
-            if (this.forceMessageOffType === 'initval') {
-                $("#node-input-forceMessageOffType").val('bool');
+            if (this.forcePayloadOffType === 'initval') {
+                $("#node-input-forcePayloadOffType").val('bool');
             }
-            $("#node-input-toggleMessage").typedInput({
+            $("#node-input-togglePayload").typedInput({
                 default: 'bool',
-                typeField: $("#node-input-toggleMessageType"),
-                types:['str','num','bool','json','bin']
+                typeField: $("#node-input-togglePayloadType"),
+                types:['str','num','bool']
             });
 
-            $("#node-input-feedbackMessageOn").typedInput({
+            $("#node-input-feedbackPayloadOn").typedInput({
                 default: 'bool',
-                typeField: $("#node-input-feedbackMessageOnType"),
-                types:['str','num','bool','json','bin']
+                typeField: $("#node-input-feedbackPayloadOnType"),
+                types:['str','num','bool']
             });
-            $("#node-input-feedbackMessageOff").typedInput({
+            $("#node-input-feedbackPayloadOff").typedInput({
                 default: 'bool',
-                typeField: $("#node-input-feedbackMessageOffType"),
-                types:['str','num','bool','json','bin']
+                typeField: $("#node-input-feedbackPayloadOffType"),
+                types:['str','num','bool']
             });
-            $("#node-input-forceMessageOn").typedInput({
+            $("#node-input-forcePayloadOn").typedInput({
                 default: 'bool',
-                typeField: $("#node-input-forceMessageOnType"),
-                types:['str','num','bool','json','bin']
+                typeField: $("#node-input-forcePayloadOnType"),
+                types:['str','num','bool']
             });
-            $("#node-input-forceMessageOff").typedInput({
+            $("#node-input-forcePayloadOff").typedInput({
                 default: 'bool',
-                typeField: $("#node-input-forceMessageOffType"),
-                types:['str','num','bool','json','bin']
+                typeField: $("#node-input-forcePayloadOffType"),
+                types:['str','num','bool']
             });
 
             // hide feedback config area
@@ -191,7 +185,7 @@
     <dl class="message-properties">
         <dt>topic<span class="property-type">as configured</span></dt>
         <dd>Can be a toggle, actuator feedback or force command. It must meet either the
-            defaults or the configured string. Defaults are described in the input fields if blank.</dd>
+            defaults or the configured string. Defaults are described in the input fields if left blank.</dd>
         <dt>payload<span class="property-type">as configured</span></dt>
         <dd>Must meet the setting in the configuration editor. Defaults are <code>true</code> and <code>false</code>.</dd>
     </dl>
