@@ -17,6 +17,42 @@
         <input style="width:70%" type="text" id="node-input-togglePayload">
     </div>
 
+    <h3>On message</h3>
+    <div class="form-row">
+        <label for="node-input-onTopic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-onTopic" placeholder="Expecting 'on' if left blank">
+    </div>
+    <div class="form-row">
+        <label for="node-input-onPayload"><i class="fa fa-tag"></i> Payload</label>
+        <input type="hidden" id="node-input-onPayloadType">
+        <input style="width:70%" type="text" id="node-input-onPayload">
+    </div>
+    <div class="form-row">
+        <label><i class="fa fa-sliders"></i> Timeout</label>
+        <input type="number" id="node-input-onTimeoutValue" min="1" style="text-align: end; width: 70px !important">
+        <select id="node-input-onTimeoutUnit" style="width:140px !important">
+            <option value="s">Seconds</option>
+            <option value="m">Minutes</option>
+            <option value="h">Hours</option>
+        </select>
+    </div>
+    
+    <h3>Force message</h3>
+    <div class="form-row">
+        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-forceTopic" placeholder="Expecting 'force' if left blank">
+    </div>
+    <div class="form-row">
+        <label for="node-input-forcePayloadOn"><i class="fa fa-tag"></i> On payload</label>
+        <input type="hidden" id="node-input-forcePayloadOnType">
+        <input style="width:70%" type="text" id="node-input-forcePayloadOn">
+    </div>
+    <div class="form-row">
+        <label for="node-input-forcePayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+        <input type="hidden" id="node-input-forcePayloadOffType">
+        <input style="width:70%" type="text" id="node-input-forcePayloadOff">
+    </div>
+
     <h3>Actuator feedback message</h3>
     <div class="form-row">
         <label><i class="fa fa-power-off"></i> Enable</label>
@@ -38,28 +74,13 @@
             <input style="width:70%" type="text" id="node-input-feedbackPayloadOff">
         </div>
     </div>
-    <h3>Force message</h3>
-    <div class="form-row">
-        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-forceTopic" placeholder="Expecting 'force' if left blank">
-    </div>
-    <div class="form-row">
-        <label for="node-input-forcePayloadOn"><i class="fa fa-tag"></i> On payload</label>
-        <input type="hidden" id="node-input-forcePayloadOnType">
-        <input style="width:70%" type="text" id="node-input-forcePayloadOn">
-    </div>
-    <div class="form-row">
-        <label for="node-input-forcePayloadOff"><i class="fa fa-tag"></i> Off payload</label>
-        <input type="hidden" id="node-input-forcePayloadOffType">
-        <input style="width:70%" type="text" id="node-input-forcePayloadOff">
-    </div>
 
-    <h3>Behaviour configuration</h3>
+    <h3>Absolute timeout</h3>
     <div class="form-row">
-        <label><i class="fa fa-sliders"></i> Timeout</label>
-        <input type="checkbox" id="node-input-timeoutActive" style="display:inline-block; width:auto;">
-        <input type="number" id="node-input-timeoutValue" min="1" style="text-align: end; width: 70px !important; margin-left: 5px">
-        <select id="node-input-timeoutUnit" style="width:140px !important">
+        <label><i class="fa fa-sliders"></i> Time</label>
+        <input type="checkbox" id="node-input-absTimeoutActive" style="display:inline-block; width:auto;">
+        <input type="number" id="node-input-absTimeoutValue" min="1" style="text-align: end; width: 70px !important; margin-left: 5px">
+        <select id="node-input-absTimeoutUnit" style="width:140px !important">
             <option value="s">Seconds</option>
             <option value="m">Minutes</option>
             <option value="h">Hours</option>
@@ -80,6 +101,11 @@
             toggleTopic: {value: ""},
             togglePayload: {value: "", validate: RED.validators.typedInput("togglePayloadType")},
             togglePayloadType: {value: "initval"},
+            onTopic: {value: ""},
+            onPayload: {value: "", validate: RED.validators.typedInput("onPayloadType")},
+            onPayloadType: {value: "initval"},
+            onTimeoutValue: {value: "2", required: true, validate:RED.validators.number()},
+            onTimeoutUnit: {value: "m"},
             feedbackActive: {value: ""},
             feedbackTopic: {value: ""},
             feedbackPayloadOn: {value: true, validate: RED.validators.typedInput("feedbackPayloadOnType")},
@@ -91,9 +117,9 @@
             forcePayloadOnType: {value: "initval"},
             forcePayloadOff: {value: false, validate: RED.validators.typedInput("forcePayloadOffType")},
             forcePayloadOffType: {value: "initval"},
-            timeoutActive: {value: false},
-            timeoutValue: {value: "2", required: true, validate:RED.validators.number()},
-            timeoutUnit: {value: "m"}
+            absTimeoutActive: {value: false},
+            absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},
+            absTimeoutUnit: {value: "h"}
         },
         inputs: 1,
         outputs: 1,
@@ -105,6 +131,9 @@
         oneditprepare: function() {
             if (this.togglePayloadType === 'initval') {
                 $("#node-input-togglePayloadType").val('bool');
+            }
+            if (this.onPayloadType === 'initval') {
+                $("#node-input-onPayloadType").val('bool');
             }
             if (this.feedbackPayloadOnType === 'initval') {
                 $("#node-input-feedbackPayloadOnType").val('bool');
@@ -118,12 +147,17 @@
             if (this.forcePayloadOffType === 'initval') {
                 $("#node-input-forcePayloadOffType").val('bool');
             }
+
             $("#node-input-togglePayload").typedInput({
                 default: 'bool',
                 typeField: $("#node-input-togglePayloadType"),
                 types:['str','num','bool']
             });
-
+            $("#node-input-onPayload").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-onPayloadType"),
+                types:['str','num','bool']
+            });
             $("#node-input-feedbackPayloadOn").typedInput({
                 default: 'bool',
                 typeField: $("#node-input-feedbackPayloadOnType"),
@@ -154,14 +188,14 @@
                 }
             })
 
-            // hide timeout config area
-            $("#node-input-timeoutActive").on('change', function(){
-                if ($("#node-input-timeoutActive")[0].checked) {
-                    $('#node-input-timeoutValue').prop('disabled', false);
-                    $('#node-input-timeoutUnit').prop('disabled', false);
+            // hide absTimeout config area
+            $("#node-input-absTimeoutActive").on('change', function(){
+                if ($("#node-input-absTimeoutActive")[0].checked) {
+                    $('#node-input-absTimeoutValue').prop('disabled', false);
+                    $('#node-input-absTimeoutUnit').prop('disabled', false);
                 } else {
-                    $('#node-input-timeoutValue').prop('disabled', true);
-                    $('#node-input-timeoutUnit').prop('disabled', true);
+                    $('#node-input-absTimeoutValue').prop('disabled', true);
+                    $('#node-input-absTimeoutUnit').prop('disabled', true);
                 }
             })
 
@@ -184,18 +218,17 @@
     <h3>Input</h3>
     <dl class="message-properties">
         <dt>topic<span class="property-type">as configured</span></dt>
-        <dd>Can be a toggle, actuator feedback or force command. It must meet either the
-            defaults or the configured string. Defaults are described in the input fields if left blank.</dd>
+        <dd>Can be a toggle, on trigger (motion detector), actuator feedback or force command. It must meet either the defaults or the configured string. Defaults are described in the input fields if left blank.</dd>
         <dt>payload<span class="property-type">as configured</span></dt>
         <dd>Must meet the setting in the configuration editor. Defaults are <code>true</code> and <code>false</code>.</dd>
     </dl>
 
     <h3>Output</h3>
     <dl class="message-properties">
-        <dt>topic<span class="property-type">string | buffer</span></dt>
-        <dd>this is the topic</dd>
-        <dt>payload<span class="property-type">string | buffer</span></dt>
-        <dd>this is the payload</dd>
+        <dt>topic<span class="property-type">string</span></dt>
+        <dd>Hardcoded <code>command</code>, will be configurable in the near future.</dd>
+        <dt>payload<span class="property-type">string</span></dt>
+        <dd><code>true</code> or <code>false</code>.</dd>
     </dl>
     
     <h3>Configuration</h3>
@@ -203,15 +236,25 @@
         <p>Defines the node name, which will also be shown on the drawpad.</p>
 
         <h4 style="font-weight: bolder;">Toggle message</h4>
-        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for a toggling event. The Control output then will be inverted to the previous command or, if actuator feedback is enabled, to the recently received feedback state. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Topic'. If the configuration field 'Topic' is empty, the value <code>topic</code> is expected as <code>msg.topic</code>.</p>
+        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for a toggling event. The Control output then will be inverted to the previous command or, if actuator feedback is enabled, to the recently received feedback state. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Payload'. If the configuration field 'Topic' is empty, the value <code>toggle</code> is expected as <code>msg.topic</code>.</p>
         
+        <h4 style="font-weight: bolder;">On message</h4>
+        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for an event to trigger on the device. The Control output then will turn <code>true</code>. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Payload'. If the configuration field 'Topic' is empty, the value <code>on</code> is expected as <code>msg.topic</code>. This can be used i.e. if you want to control a lamp with a motion detector. The lamp will go on if motion has been detected. Use the 'Timeout' configuration below to set the delay, until the light should be turned off.</p>
+        
+        <h4 style="font-weight: bolder;">Force message</h4>
+        <p>If you want the device to turn on or off, you either use a button to toggle the device state or force the device to change to that state you want to have it. For example, if you have some house leaving button or so with which you turn off all lights in your environment, let the button send the relevant 'Topic' and 'Off payload'.</p>
+
         <h4 style="font-weight: bolder;">Actuator feedback message</h4>
         <p>If whatever device you control sends a feedback, enable the option and connect the feedback signal to the node. If this option is disabled, the node thinks the device is turned on or off, depending on the outgoing command signal. If this option is turned on, the node waits for the feedback signal. Use the fields to configure, how your feedback signal is constructed.</p>
 
-        <h4 style="font-weight: bolder;">Force message</h4>
-        <p>If you want the device to turn on or off, you either use a button to toggle the device state or force the device to change to that state you want to have it. For example, if you want to control a lamp with a motion detector, the lamp must go on, if motion has been detected. Hence, let the motion detector send a message with the configured Topic as <code>msg.topic</code> (or 'force' if left blank) and the corresponding 'On payload'. Use 'Timeout' to set the delay, until the light should be turned off. Another example is some house leaving button, with which you might want to turn off all lights in your environment. Let the button send the relevant 'Topic' and 'Off payload'.</p>
+        <h4 style="font-weight: bolder;">Absolute timeout</h4>
+        <p>Enable this option if you want to configure an absolute timeout. This will automatically turn off the actor after the configured time. Use this i.e. to turn off lights you may have forgotten to manually turn off with your wall button.</p>
 
-        <h4 style="font-weight: bolder;">Behaviour configuration</h4>
-        <p>'Timeout' must initially be enabled. It defines a time, until a turned on device will be turned off. Use this for motion detectors or to turn off lights you may have forgotten to turn off.</p>
-    
 </script>
+
+
+
+
+<!--
+    
+-->
