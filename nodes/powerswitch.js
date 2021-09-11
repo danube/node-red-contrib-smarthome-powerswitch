@@ -1,12 +1,3 @@
-/*
-FIXME
-- Sperre wenn EIN durch Toggle, On message oder Force message
-- On message einbauen
-- Check abstimeout to be higher than ontimeout
-*/
-
-
-
 module.exports = function(RED) {
 	function PowerSwitchNode(config) {
 		RED.nodes.createNode(this,config);
