@@ -105,35 +105,36 @@ module.exports = function(RED) {
 
 			// message: toggle
 			if (msg.topic === config.toggleTopic && msg.payload === context.togglePayload) {
+				clearTimeout(motionTimeoutHandle);
 				sendMsgCmdFunc(context.lightSetOn = !context.lightIsOn);
 				context.lockedOn = context.lightSetOn;
-				clearTimeout(motionTimeoutHandle);
 			// message: motion on
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOn && !context.lockedOn) {
+				clearTimeout(motionTimeoutHandle);
 				sendMsgCmdFunc(context.lightSetOn = true);
 			// message: motion off
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
 				motionTimeoutHandle = setTimeout(timeoutFunc, context.motionTimeoutValue);
 			// message: force on
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
+				clearTimeout(motionTimeoutHandle);
 				sendMsgCmdFunc(context.lightSetOn = true);
 				context.lockedOn = true;
-				clearTimeout(motionTimeoutHandle);
 			// message: force off
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOff) {
+				clearTimeout(motionTimeoutHandle);
 				sendMsgCmdFunc(context.lightSetOn = false);
 				context.lockedOn = false;
-				clearTimeout(motionTimeoutHandle);
 			// message: feedback on
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOn) {
 				context.lightIsOn = true;
 				context.lightSetOn = true;
 			// message: feedback off
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOff) {
+				clearTimeout(motionTimeoutHandle);
 				context.lightIsOn = false;
 				context.lightSetOn = false;
 				context.lockedOn = false;
-				clearTimeout(motionTimeoutHandle);
 			}
 
 			setNodeState();
