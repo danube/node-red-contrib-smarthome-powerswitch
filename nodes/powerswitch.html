@@ -17,20 +17,25 @@
         <input style="width:70%" type="text" id="node-input-togglePayload">
     </div>
 
-    <h3>On message</h3>
+    <h3>Motion detector</h3>
     <div class="form-row">
-        <label for="node-input-onTopic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-onTopic" placeholder="Expecting 'on' if left blank">
+        <label for="node-input-motionTopic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-motionTopic" placeholder="Expecting 'motion' if left blank">
     </div>
     <div class="form-row">
-        <label for="node-input-onPayload"><i class="fa fa-tag"></i> Payload</label>
-        <input type="hidden" id="node-input-onPayloadType">
-        <input style="width:70%" type="text" id="node-input-onPayload">
+        <label for="node-input-motionPayloadOn"><i class="fa fa-tag"></i> On payload</label>
+        <input type="hidden" id="node-input-motionPayloadOnType">
+        <input style="width:70%" type="text" id="node-input-motionPayloadOn">
+    </div>
+    <div class="form-row">
+        <label for="node-input-motionPayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+        <input type="hidden" id="node-input-motionPayloadOffType">
+        <input style="width:70%" type="text" id="node-input-motionPayloadOff">
     </div>
     <div class="form-row">
         <label><i class="fa fa-sliders"></i> Timeout</label>
-        <input type="number" id="node-input-onTimeoutValue" min="1" style="text-align: end; width: 70px !important">
-        <select id="node-input-onTimeoutUnit" style="width:140px !important">
+        <input type="number" id="node-input-motionTimeoutValue" min="1" style="text-align: end; width: 70px !important">
+        <select id="node-input-motionTimeoutUnit" style="width:140px !important">
             <option value="s">Seconds</option>
             <option value="m">Minutes</option>
             <option value="h">Hours</option>
@@ -101,11 +106,13 @@
             toggleTopic: {value: ""},
             togglePayload: {value: "", validate: RED.validators.typedInput("togglePayloadType")},
             togglePayloadType: {value: "initval"},
-            onTopic: {value: ""},
-            onPayload: {value: "", validate: RED.validators.typedInput("onPayloadType")},
-            onPayloadType: {value: "initval"},
-            onTimeoutValue: {value: "2", required: true, validate:RED.validators.number()},
-            onTimeoutUnit: {value: "m"},
+            motionTopic: {value: ""},
+            motionPayloadOn: {value: "", validate: RED.validators.typedInput("motionPayloadOnType")},
+            motionPayloadOnType: {value: "initval"},
+            motionPayloadOff: {value: "", validate: RED.validators.typedInput("motionPayloadOffType")},
+            motionPayloadOffType: {value: "initval"},
+            motionTimeoutValue: {value: "2", required: true, validate:RED.validators.number()},
+            motionTimeoutUnit: {value: "m"},
             feedbackActive: {value: ""},
             feedbackTopic: {value: ""},
             feedbackPayloadOn: {value: true, validate: RED.validators.typedInput("feedbackPayloadOnType")},
@@ -132,8 +139,11 @@
             if (this.togglePayloadType === 'initval') {
                 $("#node-input-togglePayloadType").val('bool');
             }
-            if (this.onPayloadType === 'initval') {
-                $("#node-input-onPayloadType").val('bool');
+            if (this.motionPayloadOnType === 'initval') {
+                $("#node-input-motionPayloadOnType").val('bool');
+            }
+            if (this.motionPayloadOffType === 'initval') {
+                $("#node-input-motionPayloadOffType").val('bool');
             }
             if (this.feedbackPayloadOnType === 'initval') {
                 $("#node-input-feedbackPayloadOnType").val('bool');
@@ -153,9 +163,14 @@
                 typeField: $("#node-input-togglePayloadType"),
                 types:['str','num','bool']
             });
-            $("#node-input-onPayload").typedInput({
+            $("#node-input-motionPayloadOn").typedInput({
                 default: 'bool',
-                typeField: $("#node-input-onPayloadType"),
+                typeField: $("#node-input-motionPayloadOnType"),
+                types:['str','num','bool']
+            });
+            $("#node-input-motionPayloadOff").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-motionPayloadOffType"),
                 types:['str','num','bool']
             });
             $("#node-input-feedbackPayloadOn").typedInput({
@@ -218,7 +233,7 @@
     <h3>Input</h3>
     <dl class="message-properties">
         <dt>topic<span class="property-type">as configured</span></dt>
-        <dd>Can be a toggle, on trigger (motion detector), actuator feedback or force command. It must meet either the defaults or the configured string. Defaults are described in the input fields if left blank.</dd>
+        <dd>Can be a toggle (like a wall button), motion detector, actuator feedback or force command. It must meet either the defaults or the configured string. Defaults are described in the input fields when left blank.</dd>
         <dt>payload<span class="property-type">as configured</span></dt>
         <dd>Must meet the setting in the configuration editor. Defaults are <code>true</code> and <code>false</code>.</dd>
     </dl>
@@ -238,8 +253,8 @@
         <h4 style="font-weight: bolder;">Toggle message</h4>
         <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for a toggling event. The Control output then will be inverted to the previous command or, if actuator feedback is enabled, to the recently received feedback state. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Payload'. If the configuration field 'Topic' is empty, the value <code>toggle</code> is expected as <code>msg.topic</code>.</p>
         
-        <h4 style="font-weight: bolder;">On message</h4>
-        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for an event to trigger on the device. The Control output then will turn <code>true</code>. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Payload'. If the configuration field 'Topic' is empty, the value <code>on</code> is expected as <code>msg.topic</code>. This can be used i.e. if you want to control a lamp with a motion detector. The lamp will go on if motion has been detected. Use the 'Timeout' configuration below to set the delay, until the light should be turned off.</p>
+        <h4 style="font-weight: bolder;">Motion detector</h4>
+        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for an event to trigger on the device. The Control output then will turn <code>true</code>. Incoming <code>msg.topic</code>must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'On payload' (coming trigger from the sensor) and 'Off payload' (going trigger from the sensor). If the configuration field 'Topic' is empty, the value <code>motion</code> is expected as <code>msg.topic</code>. Use the 'Timeout' configuration to set the delay until the light should be turned off.</p>
         
         <h4 style="font-weight: bolder;">Force message</h4>
         <p>If you want the device to turn on or off, you either use a button to toggle the device state or force the device to change to that state you want to have it. For example, if you have some house leaving button or so with which you turn off all lights in your environment, let the button send the relevant 'Topic' and 'Off payload'.</p>
