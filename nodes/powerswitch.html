@@ -125,7 +125,7 @@
             forcePayloadOff: {value: false, validate: RED.validators.typedInput("forcePayloadOffType")},
             forcePayloadOffType: {value: "initval"},
             absTimeoutActive: {value: false},
-            absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},
+            absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},    // TODO validate this time to be higher than motionTimeout
             absTimeoutUnit: {value: "h"}
         },
         inputs: 1,
