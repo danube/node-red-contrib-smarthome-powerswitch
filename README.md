@@ -1,6 +1,13 @@
 ## What you get now
 ### Power Switch
-Control the output with a toggle button, force on/off commands or with a motion detector. Send the actuator feedback to the block for more features. Configure several timeouts. Find details in the node manual.
+Control the output with a toggle button, force on/off commands or with a motion detector. Send the actuator feedback to the block for more features. Configure several timeouts. Once installed, find details in the node manual.
+#### Properties
+![](files/screenshots/powerswitch-properties.png)
+#### Example
+![](files/screenshots/powerswitch-example.png)
+<br>
+<img src="files/screenshots/powerswitch-example.png" width="600px" style="border:1px dashed grey">
+<img src="files/screenshots/powerswitch-properties.png" height="500px" style="border:1px dashed grey">
 
 ## What you get later
 - Shading actuator
