@@ -1,6 +1,6 @@
 ## What you get now
 ### Power Switch
-Use it i.e. as a light switch or smart power outlet. A pushbutton or motion detector toggles the control output. Several timeouts can be configured.
+Control the output with a toggle button, force on/off commands or with a motion detector. Send the actuator feedback to the block for more features. Configure several timeouts. Find details in the node manual.
 
 ## What you get later
 - Shading actuator
