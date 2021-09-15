@@ -1,11 +1,11 @@
 <script type="text/html" data-help-name="powerswitch">
-    <p>Power switch für Lichter, smarte Steckdosen oder alles andere, das ein/aus Kommandos untertstützt.</p>
+    <p>Power switch (Ein-/Ausschalter) für Lichter, smarte Steckdosen oder alles andere, das ein/aus Kommandos untertstützt.</p>
     <p>Steuere den Ausgang mit Tastern, Bewegungsmeldern, über das Web oder was auch immer.</p>
 
     <h3>Eingänge</h3>
     <dl class="message-properties">
-        <dt>topic<span class="property-type">wie konfiguriert</span></dt>
-        <dd>Kann ein Taster (bspw. ein Schalter an der Wand), ein Bewegungsmelder, die Rückmeldung des Aktors oder ein Zwangsbefehl sein. Dieser muss entweder dem Standard-Wert oder dem konfigurierten String entsprechen. Die Standard-Werte findest Du in den jeweiligen Einstellungsfeldern, wenn diese leer sind.</dd>
+        <dt>topic<span class="property-type">String</span></dt>
+        <dd>Kann ein Taster, ein Bewegungsmelder, die Rückmeldung des Aktors oder ein Zwangsbefehl sein. Weitere Informationen findest Du unter 'Konfiguration' unten.</dd>
         <dt>payload<span class="property-type">wie konfiguriert</span></dt>
         <dd>Der Wert muss den Einstellungen entsprechen. Die Standard-Werte sind <code>true</code> bzw. <code>false</code>.</dd>
     </dl>
@@ -14,28 +14,27 @@
     <dl class="message-properties">
         <dt>topic<span class="property-type">string</span></dt>
         <dd>Fest hinterlegter Wert <code>command</code>. Das wird bald konfigurierbar sein.</dd>
-        <dt>payload<span class="property-type">string</span></dt>
+        <dt>payload<span class="property-type">Bool</span></dt>
         <dd><code>true</code> oder <code>false</code>.</dd>
     </dl>
     
     <h3>Konfiguration</h3>
         <h4 style="font-weight: bolder;">Name</h4>
         <p>Legt den Namen der Funktion fest, wie er auf Deinem Board dargestellt wird.</p>
-
+        
         <h4 style="font-weight: bolder;">Umschaltbefehl</h4>
-        <p>Lege 'topic' und 'payload' einer eingehenden Nachricht fest, um den Steuerausgang umzuschalten. Wenn die Aktor-Rückmeldung aktiv ist, sendet der Ausgang das invertierte Signal des hierauf zuletzt empfangenen Status aus. Wenn die Aktor-Rückmeldung nicht aktiv ist, sendet der Ausgang das invertierte Signal des zuletzt gesendeten Steuerausgans.</p>
-        
+        <p>Lege Topic und Payload einer eingehenden Nachricht fest, um den Steuerausgang umzuschalten. Wenn die Option "Aktor-Rückmeldung" aktiv ist, sendet der Ausgang das invertierte Signal des hierauf zuletzt empfangenen Status aus. Wenn die Option "Aktor-Rückmeldung" nicht aktiv ist, sendet der Ausgang das invertierte Signal des zuletzt gesendeten Steuerausgans.</p>
+            
         <h4 style="font-weight: bolder;">Bewegungsmelder</h4>
-        <p>Lege 'topic' und 'payload' des Bewegungsmelders fest. 'On payload' ist das kommende, 'Off payload' das gehende Ereignis des Bewegungsmelders. Der Steuerausgang wird eingeschaltet bei kommendem Ereignis. Das konfigurierte Timeout beginnt bei gehendem Ereignis zu laufen und bei Ablauf schaltet der Steuerausgang ab.</p>
+        <p>Lege Topic und Payload der Nachricht Deines Bewegungsmelders fest. 'Ein Payload' ist das kommende (Bewegung erkannt), 'Aus Payload' das gehende (keine Bewegung mehr erkannt) Ereignis des Bewegungsmelders. Der Steuerausgang wird eingeschaltet bei kommendem Ereignis. Das konfigurierte Timeout beginnt bei gehendem Ereignis zu laufen, woraufhin der Steuerausgang abschaltet.</p>
         
-        <!-- TODO -->
         <h4 style="font-weight: bolder;">Zwangsbefehl</h4>
-        <p>Wenn Du Dein Gerät ein- oder ausschalten möchtest, verwendest Du entweder den Umschaltbefehl oder Du hast einen Knopf, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest. Ein Beispiel ist ein Taster, mit dem Du alle Lichter in Deinem Haus ausschalten möchtest. 'Topic', 'On payload' und 'Off payload' der Nachricht müssen auch hier den Werten entsprechen, die eingestellt sind. .</p>
+        <p>Mit einer entsprechenden Nachricht kannst Du den Steuerausgang ein- oder ausschalten, je nachdem ob das empfangene Payload dem konfigurierten Ein- oder Aus-Payload entspricht. Das Topic der Nachricht muss der Konfiguration entsprechen. Verwende dies zum Beispiel für einen Knopf in Deinem Heim, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest, beispielsweise einen Taster, mit dem Du alle Lichter in Deinem Haus ausschalten möchtest.</p>
 
         <h4 style="font-weight: bolder;">Aktor-Rückmeldung</h4>
-        <p>Wenn das Gerät, das Du ansteuerst, eine Rückmeldung liefert, dann aktiviere diese Option und schließe dieses Signal an den Eingang des Bausteins an. Wenn die Option deaktiviert ist, denkt die Funktion, dass das Gerät ein- oder ausgeschaltet ist in dem Moment, in dem der Steuerbefehl gesendet wird. Wenn die Option jedoch aktiviert und ein entsprechendes Rückmeldesignal empfangen wird, wartet die Funktion auf dieses Signal. Konfiguriere 'Topic' und 'Payload' der Nachricht entsprechend.</p>
+        <p>Wenn das Gerät, das Du ansteuerst, eine Rückmeldung liefert, dann aktiviere diese Option und schließe Dein Signal an den Baustein an. Wenn die Option deaktiviert ist, denkt die Funktion, dass das Gerät ein- oder ausgeschaltet ist in dem Moment, in dem der Steuerbefehl gesendet wird. Wenn die Option jedoch aktiviert ist und ein Steuerbefehl gesendet wird, wartet die Funktion auf die Rückmeldung des Aktors.</p>
 
         <h4 style="font-weight: bolder;">Zeitabschaltung</h4>
-        <p>Aktiviere diese Option, wenn Du ein Timeout konfigurieren möchtest. Wenn das Gerät eingeschaltet wird, beginnt diese Zeit zu laufen. Bei Ablauf wird das Gerät abgeschaltet. Verwende diese Option, um so nie wieder zu vergessen, ein Gerät auszuschalten.</p>
+        <p>Aktiviere diese Option, wenn Du ein absolutes Timeout konfigurieren möchtest. Der Steuerausgang wird dann nie länger eingeschaltet sein als diese Zeit. Wenn das Gerät nun eingeschaltet wird, beginnt diese Zeit zu laufen. Bei Ablauf wird das Gerät abgeschaltet. Verwende diese Option, um so nie wieder zu vergessen, ein Gerät auszuschalten.</p>
 
 </script>

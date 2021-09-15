@@ -1,40 +1,40 @@
 <script type="text/html" data-help-name="powerswitch">
-    <p>Power switch for lights, smart plugs or anything else handling on/off commands.</p>
-    <p>Control the output with pushbuttons, motion detectors, over the web or anything else.</p>
+    <p>Power switch (on-/off switch) for lights, smart plugs or anything else supporting on/off commands.</p>
+    <p>Control the output with a pushbutton, motion detector, over the web or whatever.</p>
 
-    <h3>Input</h3>
+    <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>topic<span class="property-type">as configured</span></dt>
-        <dd>Can be a toggle (like a wall button), motion detector, actuator feedback or force command. It must meet either the defaults or the configured string. Defaults are described in the input fields when left blank.</dd>
+        <dt>topic<span class="property-type">String</span></dt>
+        <dd>Can be a pushbutton, motion detector, the feedback signal from an actuator or a force command. Find more details about messages in the 'Configuration' section below.</dd>
         <dt>payload<span class="property-type">as configured</span></dt>
-        <dd>Must meet the setting in the configuration editor. Defaults are <code>true</code> and <code>false</code>.</dd>
+        <dd>Value must meet the configuration. Default values are <code>true</code> and <code>false</code>.</dd>
     </dl>
 
     <h3>Output</h3>
     <dl class="message-properties">
         <dt>topic<span class="property-type">string</span></dt>
-        <dd>Hardcoded <code>command</code>, will be configurable in the near future.</dd>
-        <dt>payload<span class="property-type">string</span></dt>
+        <dd>Hardcoded string <code>command</code>. Will be configurable soon.</dd>
+        <dt>payload<span class="property-type">Bool</span></dt>
         <dd><code>true</code> or <code>false</code>.</dd>
     </dl>
     
     <h3>Configuration</h3>
         <h4 style="font-weight: bolder;">Name</h4>
-        <p>Defines the node name, which will also be shown on the drawpad.</p>
-
-        <h4 style="font-weight: bolder;">Toggle message</h4>
-        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for a toggling event. The Control output then will be inverted. Incoming <code>msg.topic</code> must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'Payload'. If the configuration field 'Topic' is empty, the value <code>toggle</code> is expected as <code>msg.topic</code>.</p>
+        <p>Defines the name of the function as it appears on your board.</p>
         
+        <h4 style="font-weight: bolder;">Toggle command</h4>
+        <p>Configure topic and payload of an incoming message to invert the control output. If the feedback option is enabled, the output sends the inverted signal of the last received feedback signal. If the feedback option is disabled, the output sends the inverted signal of the last sent control output.</p>.
+            
         <h4 style="font-weight: bolder;">Motion detector</h4>
-        <p>The values 'Topic' and 'Payload' define the expected content of the incoming message for an event to trigger on the device. The Control output then will turn on. Use the 'Timeout' configuration to set the delay until the light should be turned off. This time begins to count down as soon as the motion detector sends a message which meets the configured off payload. Incoming <code>msg.topic</code> must match the value configured in the field 'Topic' and incoming <code>msg.payload</code> must match the value configured in the field 'On payload' (coming trigger from the sensor) and 'Off payload' (going trigger from the sensor). If the configuration field 'Topic' is empty, the value <code>motion</code> is expected as <code>msg.topic</code>.</p>
+        <p>Configure topic and payload of an incoming message suiting the message of your motion detector. 'On payload' is the coming (motion detected), 'Off payload' is the going (no more motion detected) event of the motion detector. The control output is switched on when an on message is received. The configured timeout starts to count down when the off message is received, after which the control output turns off.</p>
         
-        <h4 style="font-weight: bolder;">Force message</h4>
-        <p>If you want the device to turn on or off, you either use a button to toggle the device state or force the device to change to that state you want to have it. For example, if you have some house leaving button or so with which you turn off all lights in your environment, let the button send the relevant 'Topic' together with 'On payload' or 'Off payload' as configured.</p>
+        <h4 style="font-weight: bolder;">Force command</h4>
+        <p>Mit einer entsprechenden Nachricht kannst Du den Steuerausgang ein- oder ausschalten, je nachdem ob das empfangene Payload dem konfigurierten On- oder Off-Payload entspricht. Das Topic der Nachricht muss der Konfiguration entsprechen. Verwende dies zum Beispiel für einen Knopf in Deinem Heim, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest, beispielsweise einen Taster, mit dem Du alle Lichter in Deinem Haus ausschalten möchtest.</p>
 
-        <h4 style="font-weight: bolder;">Actuator feedback message</h4>
-        <p>If whatever device you control sends a feedback, enable the option and connect the feedback signal to the node. If this option is disabled, the node thinks the device is turned on or off, depending on the outgoing command signal. If this option is turned on, the node waits for the feedback signal. Use the fields to configure, how your feedback signal is constructed.</p>
+        <h4 style="font-weight: bolder;">Aktor-Rückmeldung</h4>
+        <p>Wenn das Gerät, das Du ansteuerst, eine Rückmeldung liefert, dann aktiviere diese Option und schließe Dein Signal an den Baustein an. Wenn die Option deaktiviert ist, denkt die Funktion, dass das Gerät ein- oder ausgeschaltet ist in dem Moment, in dem der Steuerbefehl gesendet wird. Wenn die Option jedoch aktiviert ist und ein Steuerbefehl gesendet wird, wartet die Funktion auf die Rückmeldung des Aktors.</p>
 
-        <h4 style="font-weight: bolder;">Absolute timeout</h4>
-        <p>Enable this option if you want to configure an absolute timeout. This will automatically turn off the actor after the configured time. Use this i.e. to turn off lights you may have forgotten to manually turn off with your wall button.</p>
+        <h4 style="font-weight: bolder;">Zeitabschaltung</h4>
+        <p>Aktiviere diese Option, wenn Du ein absolutes Timeout konfigurieren möchtest. Der Steuerausgang wird dann nie länger eingeschaltet sein als diese Zeit. Wenn das Gerät nun eingeschaltet wird, beginnt diese Zeit zu laufen. Bei Ablauf wird das Gerät abgeschaltet. Verwende diese Option, um so nie wieder zu vergessen, ein Gerät auszuschalten.</p>
 
 </script>
