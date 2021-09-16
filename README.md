@@ -12,3 +12,4 @@ Control the output with a toggle button, force on/off commands or with a motion 
 ## What you get later
 - Shading actuator
 - Light dimmer
+- Alarm system
