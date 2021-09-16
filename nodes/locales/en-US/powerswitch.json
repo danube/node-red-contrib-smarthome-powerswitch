@@ -1,0 +1,8 @@
+{
+    "common": {
+        "name": "NameEN"
+    },
+    "powerswitch": {
+        "togglemsg": "Toggle message"
+    }
+}

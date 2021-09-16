@@ -1,0 +1,8 @@
+{
+    "common": {
+        "name": "NameDE"
+    },
+    "powerswitch": {
+        "togglemsg": "Umschaltnachricht"
+    }
+}
