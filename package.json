@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-smarthome",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "This node contains several functions to set up your smart home.",
   "author": "Thomas Astleitner",
   "license": "EUPL",
