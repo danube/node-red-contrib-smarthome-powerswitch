@@ -1,94 +1,99 @@
-<!-- edit template -->
 <script type="text/html" data-template-name="powerswitch">
 
+    <!-- Name -->
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.name"></span></label>
-        <input type="text" id="node-input-name" placeholder="Power Switch">
+        <input type="text" id="node-input-name" data-i18n="[placeholder]placeholder.name">
     </div>
 
-    <h3><span data-i18n="powerswitch.togglemsg"></span></h3>
+    <!-- Toggle -->
+    <h3><span data-i18n="head.toggle"></span></h3>
     <div class="form-row">
-        <label for="node-input-toggleTopic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-toggleTopic" placeholder="Expecting 'toggle' if left blank">
+        <label for="node-input-toggleTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+        <input type="text" id="node-input-toggleTopic" data-i18n="[placeholder]placeholder.toggleTopic">
     </div>
     <div class="form-row">
-        <label for="node-input-togglePayload"><i class="fa fa-tag"></i> Payload</label>
+        <label for="node-input-togglePayload"><i class="fa fa-tag"></i> <span data-i18n="common.payload"></span></label>
         <input type="hidden" id="node-input-togglePayloadType">
         <input style="width:70%" type="text" id="node-input-togglePayload">
     </div>
 
-    <h3>Motion detector</h3>
+    <!-- Motion detector -->
+    <h3><span data-i18n="head.motion"></span></h3>
     <div class="form-row">
-        <label for="node-input-motionTopic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-motionTopic" placeholder="Expecting 'motion' if left blank">
+        <label for="node-input-motionTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+        <input type="text" id="node-input-motionTopic" data-i18n="[placeholder]placeholder.motionTopic">
     </div>
     <div class="form-row">
-        <label for="node-input-motionPayloadOn"><i class="fa fa-tag"></i> On payload</label>
+        <label for="node-input-motionPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
         <input type="hidden" id="node-input-motionPayloadOnType">
         <input style="width:70%" type="text" id="node-input-motionPayloadOn">
     </div>
     <div class="form-row">
-        <label for="node-input-motionPayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+        <label for="node-input-motionPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
         <input type="hidden" id="node-input-motionPayloadOffType">
         <input style="width:70%" type="text" id="node-input-motionPayloadOff">
     </div>
     <div class="form-row">
-        <label><i class="fa fa-sliders"></i> Timeout</label>
+        <label><i class="fa fa-sliders"></i> <span data-i18n="common.timeout"></span></label>
         <input type="number" id="node-input-motionTimeoutValue" min="1" style="text-align: end; width: 70px !important">
         <select id="node-input-motionTimeoutUnit" style="width:140px !important">
-            <option value="s">Seconds</option>
-            <option value="m">Minutes</option>
-            <option value="h">Hours</option>
+            <option value="s" data-i18n="common.seconds"></option>
+            <option value="m" data-i18n="common.minutes"></option>
+            <option value="h" data-i18n="common.hours"></option>
         </select>
     </div>
     
-    <h3>Force message</h3>
+    <!-- Force message -->
+    <h3><span data-i18n="head.force"></span></h3>
     <div class="form-row">
-        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-forceTopic" placeholder="Expecting 'force' if left blank">
+        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+        <input type="text" id="node-input-forceTopic" data-i18n="[placeholder]placeholder.forceTopic">
     </div>
     <div class="form-row">
-        <label for="node-input-forcePayloadOn"><i class="fa fa-tag"></i> On payload</label>
+        <label for="node-input-forcePayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
         <input type="hidden" id="node-input-forcePayloadOnType">
         <input style="width:70%" type="text" id="node-input-forcePayloadOn">
     </div>
     <div class="form-row">
-        <label for="node-input-forcePayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+        <label for="node-input-forcePayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
         <input type="hidden" id="node-input-forcePayloadOffType">
         <input style="width:70%" type="text" id="node-input-forcePayloadOff">
     </div>
 
-    <h3>Actuator feedback message</h3>
+    <!-- Actuator feedback message -->
+    <h3><span data-i18n="head.feedback"></span></h3>
     <div class="form-row">
-        <label><i class="fa fa-power-off"></i> Enable</label>
+        <label><i class="fa fa-power-off"></i> <span data-i18n="common.enable"></span></label>
         <input type="checkbox" id="node-input-feedbackActive" style="display:inline-block; width:auto;">
     </div>
     <div id="feedbackConfig">
         <div class="form-row">
-            <label for="node-input-feedbackTopic"><i class="fa fa-tasks"></i> Topic</label>
-            <input type="text" id="node-input-feedbackTopic" placeholder="Expecting 'feedback' if left blank">
+            <label for="node-input-feedbackTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+            <input type="text" id="node-input-feedbackTopic" data-i18n="[placeholder]placeholder.feedbackTopic">
         </div>
         <div class="form-row">
-            <label for="node-input-feedbackPayloadOn"><i class="fa fa-tag"></i> On payload</label>
+            <label for="node-input-feedbackPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
             <input type="hidden" id="node-input-feedbackPayloadOnType">
             <input style="width:70%" type="text" id="node-input-feedbackPayloadOn">
         </div>
         <div class="form-row">
-            <label for="node-input-feedbackPayloadOff"><i class="fa fa-tag"></i> Off payload</label>
+            <label for="node-input-feedbackPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
             <input type="hidden" id="node-input-feedbackPayloadOffType">
             <input style="width:70%" type="text" id="node-input-feedbackPayloadOff">
         </div>
     </div>
 
-    <h3>Absolute timeout</h3>
+    <!-- Absolute timeout -->
+    <h3><span data-i18n="head.abstimeout"></span></h3>
     <div class="form-row">
-        <label><i class="fa fa-sliders"></i> Time</label>
+        <label><i class="fa fa-sliders"></i> <span data-i18n="common.time"></span></label>
         <input type="checkbox" id="node-input-absTimeoutActive" style="display:inline-block; width:auto;">
         <input type="number" id="node-input-absTimeoutValue" min="1" style="text-align: end; width: 70px !important; margin-left: 5px">
         <select id="node-input-absTimeoutUnit" style="width:140px !important">
-            <option value="s">Seconds</option>
-            <option value="m">Minutes</option>
-            <option value="h">Hours</option>
+            <option value="s" data-i18n="common.seconds"></option>
+            <option value="m" data-i18n="common.minutes"></option>
+            <option value="h" data-i18n="common.hours"></option>
         </select>
     </div>
 
@@ -125,12 +130,11 @@
             forcePayloadOff: {value: false, validate: RED.validators.typedInput("forcePayloadOffType")},
             forcePayloadOffType: {value: "initval"},
             absTimeoutActive: {value: false},
-            absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},    // TODO validate this time to be higher than motionTimeout
+            absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},
             absTimeoutUnit: {value: "h"}
         },
         inputs: 1,
         outputs: 1,
-        outputLabels: "Control output",
         icon: "font-awesome/fa-lightbulb-o",
         label: function() {
             return this.name || "Power Switch"

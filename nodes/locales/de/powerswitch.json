@@ -1,8 +1,29 @@
 {
     "common": {
-        "name": "NameDE"
+        "name": "Name",
+        "topic": "Topic",
+        "payload": "Payload",
+        "onPayload": "Ein Payload",
+        "offPayload": "Aus Payload",
+        "seconds": "Sekunde(n)",
+        "minutes": "Minute(n)",
+        "hours": "Stunde(n)",
+        "timeout": "Laufzeit",
+        "enable": "Aktivieren",
+        "time": "Zeit"
     },
-    "powerswitch": {
-        "togglemsg": "Umschaltnachricht"
+    "head": {
+        "toggle": "Umschaltbefehl",
+        "motion": "Bewegungsmelder",
+        "force": "Zwangsbefehl",
+        "feedback": "Aktor-Rückmeldung",
+        "abstimeout": "Maximale Einschaltdauer"
+    },
+    "placeholder": {
+        "name": "Power Switch",
+        "toggleTopic": "Erwarte 'toggle' wenn leer",
+        "motionTopic": "Erwarte 'motion' wenn leer",
+        "forceTopic": "Erwarte 'force' wenn leer",
+        "feedbackTopic": "Erwarte 'feedback' wenn leer"
     }
 }
