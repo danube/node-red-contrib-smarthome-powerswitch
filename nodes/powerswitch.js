@@ -105,6 +105,7 @@ module.exports = function(RED) {
 				sendMsgCmdFunc(context.lightSetOn = true);
 			// message: motion off
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
+			  clearTimeout(motionTimeoutHandle);
 				motionTimeoutHandle = setTimeout(timeoutFunc, context.motionTimeoutValue);
 			// message: force on
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
