@@ -103,9 +103,17 @@ module.exports = function(RED) {
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOn && !context.lockedOn) {
 				clearTimeout(motionTimeoutHandle);
 				sendMsgCmdFunc(context.lightSetOn = true);
+				if (isNaN(context.motions)) {
+					context.motions = 1;
+				} else {
+					context.motions += 1;
+				}
 			// message: motion off
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
-				motionTimeoutHandle = setTimeout(timeoutFunc, context.motionTimeoutValue);
+				context.motions -= 1;
+				if (context.motions === 0) {
+					motionTimeoutHandle = setTimeout(timeoutFunc, context.motionTimeoutValue);
+				}
 			// message: force on
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
 				clearTimeout(motionTimeoutHandle);
