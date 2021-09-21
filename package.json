@@ -1,7 +1,7 @@
 {
-  "name": "node-red-contrib-smarthome",
-  "version": "0.1.1-210921a",
-  "description": "This node contains several functions to set up your smart home.",
+  "name": "node-red-contrib-smarthome-powerswitch",
+  "version": "1.0.0",
+  "description": "This node is part of the smarthome collection and contains only the powerswitch.",
   "author": "Thomas Astleitner",
   "license": "EUPL",
   "node-red" : {
