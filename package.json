@@ -1,12 +1,26 @@
 {
   "name": "node-red-contrib-smarthome-powerswitch",
   "version": "1.0.0",
-  "description": "This node is part of the smarthome collection and contains only the powerswitch.",
-  "author": "Thomas Astleitner",
-  "license": "EUPL",
+  "description": "This is the powerswitch node as standalone, which is part of 'node-red-contrib-smarthome'. It containes nodes for Node-RED.",
+  "author": {
+    "name": "Thomas Astleitner"
+  },
+  "license": "EUPL-1.2",
   "node-red" : {
     "nodes": {
         "powerswitch": "nodes/powerswitch.js"
     }
-  }
+  },
+  "main": "nodes/powerswitch.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danube/node-red-contrib-smarthome-powerswitch.git"
+  },
+  "keywords": [
+    "node","node-red","nodered","switch","power","toggle","motion","plug","smartplug","smarthome","loxone","sps","plc","digital"
+  ],
+  "bugs": {
+    "url": "https://github.com/danube/node-red-contrib-smarthome-powerswitch/issues"
+  },
+  "homepage": "https://github.com/eschava/node-red-contrib-smarthome-powerswitch"
 }
