@@ -111,7 +111,7 @@ module.exports = function(RED) {
 			// message: motion off
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
 				context.motions -= 1;
-				if (context.motions === 0) {
+				if (context.motions <= 0) {
 					motionTimeoutHandle = setTimeout(timeoutFunc, context.motionTimeoutValue);
 				}
 			// message: force on
