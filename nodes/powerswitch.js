@@ -62,20 +62,35 @@ module.exports = function(RED) {
 			else if (config.motionTimeoutUnit === "s") {context.motionTimeoutValue = config.motionTimeoutValue * 1000}
 			else {context.motionTimeoutValue = 0}
 			
-			function timeoutFunc() {
-				sendMsgCmdFunc(context.lightSetOn = false);
+			function motionTimeoutFunc() {
+				sendMsgCmdFunc(context.lightSetOn = false, "Motion timeout");
 				setNodeState();
 			}
 
-			function sendMsgCmdFunc(command) {
+			function absTimeoutFunc() {
+				sendMsgCmdFunc(context.lightSetOn = false, "Absolute timeout");
+				setNodeState();
+			}
+
+			function sendMsgCmdFunc(command, reason) {
 				msgCmd = {
 					topic: "command",
 					payload: command
 				}
-				nodeThis.send(msgCmd);
+				clearTimeout(absTimeoutHandle);
+				clearTimeout(motionTimeoutHandle);
+				if (command && context.absTimeoutValue > 0) {
+					absTimeoutHandle = setTimeout(absTimeoutFunc, context.absTimeoutValue);
+				}
 				if (!config.feedbackActive) {
 					context.lightIsOn = command;
 				}
+				if (context.motions < 0) {
+					context.motions = 0;
+					nodeThis.warn("Code 01: Got more motion off than on messages, resetting counter. See https://github.com/danube/node-red-contrib-smarthome-powerswitch/blob/main/README.md")
+				}
+				nodeThis.send(msgCmd);
+				sendMsgDebugFunc(reason);
 			}
 
 			function setNodeState() {
@@ -83,26 +98,33 @@ module.exports = function(RED) {
 					nodeThis.status({fill:"red",shape:"ring",text:"powering off"});
 				} else if (context.lightIsOn && context.lightSetOn) {
 					nodeThis.status({fill:"green",shape:"dot",text:"on"});
-					if (context.absTimeoutValue > 0) {
-						absTimeoutHandle = setTimeout(timeoutFunc, context.absTimeoutValue);
-					}
 				} else if (!context.lightIsOn && !context.lightSetOn) {
 					nodeThis.status({fill:"red",shape:"dot",text:"off"});
-					clearTimeout(absTimeoutHandle);
 				} else if (!context.lightIsOn && context.lightSetOn) {
 					nodeThis.status({fill:"green",shape:"ring",text:"powering on"});
 				}
 			}
 
+			function sendMsgDebugFunc(reason) {
+				if (msg.debug) {
+					msgDebug = {
+						topic: "debug",
+						inmsg: msg,
+						config: config,
+						context: context,
+						reason: reason
+					}
+					nodeThis.send(msgDebug);
+				}
+			}
+
 			// message: toggle
 			if (msg.topic === config.toggleTopic && msg.payload === context.togglePayload) {
-				clearTimeout(motionTimeoutHandle);
-				sendMsgCmdFunc(context.lightSetOn = !context.lightIsOn);
+				sendMsgCmdFunc(context.lightSetOn = !context.lightIsOn, "Toggle message");
 				context.lockedOn = context.lightSetOn;
 			// message: motion on
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOn && !context.lockedOn) {
-				clearTimeout(motionTimeoutHandle);
-				sendMsgCmdFunc(context.lightSetOn = true);
+				sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
 				if (isNaN(context.motions)) {
 					context.motions = 1;
 				} else {
@@ -112,17 +134,16 @@ module.exports = function(RED) {
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
 				context.motions -= 1;
 				if (context.motions <= 0) {
-					motionTimeoutHandle = setTimeout(timeoutFunc, context.motionTimeoutValue);
+					motionTimeoutHandle = setTimeout(motionTimeoutFunc, context.motionTimeoutValue);
 				}
+				sendMsgDebugFunc("Motion off message");
 			// message: force on
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
-				clearTimeout(motionTimeoutHandle);
-				sendMsgCmdFunc(context.lightSetOn = true);
+				sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
 				context.lockedOn = true;
 			// message: force off
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOff) {
-				clearTimeout(motionTimeoutHandle);
-				sendMsgCmdFunc(context.lightSetOn = false);
+				sendMsgCmdFunc(context.lightSetOn = false, "Force off message");
 				context.lockedOn = false;
 			// message: feedback on
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOn) {
@@ -130,23 +151,15 @@ module.exports = function(RED) {
 				context.lightSetOn = true;
 			// message: feedback off
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOff) {
-				clearTimeout(motionTimeoutHandle);
 				context.lightIsOn = false;
 				context.lightSetOn = false;
 				context.lockedOn = false;
+			// message: debug
+			} else if (msg.debug) {
+				sendMsgDebugFunc("Debug solo");
 			}
 
 			setNodeState();
-
-			if (msg.debug) {
-				msgDebug = {
-					topic: "debug",
-					msg: msg,
-					config: config,
-					context: context
-				}
-				nodeThis.send(msgDebug);
-			}
 
 			if (err) {
 				if (done) {
