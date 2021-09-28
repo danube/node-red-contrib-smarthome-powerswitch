@@ -85,9 +85,8 @@ module.exports = function(RED) {
 				if (!config.feedbackActive) {
 					context.lightIsOn = command;
 				}
-				if (context.motions < 0) {
+				if (context.motions < 0 || !command) {
 					context.motions = 0;
-					nodeThis.warn("Code 01: Got more motion off than on messages, resetting counter. See https://github.com/danube/node-red-contrib-smarthome-powerswitch/blob/main/README.md")
 				}
 				nodeThis.send(msgCmd);
 				sendMsgDebugFunc(reason);
