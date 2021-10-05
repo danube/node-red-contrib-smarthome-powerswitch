@@ -85,7 +85,7 @@ module.exports = function(RED) {
 				if (!config.feedbackActive) {
 					context.lightIsOn = command;
 				}
-				if (context.motions < 0 || !command) {
+				if (context.motions < 0 || !command) {		// Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
 					context.motions = 0;
 				}
 				nodeThis.send(msgCmd);
