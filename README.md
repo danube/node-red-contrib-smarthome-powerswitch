@@ -7,5 +7,8 @@ This node enables you to control anything, which can be controlled with an on an
 ### Properties
 <img src="https://github.com/danube/node-red-contrib-smarthome-powerswitch/raw/main/files/screenshots/powerswitch-properties.png" height="500px" style="border:1px dashed grey">
 
+### Changelog
+See [CHANGELOG.md](CHANGELOG.md)
+
 ## Smart Home Collection
 A collection of nodes relevant to control your smart home will be published soon under the name "node-red-contrib-smarthome". This node "powerswitch" is the first released output. The next will be a shading node to control your window blinds. Other scheduled nodes are a light dimmer, alarm system and more. These will be also published together under the name "node-red-contrib-smarthome" as well as independant nodes. So stay tunded @ https://github.com/danube.
