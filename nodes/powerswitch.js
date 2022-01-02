@@ -70,6 +70,9 @@ module.exports = function(RED) {
 			function absTimeoutFunc() {
 				sendMsgCmdFunc(context.lightSetOn = false, "Absolute timeout");
 				setNodeState();
+				if (!config.feedbackActive) {
+					context.lockedOn = false
+				}
 			}
 
 			function sendMsgCmdFunc(command, reason) {
