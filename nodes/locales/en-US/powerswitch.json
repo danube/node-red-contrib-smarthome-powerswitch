@@ -9,6 +9,7 @@
         "minutes": "Minute(s)",
         "hours": "Hour(s)",
         "timeout": "Timeout",
+        "timeoutoverride": "Override with msg.timeout at 'Off Payload'",
         "enable": "Enable",
         "time": "Time"
     },

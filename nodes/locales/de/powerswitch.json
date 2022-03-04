@@ -9,6 +9,7 @@
         "minutes": "Minute(n)",
         "hours": "Stunde(n)",
         "timeout": "Laufzeit",
+        "timeoutoverride": "Überschreibe mit msg.timeout im 'Aus Payload'",
         "enable": "Aktivieren",
         "time": "Zeit"
     },

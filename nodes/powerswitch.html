@@ -48,6 +48,10 @@ TODO
             <option value="h" data-i18n="common.hours"></option>
         </select>
     </div>
+    <div class="form-row">
+        <label></label>
+        <input type="checkbox" id="node-input-motionTimeoutOverride" style="margin-left:0px; vertical-align:top; width:auto !important;"> <label style="width:auto !important;" for="node-input-motionTimeoutOverride" data-i18n="common.timeoutoverride"></label>
+    </div>
     
     <!-- Force message -->
     <h3><span data-i18n="head.force"></span></h3>
@@ -123,6 +127,7 @@ TODO
             motionPayloadOffType: {value: "initval"},
             motionTimeoutValue: {value: "2", required: true, validate:RED.validators.number()},
             motionTimeoutUnit: {value: "m"},
+            motionTimeoutOverride: {value: false},
             feedbackActive: {value: ""},
             feedbackTopic: {value: ""},
             feedbackPayloadOn: {value: true, validate: RED.validators.typedInput("feedbackPayloadOnType")},

@@ -135,6 +135,17 @@ module.exports = function(RED) {
 			// message: motion off
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
 				context.motions -= 1;
+				if (config.motionTimeoutOverride && msg.timeout) {
+					if (typeof(msg.timeout) != "number") {
+						nodeThis.warn("msg.timeout must be of type 'number' but is '" + typeof(msg.timeout) + "'")
+					} else if (msg.timeout == 0) {
+						nodeThis.warn("msg.timeout is zero which is invalid. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
+					} else if (msg.timeout < 0) {
+						nodeThis.warn("msg.timeout is negative (" + msg.timeout + ") which is invalid. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
+					} else {
+						context.motionTimeoutValue = msg.timeout
+					}
+				}
 				if (context.motions <= 0) {
 					motionTimeoutHandle = setTimeout(motionTimeoutFunc, context.motionTimeoutValue);
 				}

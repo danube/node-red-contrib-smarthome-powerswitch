@@ -8,6 +8,8 @@
         <dd>Kann ein Taster, ein Bewegungsmelder, die Rückmeldung des Aktors oder ein Zwangsbefehl sein. Weitere Informationen findest Du unter 'Konfiguration' unten.</dd>
         <dt>payload<span class="property-type">wie konfiguriert</span></dt>
         <dd>Der Wert muss den Einstellungen entsprechen. Die Standard-Werte sind <code>true</code> bzw. <code>false</code>.</dd>
+        <dt>timeout<span class="property-type">Number</span></dt>
+        <dd>Enthält die 'Aus Payload' Nachricht diesen Parameter, dann wird die Laufzeit Konfiguration mit diesem Wert überschrieben. Dieser muss positiv sein und ist in Milisekunden anzugeben (1000 = 1s).</dd>
     </dl>
 
     <h3>Ausgang</h3>
@@ -26,7 +28,7 @@
         <p>Lege Topic und Payload einer eingehenden Nachricht fest, um den Steuerausgang umzuschalten. Wenn die Option "Aktor-Rückmeldung" aktiv ist, sendet der Ausgang das invertierte Signal des hierauf zuletzt empfangenen Status aus. Wenn die Option "Aktor-Rückmeldung" nicht aktiv ist, sendet der Ausgang das invertierte Signal des zuletzt gesendeten Steuerausgans.</p>
             
         <h4 style="font-weight: bolder;">Bewegungsmelder</h4>
-        <p>Lege Topic und Payload der Nachricht Deines Bewegungsmelders fest. 'Ein Payload' ist das kommende (Bewegung erkannt), 'Aus Payload' das gehende (keine Bewegung mehr erkannt) Ereignis des Bewegungsmelders. Der Steuerausgang wird eingeschaltet bei kommendem Ereignis. Das konfigurierte Timeout beginnt bei gehendem Ereignis zu laufen, woraufhin der Steuerausgang abschaltet.</p>
+        <p>Lege Topic und Payload der Nachricht Deines Bewegungsmelders fest. 'Ein Payload' ist das kommende (Bewegung erkannt), 'Aus Payload' das gehende (keine Bewegung mehr erkannt) Ereignis des Bewegungsmelders. Der Steuerausgang wird eingeschaltet bei kommendem Ereignis. Die konfigurierte Laufzeit beginnt bei gehendem Ereignis, woraufhin der Steuerausgang abschaltet. Die Laufzeit kann über eine Nachricht verändert werden (siehe 'Eingänge', msg.timeout).</p>
         
         <h4 style="font-weight: bolder;">Zwangsbefehl</h4>
         <p>Mit einer entsprechenden Nachricht kannst Du den Steuerausgang ein- oder ausschalten, je nachdem ob das empfangene Payload dem konfigurierten Ein- oder Aus-Payload entspricht. Das Topic der Nachricht muss der Konfiguration entsprechen. Verwende dies zum Beispiel für einen Knopf in Deinem Heim, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest, beispielsweise einen Taster, mit dem Du alle Lichter ausschalten möchtest.</p>
