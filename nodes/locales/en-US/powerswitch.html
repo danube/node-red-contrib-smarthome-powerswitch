@@ -9,7 +9,7 @@
         <dt>payload<span class="property-type">as configured</span></dt>
         <dd>Value must meet the configuration. Default values are <code>true</code> and <code>false</code>.</dd>
         <dt>timeout<span class="property-type">Number</span></dt>
-        <dd>If the 'Off Payload' message contains such a parameter, the configured timeout will be overwritten with this value. It must be positive and is evaluated in miliseconds (1000 = 1s).</dd>
+        <dd>If the 'Off Payload' message contains such a parameter, the configured timeout will be overwritten with this value. It must be positive and is evaluated in miliseconds (1000 = 1s). If the value is not a number, zero or negative, the value from the node configuration will be used and a warning will be sent.</dd>
     </dl>
 
     <h3>Output</h3>

@@ -1,3 +1,6 @@
+# 1.0.7
+* No code change. Just added info to doc what happens if msg.timeout is invalid (#9).
+
 # 1.0.6
 * Added option to override timeout with msg.timeout (#9).
 
