@@ -1,0 +1,77 @@
+[
+    {
+        "id": "ce4d3ec4b2522892",
+        "type": "inject",
+        "z": "83e5e4d4985b3b03",
+        "name": "Wall button",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "toggle",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 180,
+        "y": 120,
+        "wires": [
+            [
+                "0697719c48baa333"
+            ]
+        ]
+    },
+    {
+        "id": "0697719c48baa333",
+        "type": "powerswitch",
+        "z": "83e5e4d4985b3b03",
+        "name": "",
+        "toggleTopic": "",
+        "togglePayload": "true",
+        "togglePayloadType": "bool",
+        "motionTopic": "",
+        "motionPayloadOn": "true",
+        "motionPayloadOnType": "bool",
+        "motionPayloadOff": "false",
+        "motionPayloadOffType": "bool",
+        "motionTimeoutValue": "2",
+        "motionTimeoutUnit": "m",
+        "motionTimeoutOverride": false,
+        "feedbackActive": "",
+        "feedbackTopic": "",
+        "feedbackPayloadOn": "true",
+        "feedbackPayloadOnType": "bool",
+        "feedbackPayloadOff": "false",
+        "feedbackPayloadOffType": "bool",
+        "forceTopic": "",
+        "forcePayloadOn": "true",
+        "forcePayloadOnType": "bool",
+        "forcePayloadOff": "false",
+        "forcePayloadOffType": "bool",
+        "absTimeoutActive": true,
+        "absTimeoutValue": "1",
+        "absTimeoutUnit": "h",
+        "x": 410,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fe64b3e186ae79b0",
+        "type": "comment",
+        "z": "83e5e4d4985b3b03",
+        "name": "Wall button with auto off",
+        "info": "By pressing a wall button, a message will be sent to the power switch node. It contains topic and payload as configured under \"Toggle command\". After every press, the power switch toggles between on and off state. It it is powered on longer than 1h, it automatically powers off. This is configured in the node settings at \"Absolute timeout\".",
+        "x": 200,
+        "y": 80,
+        "wires": []
+    }
+]

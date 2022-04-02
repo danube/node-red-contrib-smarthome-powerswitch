@@ -1,0 +1,168 @@
+[
+    {
+        "id": "ce4d3ec4b2522892",
+        "type": "inject",
+        "z": "83e5e4d4985b3b03",
+        "name": "Trigger",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "3a5fc63337d5eaab",
+                "e7786e3d93422228"
+            ]
+        ]
+    },
+    {
+        "id": "0697719c48baa333",
+        "type": "powerswitch",
+        "z": "83e5e4d4985b3b03",
+        "name": "",
+        "toggleTopic": "",
+        "togglePayload": "true",
+        "togglePayloadType": "bool",
+        "motionTopic": "",
+        "motionPayloadOn": "true",
+        "motionPayloadOnType": "bool",
+        "motionPayloadOff": "false",
+        "motionPayloadOffType": "bool",
+        "motionTimeoutValue": "2",
+        "motionTimeoutUnit": "m",
+        "motionTimeoutOverride": true,
+        "feedbackActive": "",
+        "feedbackTopic": "",
+        "feedbackPayloadOn": "true",
+        "feedbackPayloadOnType": "bool",
+        "feedbackPayloadOff": "false",
+        "feedbackPayloadOffType": "bool",
+        "forceTopic": "",
+        "forcePayloadOn": "true",
+        "forcePayloadOnType": "bool",
+        "forcePayloadOff": "false",
+        "forcePayloadOffType": "bool",
+        "absTimeoutActive": false,
+        "absTimeoutValue": "1",
+        "absTimeoutUnit": "h",
+        "x": 950,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e7786e3d93422228",
+        "type": "change",
+        "z": "83e5e4d4985b3b03",
+        "name": "Create On Message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "motion",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 120,
+        "wires": [
+            [
+                "0697719c48baa333"
+            ]
+        ]
+    },
+    {
+        "id": "f42cf777843b9396",
+        "type": "change",
+        "z": "83e5e4d4985b3b03",
+        "name": "Create Off Message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "motion",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "timeout",
+                "pt": "msg",
+                "to": "2000",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 160,
+        "wires": [
+            [
+                "0697719c48baa333"
+            ]
+        ]
+    },
+    {
+        "id": "3a5fc63337d5eaab",
+        "type": "delay",
+        "z": "83e5e4d4985b3b03",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "f42cf777843b9396"
+            ]
+        ]
+    },
+    {
+        "id": "fe64b3e186ae79b0",
+        "type": "comment",
+        "z": "83e5e4d4985b3b03",
+        "name": "Motion detector with msg.timeout",
+        "info": "By injecting, \"On Message\" will be generated. It holds topic and payload as configured in the node for \"On Message\". This simulates a coming signal from a motion detector.\n\nAfter 1s, another message will be generated. It holds topic and payload as configured in the node for \"Off Message\". This simulates a going signal from a motion detector.\n\nThe \"Off Message\" also contains msg.timeout, which overwrites the configured time after which the power switch will power off.",
+        "x": 230,
+        "y": 80,
+        "wires": []
+    }
+]

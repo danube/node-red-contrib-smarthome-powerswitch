@@ -147,7 +147,10 @@ TODO
         outputs: 1,
         icon: "font-awesome/fa-lightbulb-o",
         label: function() {
-            return this.name || "Power Switch"
+            let app = this.motionTimeoutValue + this.motionTimeoutUnit
+            if (this.motionTimeoutOverride) {app = app + "*"}
+            if (this.absTimeoutActive) {app = app + "/" + this.absTimeoutValue + this.absTimeoutUnit}
+            return (this.name || "Power Switch") + " (" + app + ")"
         },
         oneditprepare: function() {
             if (this.togglePayloadType === 'initval') {

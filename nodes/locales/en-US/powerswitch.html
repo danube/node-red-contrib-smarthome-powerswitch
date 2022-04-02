@@ -1,6 +1,7 @@
 <script type="text/html" data-help-name="powerswitch">
     <p>Power switch (on-/off switch) for lights, smart plugs or anything else supporting on/off commands.</p>
     <p>Control the output with a pushbutton, motion detector, over the web or whatever.</p>
+    <p>The node title shows either "Power Switch" or the configured name, together with the time settings. First value shows the configured timeout, followed by a star, if the option "Override with msg.timeout at 'Off Payload'" is enabled. Second value shows the absolute timeout, if enabled.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -25,17 +26,16 @@
         <p>Defines the name of the function as it appears on your board.</p>
         
         <h4 style="font-weight: bolder;">Toggle command</h4>
-        <p>Configure topic and payload of an incoming message to invert the control output. If the feedback option is enabled, the output sends the inverted signal of the last received feedback signal. If the feedback option is disabled, the output sends the inverted signal of the last sent control output.</p>.
+        <p>Configure topic and payload of an incoming message to invert the control output. If the feedback option is enabled, the output sends the inverted signal of the last received feedback signal. If the feedback option is disabled, the output sends the inverted signal of the last sent control output.</p>
             
         <h4 style="font-weight: bolder;">Motion detector</h4>
-        <p>Configure topic and payload of an incoming message suiting the message of your motion detector. 'On payload' is the coming (motion started), 'Off payload' is the going (motion ended) event of the motion detector. The control output is switched on when an on message is received. The configured timeout starts to count down when the off message is received, after which the control output turns off. The timeout can be manipulated with a message (see 'Inputs', msg.timeout).
-        </p>
+        <p>Configure topic and payload of an incoming message suiting the message of your motion detector. 'On payload' is the coming (motion started), 'Off payload' is the going (motion ended) event of the motion detector. The control output is switched on when an on message is received. The configured timeout starts to count down when the off message is received, after which the control output turns off. The timeout can be manipulated with a message (see 'Inputs', msg.timeout).</p>
         
         <h4 style="font-weight: bolder;">Force command</h4>
         <p>With a corresponding message you can switch the control output on or off, depending on whether the received payload corresponds to the configured on or off payload. The topic of the message must correspond to the configuration. For example, use this for a button in your home to force your devices on or off, such as a push button to turn off all the lights.</p>
 
         <h4 style="font-weight: bolder;">Device Feedback</h4>
-        <p>If the device you are controlling provides feedback, enable this option and connect your signal to the node. If the option is disabled, the function thinks that the device is on or off at the moment the control command is sent. However, if the option is enabled and a control command is sent, the function waits for the actuator's feedback.</p>.
+        <p>If the device you are controlling provides feedback, enable this option and connect your signal to the node. If the option is disabled, the function thinks that the device is on or off at the moment the control command is sent. However, if the option is enabled and a control command is sent, the function waits for the actuator's feedback.</p>
 
         <h4 style="font-weight: bolder;">Timeout</h4>
         <p>Activate this option if you want to configure an absolute timeout. The control output will then never be on longer than this time. If the device is now switched on, this time starts to run. After the time has ended, the device will be switched off. Use this option to never again forget to turn off a device.</p>

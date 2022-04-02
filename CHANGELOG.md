@@ -1,3 +1,14 @@
+# 1.0.10
+* Showing time setting in node title (addressing #8).
+* Fixes in package.json to satisfy Node-RED scoreboard.
+* Updated screenshots, README.md and help files accordingly.
+
+# 1.0.9
+* Added engines section and node-red min version keyword to package.json.
+
+# 1.0.8
+* Added example nodes.
+
 # 1.0.7
 * No code change. Just added info to doc what happens if msg.timeout is invalid (#9).
 
