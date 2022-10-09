@@ -11,20 +11,23 @@
         "timeout": "Laufzeit",
         "timeoutoverride": "Überschreibe mit msg.timeout im 'Aus Payload'",
         "enable": "Aktivieren",
-        "time": "Zeit"
+        "time": "Zeit",
+        "timespan": "Zeitspanne"
     },
     "head": {
         "toggle": "Umschaltbefehl",
         "motion": "Bewegungsmelder",
         "force": "Zwangsbefehl",
         "feedback": "Aktor-Rückmeldung",
-        "abstimeout": "Maximale Einschaltdauer"
+        "abstimeout": "Maximale Einschaltdauer",
+        "precondition": "Vorraussetungen"
     },
     "placeholder": {
         "name": "Power Switch",
         "toggleTopic": "Erwarte 'toggle' wenn leer",
         "motionTopic": "Erwarte 'motion' wenn leer",
         "forceTopic": "Erwarte 'force' wenn leer",
+        "preconditionTopic": "Erwarte 'precondition' wenn leer",
         "feedbackTopic": "Erwarte 'feedback' wenn leer"
     }
 }

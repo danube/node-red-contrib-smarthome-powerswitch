@@ -1,12 +1,14 @@
 module.exports = function(RED) {
 	function PowerSwitchNode(config) {
-		RED.nodes.createNode(this,config);
-		
+		config.outputs = 2;
+		RED.nodes.createNode(this, config);
+
 		var context = this.context();
 		var nodeThis = this;
 		var err = false;
 		var absTimeoutHandle, motionTimeoutHandle;
 		var msgCmd, msgDebug = null;
+		context.luminosity = 0;
 
 		this.on('input', function(msg,send,done) {
 
@@ -14,6 +16,9 @@ module.exports = function(RED) {
 			config.motionTopic = config.motionTopic || "motion";
 			config.feedbackTopic = config.feedbackTopic || "feedback";
 			config.forceTopic = config.forceTopic || "force";
+			config.luminosityTopic = config.luminosityTopic || "luminosity";
+			config.luminosity = config.luminosity || 200;
+			config.forceIgnoreAfterMotion = config.forceIgnoreAfterMotion || false;
 
 			// convert config string: toggle payload
 			if (config.togglePayloadType === 'num') {context.togglePayload = Number(config.togglePayload)}
@@ -88,23 +93,32 @@ module.exports = function(RED) {
 				if (!config.feedbackActive) {
 					context.lightIsOn = command;
 				}
-				if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
-					context.motions = 0;
+				// if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
+				// 	context.motions = 0;
+				// }
+
+				if (command == true && context.lockedOn == false) {
+					context.lastTriggeredByMotion = true;
+				} else {
+					context.lastTriggeredByMotion = false;
 				}
 				nodeThis.send(msgCmd);
 				sendMsgDebugFunc(reason);
 			}
 
 			function setNodeState() {
+				var status = {};
 				if (context.lightIsOn && !context.lightSetOn) {
-					nodeThis.status({fill:"red",shape:"ring",text:"powering off"});
+					status = {fill:"red",shape:"ring",text:"powering off"};
 				} else if (context.lightIsOn && context.lightSetOn) {
-					nodeThis.status({fill:"green",shape:"dot",text:"on"});
+					status = {fill:"green",shape:"dot",text:"on"};
 				} else if (!context.lightIsOn && !context.lightSetOn) {
-					nodeThis.status({fill:"red",shape:"dot",text:"off"});
+					status = {fill:"red",shape:"dot",text:"off"};
 				} else if (!context.lightIsOn && context.lightSetOn) {
-					nodeThis.status({fill:"green",shape:"ring",text:"powering on"});
+					status = {fill:"green",shape:"ring",text:"powering"};
 				}
+				status.text = status.text + ' (' + context.luminosity + 'lx, ' + context.motions + ' motions, ' + (context.lockedOn ? 'locked' : 'unlocked') + ')';
+				nodeThis.status(status);
 			}
 
 			function sendMsgDebugFunc(reason) {
@@ -126,7 +140,9 @@ module.exports = function(RED) {
 				context.lockedOn = context.lightSetOn;
 			// message: motion on
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOn && !context.lockedOn) {
-				sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
+				if (context.luminosity < config.luminosity) {
+					sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
+				}
 				if (isNaN(context.motions)) {
 					context.motions = 1;
 				} else {
@@ -152,12 +168,25 @@ module.exports = function(RED) {
 				sendMsgDebugFunc("Motion off message");
 			// message: force on
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
-				sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
-				context.lockedOn = true;
+				if (context.lastTriggeredByMotion == true && config.forceIgnoreAfterMotion == true) {
+					// ignore a force triggered by the last motion trigger;
+					context.lastTriggeredByMotion = false;
+				} else {
+					sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
+					context.lockedOn = true;
+				}
 			// message: force off
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOff) {
 				sendMsgCmdFunc(context.lightSetOn = false, "Force off message");
 				context.lockedOn = false;
+			// message: luminosity on
+			} else if (msg.topic === config.luminosityTopic) {
+				context.luminosity = msg.payload;
+				if (context.luminosity < config.luminosity && context.motions > 0) {
+					sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
+				} else if (context.motions > 0) {
+					sendMsgCmdFunc(context.lightSetOn = false, "Motion on message");
+				}
 			// message: feedback on
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOn) {
 				context.lightIsOn = true;

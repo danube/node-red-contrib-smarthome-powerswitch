@@ -69,6 +69,22 @@ TODO
         <input type="hidden" id="node-input-forcePayloadOffType">
         <input style="width:70%" type="text" id="node-input-forcePayloadOff">
     </div>
+    <div class="form-row">
+        <label></label>
+        <input type="checkbox" id="node-input-forceIgnoreAfterMotion" style="margin-left:0px; vertical-align:top; width:auto !important;"> <label style="width:auto !important;" for="node-input-forceIgnoreAfterMotion" data-i18n="common.forceIgnoreAfterMotion"></label>
+    </div>
+
+    <!-- Luminosity -->
+    <h3><span data-i18n="head.luminosity"></span></h3>
+    <p><small>Ignore motion Events if the luminosity is above a certain level</small></p>
+    <div class="form-row">
+        <label for="node-input-luminosityTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+        <input type="text" id="node-input-luminosityTopic" data-i18n="[placeholder]placeholder.luminosityTopic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-luminosity"><i class="fa fa-tasks"></i> <span data-i18n="common.luminosity"></span></label>
+        <input type="number" min="1" id="node-input-luminosity" data-i18n="[placeholder]placeholder.luminosity">
+    </div>
 
     <!-- Actuator feedback message -->
     <h3><span data-i18n="head.feedback"></span></h3>
@@ -139,17 +155,22 @@ TODO
             forcePayloadOnType: {value: "initval"},
             forcePayloadOff: {value: false, validate: RED.validators.typedInput("forcePayloadOffType")},
             forcePayloadOffType: {value: "initval"},
+            forceIgnoreAfterMotion: {value: false},
+            luminosityTopic: {value: ""},
+            luminosity: {value: "200", validate:RED.validators.number()},
             absTimeoutActive: {value: false},
             absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},
             absTimeoutUnit: {value: "h"}
         },
         inputs: 1,
-        outputs: 1,
+        outputs: 3,
+        outputLabels: ["status","on","off"],
         icon: "font-awesome/fa-lightbulb-o",
         label: function() {
             let app = this.motionTimeoutValue + this.motionTimeoutUnit
             if (this.motionTimeoutOverride) {app = app + "*"}
             if (this.absTimeoutActive) {app = app + "/" + this.absTimeoutValue + this.absTimeoutUnit}
+            if (this.luminosity) {app = app + "/" + this.luminosity + "lx"}
             return (this.name || "Power Switch") + " (" + app + ")"
         },
         oneditprepare: function() {

@@ -11,21 +11,27 @@
         "timeout": "Timeout",
         "timeoutoverride": "Override with msg.timeout at 'Off Payload'",
         "enable": "Enable",
-        "time": "Time"
+        "time": "Time",
+        "timespan": "Timespan",
+        "forceIgnoreAfterMotion": "Ignore if triggered by Motion",
+        "luminosity": "Luminosity"
     },
     "head": {
         "toggle": "Toggle command",
         "motion": "Motion detector",
         "force": "Force command",
         "feedback": "Device Feedback",
-        "abstimeout": "Absolute timeout"
+        "abstimeout": "Absolute timeout",
+        "luminosity": "Luminosity"
     },
     "placeholder": {
         "name": "Power Switch",
         "toggleTopic": "Expecting 'toggle' if left blank",
         "motionTopic": "Expecting 'motion' if left blank",
         "forceTopic": "Expecting 'force' if left blank",
-        "feedbackTopic": "Expecting 'feedback' if left blank"
+        "luminosityTopic": "Expecting 'luminosity' if left blank",
+        "feedbackTopic": "Expecting 'feedback' if left blank",
+        "luminosity": "Expecting 'feedback' if left blank"
     }
 
 }
