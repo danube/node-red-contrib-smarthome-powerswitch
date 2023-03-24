@@ -1,7 +1,23 @@
 module.exports = function(RED) {
 	function PowerSwitchNode(config) {
-		RED.nodes.createNode(this,config);
+		RED.nodes.createNode(this, config);
 		
+		/**
+		 * The context of this node.
+		 * @param {any} togglePayload Expected 'toggle' payload, type converted.
+		 * @param {any} motionPayloadOn Expected 'motion on' payload, type converted.
+		 * @param {any} motionPayloadOff Expected 'motion off' payload, type converted.
+		 * @param {any} feedbackPayloadOn Expected 'feedback on' payload, type converted.
+		 * @param {any} feedbackPayloadOff Expected 'feedback off' payload, type converted.
+		 * @param {any} forcePayloadOn Expected 'force on' payload, type converted.
+		 * @param {any} forcePayloadOff Expected 'force off' payload, type converted.
+		 * @param {any} absTimeoutValue Absolute timeout time, converted to miliseconds.
+		 * @param {any} motionTimeoutValue Motion timeout time, converted to miliseconds.
+		 * @param {any} lightSetOn Instructing switch to turn on.
+		 * @param {any} lightIsOn Received switch feedback (if configured with 'feedbackActive').
+		 * @param {any} lockedOn Switch is powered on and may not be powered off by motion timeout.
+		 * @param {any} motions Motion telegram up/down counter (+1 on true, -1 on false).
+		 */
 		var context = this.context();
 		var nodeThis = this;
 		var err = false;
