@@ -4,7 +4,7 @@
 
 * Reworked warnings on faulty or missing msg.timeout value
 * Added "input" label on headings
-* Introducing equal payload validation (#1)
+* Introducing equal payload validation (resolves #1)
 
 ## 1.0.10
 
