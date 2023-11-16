@@ -1,8 +1,3 @@
-<!--
-TODO
-* Check for same payload (true/true) on one command
--->
-
 <script type="text/html" data-template-name="powerswitch">
 
     <!-- Name -->
@@ -121,26 +116,26 @@ TODO
             togglePayload: {value: "true", validate: RED.validators.typedInput("togglePayloadType")},
             togglePayloadType: {value: "initval"},
             motionTopic: {value: ""},
-            motionPayloadOn: {value: "true", validate: RED.validators.typedInput("motionPayloadOnType")},
+            motionPayloadOn: {value: "true", validate: function(v) {return v != this.motionPayloadOff}},
             motionPayloadOnType: {value: "initval"},
-            motionPayloadOff: {value: "false", validate: RED.validators.typedInput("motionPayloadOffType")},
+            motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
             motionPayloadOffType: {value: "initval"},
-            motionTimeoutValue: {value: "2", required: true, validate:RED.validators.number()},
+            motionTimeoutValue: {value: "2", required: true, validate: RED.validators.number()},
             motionTimeoutUnit: {value: "m"},
             motionTimeoutOverride: {value: false},
             feedbackActive: {value: ""},
             feedbackTopic: {value: ""},
-            feedbackPayloadOn: {value: true, validate: RED.validators.typedInput("feedbackPayloadOnType")},
+            feedbackPayloadOn: {value: true, validate: function(v) {return v != this.feedbackPayloadOff || !this.feedbackActive}},
             feedbackPayloadOnType: {value: "initval"},
-            feedbackPayloadOff: {value: false, validate: RED.validators.typedInput("feedbackPayloadOffType")},
+            feedbackPayloadOff: {value: false, validate: function(v) {return v != this.feedbackPayloadOn || !this.feedbackActive}},
             feedbackPayloadOffType: {value: "initval"},
             forceTopic: {value: ""},
-            forcePayloadOn: {value: true, validate: RED.validators.typedInput("forcePayloadOnType")},
+            forcePayloadOn: {value: true, validate: function(v) {return v != this.forcePayloadOff}},
             forcePayloadOnType: {value: "initval"},
-            forcePayloadOff: {value: false, validate: RED.validators.typedInput("forcePayloadOffType")},
+            forcePayloadOff: {value: false, validate: function(v) {return v != this.forcePayloadOn}},
             forcePayloadOffType: {value: "initval"},
             absTimeoutActive: {value: false},
-            absTimeoutValue: {value: "1", required: true, validate:RED.validators.number()},
+            absTimeoutValue: {value: "1", required: true, validate: RED.validators.number()},
             absTimeoutUnit: {value: "h"}
         },
         inputs: 1,
