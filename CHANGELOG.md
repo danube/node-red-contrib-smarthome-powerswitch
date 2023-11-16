@@ -5,6 +5,7 @@
 * Reworked warnings on faulty or missing msg.timeout value
 * Added "input" label on headings
 * Introducing equal payload validation (resolves #1)
+* Added validations to motion and absolute timeout (resolves #2)
 
 ## 1.0.10
 
