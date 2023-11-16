@@ -120,7 +120,7 @@
             motionPayloadOnType: {value: "initval"},
             motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
             motionPayloadOffType: {value: "initval"},
-            motionTimeoutValue: {value: "2", required: true, validate: RED.validators.number()},
+            motionTimeoutValue: {value: "2", required: true, validate: function(v) {return v > 0}},
             motionTimeoutUnit: {value: "m"},
             motionTimeoutOverride: {value: false},
             feedbackActive: {value: ""},
@@ -135,7 +135,14 @@
             forcePayloadOff: {value: false, validate: function(v) {return v != this.forcePayloadOn}},
             forcePayloadOffType: {value: "initval"},
             absTimeoutActive: {value: false},
-            absTimeoutValue: {value: "1", required: true, validate: RED.validators.number()},
+            absTimeoutValue: {value: "1", required: true, validate: function(v) {
+                let motionFactor = 1
+                if (this.motionTimeoutUnit == "m") {motionFactor = 60}
+                else if (this.motionTimeoutUnit == "h") {motionFactor = 3600}
+                let absFactor = 1
+                if (this.absTimeoutUnit == "m") {absFactor = 60}
+                else if (this.absTimeoutUnit == "h") {absFactor = 3600}
+                return v * absFactor > this.motionTimeoutValue * motionFactor || !this.absTimeoutActive}},
             absTimeoutUnit: {value: "h"}
         },
         inputs: 1,
