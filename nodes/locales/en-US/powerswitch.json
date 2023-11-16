@@ -9,15 +9,15 @@
         "minutes": "Minute(s)",
         "hours": "Hour(s)",
         "timeout": "Timeout",
-        "timeoutoverride": "Override with msg.timeout at 'Off Payload'",
+        "timeoutoverride": "Allow msg.timeout in 'Off Payload' (ms)",
         "enable": "Enable",
         "time": "Time"
     },
     "head": {
-        "toggle": "Toggle command",
-        "motion": "Motion detector",
-        "force": "Force command",
-        "feedback": "Device Feedback",
+        "toggle": "Input: Toggle command",
+        "motion": "Input: Motion detector",
+        "force": "Input: Force command",
+        "feedback": "Input: Device Feedback",
         "abstimeout": "Absolute timeout"
     },
     "placeholder": {

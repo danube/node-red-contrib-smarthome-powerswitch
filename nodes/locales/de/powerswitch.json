@@ -9,15 +9,15 @@
         "minutes": "Minute(n)",
         "hours": "Stunde(n)",
         "timeout": "Laufzeit",
-        "timeoutoverride": "Überschreibe mit msg.timeout im 'Aus Payload'",
+        "timeoutoverride": "Erlaube msg.timeout im 'Aus Payload' (ms)",
         "enable": "Aktivieren",
         "time": "Zeit"
     },
     "head": {
-        "toggle": "Umschaltbefehl",
-        "motion": "Bewegungsmelder",
-        "force": "Zwangsbefehl",
-        "feedback": "Aktor-Rückmeldung",
+        "toggle": "Eingang: Umschaltbefehl",
+        "motion": "Eingang: Bewegungsmelder",
+        "force": "Eingang: Zwangsbefehl",
+        "feedback": "Eingang: Aktor-Rückmeldung",
         "abstimeout": "Maximale Einschaltdauer"
     },
     "placeholder": {
