@@ -92,23 +92,30 @@ module.exports = function(RED) {
 			}
 
 			function sendMsgCmdFunc(command, reason) {
-				msgCmd = {
-					topic: "command",
-					payload: command
+				if (context.lastReason == "Motion on message" && reason == "Force on message" && config.motionOverridesForceOn) {
+					// do nothing, https://github.com/danube/node-red-contrib-smarthome-powerswitch/issues/13
+				} else {
+					clearTimeout(absTimeoutHandle);
+					clearTimeout(motionTimeoutHandle);
+					if (command && context.absTimeoutValue > 0) {
+						absTimeoutHandle = setTimeout(absTimeoutFunc, context.absTimeoutValue);
+					}
+					if (!config.feedbackActive) {
+						context.lightIsOn = command;
+					}
+					if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
+						context.motions = 0;
+					}
+					context.thisReason = reason
+					msgCmd = {
+						topic: "command",
+						payload: command,
+						context: context
+					}
+					nodeThis.send(msgCmd);
 				}
-				clearTimeout(absTimeoutHandle);
-				clearTimeout(motionTimeoutHandle);
-				if (command && context.absTimeoutValue > 0) {
-					absTimeoutHandle = setTimeout(absTimeoutFunc, context.absTimeoutValue);
-				}
-				if (!config.feedbackActive) {
-					context.lightIsOn = command;
-				}
-				if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
-					context.motions = 0;
-				}
-				nodeThis.send(msgCmd);
 				sendMsgDebugFunc(reason);
+				context.lastReason = reason;
 			}
 
 			function setNodeState() {
