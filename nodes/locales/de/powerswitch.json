@@ -18,7 +18,8 @@
         "motion": "Eingang: Bewegungsmelder",
         "force": "Eingang: Zwangsbefehl",
         "feedback": "Eingang: Aktor-Rückmeldung",
-        "abstimeout": "Maximale Einschaltdauer"
+        "abstimeout": "Maximale Einschaltdauer",
+        "output": "Ausgang"
     },
     "placeholder": {
         "name": "Power Switch",

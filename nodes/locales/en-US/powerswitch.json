@@ -18,7 +18,8 @@
         "motion": "Input: Motion detector",
         "force": "Input: Force command",
         "feedback": "Input: Device Feedback",
-        "abstimeout": "Absolute timeout"
+        "abstimeout": "Absolute timeout",
+        "output": "Output"
     },
     "placeholder": {
         "name": "Power Switch",
