@@ -11,7 +11,8 @@
         "timeout": "Timeout",
         "timeoutoverride": "Allow msg.timeout in 'Off Payload' (ms)",
         "enable": "Enable",
-        "time": "Time"
+        "time": "Time",
+        "motionOverridesForceOn": "Ignore while powered by motion"
     },
     "head": {
         "toggle": "Input: Toggle command",
