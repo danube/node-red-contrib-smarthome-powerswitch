@@ -12,7 +12,7 @@
         "timeoutoverride": "Erlaube msg.timeout im 'Aus Payload' (ms)",
         "enable": "Aktivieren",
         "time": "Zeit",
-        "motionOverridesForceOn": "Ignoriere wenn an durch Bewegungsmelder"
+        "motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder"
     },
     "head": {
         "toggle": "Eingang: Umschaltbefehl",
