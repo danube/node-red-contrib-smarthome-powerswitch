@@ -17,6 +17,8 @@ module.exports = function(RED) {
 		 * @param {any} lightIsOn Received switch feedback (if configured with 'feedbackActive').
 		 * @param {any} lockedOn Switch is powered on and may not be powered off by motion timeout.
 		 * @param {any} motions Motion telegram up/down counter (+1 on true, -1 on false).
+		 * @param {any} thisReason Reason for this message
+		 * @param {any} lastReason Reason for previous message
 		 */
 		var context = this.context();
 		var nodeThis = this;
@@ -155,6 +157,7 @@ module.exports = function(RED) {
 				} else {
 					context.motions += 1;
 				}
+
 			// message: motion off
 			} else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOff && !context.lockedOn) {
 				context.motions -= 1;
@@ -175,23 +178,28 @@ module.exports = function(RED) {
 					motionTimeoutHandle = setTimeout(motionTimeoutFunc, context.motionTimeoutValue);
 				}
 				sendMsgDebugFunc("Motion off message");
+
 			// message: force on
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
 				sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
 				context.lockedOn = true;
+
 			// message: force off
 			} else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOff) {
 				sendMsgCmdFunc(context.lightSetOn = false, "Force off message");
 				context.lockedOn = false;
+
 			// message: feedback on
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOn) {
 				context.lightIsOn = true;
 				context.lightSetOn = true;
+
 			// message: feedback off
 			} else if (config.feedbackActive && msg.topic === config.feedbackTopic && msg.payload === context.feedbackPayloadOff) {
 				context.lightIsOn = false;
 				context.lightSetOn = false;
 				context.lockedOn = false;
+
 			// message: debug
 			} else if (msg.debug) {
 				sendMsgDebugFunc("Debug solo");
