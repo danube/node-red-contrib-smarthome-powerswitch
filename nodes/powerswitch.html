@@ -104,18 +104,17 @@
     <!-- Output message -->
     <h3><span data-i18n="head.output"></span></h3>
     <div class="form-row">
-        <label for="node-output-topic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
-        <input type="text" id="node-output-topic" data-i18n="[placeholder]placeholder.outputTopic">
+        <label for="node-input-outputTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+        <input type="text" id="node-input-outputTopic" data-i18n="[placeholder]placeholder.outputTopic">
     </div>
     <div class="form-row">
-        <label for="node-output-payloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
-        <input type="hidden" id="node-output-payloadOnType">
-        <input style="width:70%" type="text" id="node-output-payloadOn">
+        <label for="node-input-outputPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
+        <input type="hidden" id="node-input-outputPayloadOnType"><input style="width:70%" type="text" id="node-input-outputPayloadOn">
     </div>
     <div class="form-row">
-        <label for="node-output-payloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
-        <input type="hidden" id="node-output-payloadOffType">
-        <input style="width:70%" type="text" id="node-output-payloadOff">
+        <label for="node-input-outputPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
+        <input type="hidden" id="node-input-outputPayloadOffType">
+        <input style="width:70%" type="text" id="node-input-outputPayloadOff">
     </div>
 
 </script>
@@ -160,7 +159,12 @@
                 if (this.absTimeoutUnit == "m") {absFactor = 60}
                 else if (this.absTimeoutUnit == "h") {absFactor = 3600}
                 return v * absFactor > this.motionTimeoutValue * motionFactor || !this.absTimeoutActive}},
-            absTimeoutUnit: {value: "h"}
+            absTimeoutUnit: {value: "h"},
+            outputTopic: {value: ""},
+            outputPayloadOnType: {value: "initval"},
+            outputPayloadOn: {value: true},
+            outputPayloadOffType: {value: "initval"},
+            outputPayloadOff: {value: false}
         },
         inputs: 1,
         outputs: 1,
@@ -192,6 +196,12 @@
             }
             if (this.forcePayloadOffType === 'initval') {
                 $("#node-input-forcePayloadOffType").val('bool');
+            }
+            if (this.outputPayloadOnType === 'initval') {
+                $("#node-input-outputPayloadOnType").val('bool');
+            }
+            if (this.outputPayloadOffType === 'initval') {
+                $("#node-input-outputPayloadOffType").val('bool');
             }
 
             $("#node-input-togglePayload").typedInput({
@@ -227,6 +237,16 @@
             $("#node-input-forcePayloadOff").typedInput({
                 default: 'bool',
                 typeField: $("#node-input-forcePayloadOffType"),
+                types:['str','num','bool']
+            });
+            $("#node-input-outputPayloadOn").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-outputPayloadOnType"),
+                types:['str','num','bool']
+            });
+            $("#node-input-outputPayloadOff").typedInput({
+                default: 'bool',
+                typeField: $("#node-input-outputPayloadOffType"),
                 types:['str','num','bool']
             });
 

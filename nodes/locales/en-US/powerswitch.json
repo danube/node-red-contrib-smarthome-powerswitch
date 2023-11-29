@@ -26,7 +26,8 @@
         "toggleTopic": "Expecting 'toggle' if left blank",
         "motionTopic": "Expecting 'motion' if left blank",
         "forceTopic": "Expecting 'force' if left blank",
-        "feedbackTopic": "Expecting 'feedback' if left blank"
+        "feedbackTopic": "Expecting 'feedback' if left blank",
+        "outputTopic": "Default is 'command'"
     }
 
 }

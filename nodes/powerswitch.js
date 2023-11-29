@@ -23,6 +23,7 @@ module.exports = function(RED) {
 		var err = false;
 		var absTimeoutHandle, motionTimeoutHandle;
 		var msgCmd, msgDebug = null;
+		let outputTopic = config.outputTopic
 
 		this.on('input', function(msg,send,done) {
 
@@ -77,6 +78,9 @@ module.exports = function(RED) {
 			else if (config.motionTimeoutUnit === "m") {context.motionTimeoutValue = config.motionTimeoutValue * 60000}
 			else if (config.motionTimeoutUnit === "s") {context.motionTimeoutValue = config.motionTimeoutValue * 1000}
 			else {context.motionTimeoutValue = 0}
+
+			// set output topic to default if unconfigured
+			if (!outputTopic) {outputTopic = "command"}
 			
 			function motionTimeoutFunc() {
 				sendMsgCmdFunc(context.lightSetOn = false, "Motion timeout");
@@ -92,9 +96,20 @@ module.exports = function(RED) {
 			}
 
 			function sendMsgCmdFunc(command, reason) {
+				let convertedCommand = command
+				if (command) {		// power on
+					if (config.outputPayloadOnType == 'num') {convertedCommand = Number(config.outputPayloadOn)}
+					else if (config.outputPayloadOnType == 'str') {convertedCommand = config.outputPayloadOn}
+					else if (config.outputPayloadOn == 'false') {convertedCommand = false}
+				} else {
+					if (config.outputPayloadOffType == 'num') {convertedCommand = Number(config.outputPayloadOff)}
+					else if (config.outputPayloadOffType == 'str') {convertedCommand = config.outputPayloadOff}
+					else if (config.outputPayloadOff == 'true') {convertedCommand = true}
+				}
+				
 				msgCmd = {
-					topic: "command",
-					payload: command
+					topic: outputTopic,
+					payload: convertedCommand
 				}
 				clearTimeout(absTimeoutHandle);
 				clearTimeout(motionTimeoutHandle);
