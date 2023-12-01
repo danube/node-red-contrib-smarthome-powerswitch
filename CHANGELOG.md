@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.12
+
+* Added option to ignore incoming "Force On" payload while powered on by motion detector. Find checkbox "Ignore while powered on by motion" in the "Force" section. Addresses #13.
+* Added `lastReason` to context.
+
 ## 1.0.11
 
 * Reworked warnings on faulty or missing msg.timeout value
