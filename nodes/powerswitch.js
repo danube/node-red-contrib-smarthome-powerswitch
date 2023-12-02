@@ -94,7 +94,7 @@ module.exports = function(RED) {
 			}
 
 			function sendMsgCmdFunc(command, reason) {
-				reason = "Motion on message" && config.motionOverridesForceOn ? lockForceOn = true : lockForceOn = false
+				reason == "Motion on message" && config.motionOverridesForceOn ? lockForceOn = true : lockForceOn = false
 				clearTimeout(absTimeoutHandle);
 				clearTimeout(motionTimeoutHandle);
 				if (command && context.absTimeoutValue > 0) {
@@ -171,7 +171,6 @@ module.exports = function(RED) {
 					}
 				}
 				if (context.motions <= 0) {
-					lockForceOn = false
 					motionTimeoutHandle = setTimeout(motionTimeoutFunc, context.motionTimeoutValue);
 				}
 				if (msg.debug) {sendMsgDebugFunc("Motion off message")}
