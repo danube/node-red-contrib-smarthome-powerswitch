@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+* Introducing possibility to configure output topic and payload (resolves #4)
+
 ## 1.0.11
 
 * Reworked warnings on faulty or missing msg.timeout value
