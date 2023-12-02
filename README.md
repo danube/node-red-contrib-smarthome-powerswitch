@@ -15,11 +15,11 @@ You may also be interested in the **exmaples** coming with the installation. Onc
 
 ## Example
 
-<img src="https://github.com/danube/node-red-contrib-smarthome-powerswitch/raw/main/files/screenshots/powerswitch-example.png" width="600px" style="border:1px dashed grey">
+<img src="files/screenshots/powerswitch-example.png" width="600px" style="border:1px dashed grey">
 
 ## Properties
 
-<img src="https://github.com/danube/node-red-contrib-smarthome-powerswitch/raw/main/files/screenshots/powerswitch-properties.png" height="500px" style="border:1px dashed grey">
+<img src="files/screenshots/powerswitch-properties.png" height="500px" style="border:1px dashed grey">
 
 ## Changelog
 
