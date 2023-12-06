@@ -130,26 +130,26 @@
             name: {value: ""},
             toggleTopic: {value: ""},
             togglePayload: {value: "true", validate: RED.validators.typedInput("togglePayloadType")},
-            togglePayloadType: {value: "initval"},
+            togglePayloadType: {value: "bool"},
             motionTopic: {value: ""},
             motionPayloadOn: {value: "true", validate: function(v) {return v != this.motionPayloadOff}},
-            motionPayloadOnType: {value: "initval"},
+            motionPayloadOnType: {value: "bool"},
             motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
-            motionPayloadOffType: {value: "initval"},
+            motionPayloadOffType: {value: "bool"},
             motionTimeoutValue: {value: "2", required: true, validate: function(v) {return v > 0}},
             motionTimeoutUnit: {value: "m"},
             motionTimeoutOverride: {value: false},
             feedbackActive: {value: ""},
             feedbackTopic: {value: ""},
-            feedbackPayloadOn: {value: true, validate: function(v) {return v != this.feedbackPayloadOff || !this.feedbackActive}},
-            feedbackPayloadOnType: {value: "initval"},
+            feedbackPayloadOn: {value: "true", validate: function(v) {return v != this.feedbackPayloadOff || !this.feedbackActive}},
+            feedbackPayloadOnType: {value: "bool"},
             feedbackPayloadOff: {value: false, validate: function(v) {return v != this.feedbackPayloadOn || !this.feedbackActive}},
-            feedbackPayloadOffType: {value: "initval"},
+            feedbackPayloadOffType: {value: "bool"},
             forceTopic: {value: ""},
-            forcePayloadOn: {value: true, validate: function(v) {return v != this.forcePayloadOff}},
-            forcePayloadOnType: {value: "initval"},
+            forcePayloadOn: {value: "true", validate: function(v) {return v != this.forcePayloadOff}},
+            forcePayloadOnType: {value: "bool"},
             forcePayloadOff: {value: false, validate: function(v) {return v != this.forcePayloadOn}},
-            forcePayloadOffType: {value: "initval"},
+            forcePayloadOffType: {value: "bool"},
             absTimeoutActive: {value: false},
             absTimeoutValue: {value: "1", required: true, validate: function(v) {
                 let motionFactor = 1
@@ -161,10 +161,10 @@
                 return v * absFactor > this.motionTimeoutValue * motionFactor || !this.absTimeoutActive}},
             absTimeoutUnit: {value: "h"},
             outputTopic: {value: ""},
-            outputPayloadOnType: {value: "initval"},
-            outputPayloadOn: {value: true},
-            outputPayloadOffType: {value: "initval"},
-            outputPayloadOff: {value: false}
+            outputPayloadOnType: {value: "bool"},
+            outputPayloadOn: {value: "true"},
+            outputPayloadOffType: {value: "bool"},
+            outputPayloadOff: {value: "false"}
         },
         inputs: 1,
         outputs: 1,
@@ -176,78 +176,41 @@
             return (this.name || "Power Switch") + " (" + app + ")"
         },
         oneditprepare: function() {
-            if (this.togglePayloadType === 'initval') {
-                $("#node-input-togglePayloadType").val('bool');
-            }
-            if (this.motionPayloadOnType === 'initval') {
-                $("#node-input-motionPayloadOnType").val('bool');
-            }
-            if (this.motionPayloadOffType === 'initval') {
-                $("#node-input-motionPayloadOffType").val('bool');
-            }
-            if (this.feedbackPayloadOnType === 'initval') {
-                $("#node-input-feedbackPayloadOnType").val('bool');
-            }
-            if (this.feedbackPayloadOffType === 'initval') {
-                $("#node-input-feedbackPayloadOffType").val('bool');
-            }
-            if (this.forcePayloadOnType === 'initval') {
-                $("#node-input-forcePayloadOnType").val('bool');
-            }
-            if (this.forcePayloadOffType === 'initval') {
-                $("#node-input-forcePayloadOffType").val('bool');
-            }
-            if (this.outputPayloadOnType === 'initval') {
-                $("#node-input-outputPayloadOnType").val('bool');
-            }
-            if (this.outputPayloadOffType === 'initval') {
-                $("#node-input-outputPayloadOffType").val('bool');
-            }
-
             $("#node-input-togglePayload").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-togglePayloadType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-motionPayloadOn").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-motionPayloadOnType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-motionPayloadOff").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-motionPayloadOffType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-feedbackPayloadOn").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-feedbackPayloadOnType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-feedbackPayloadOff").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-feedbackPayloadOffType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-forcePayloadOn").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-forcePayloadOnType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-forcePayloadOff").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-forcePayloadOffType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-outputPayloadOn").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-outputPayloadOnType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
             $("#node-input-outputPayloadOff").typedInput({
-                default: 'bool',
                 typeField: $("#node-input-outputPayloadOffType"),
-                types:['str','num','bool']
+                types:['bool','str','num']
             });
 
             // hide feedback config area
@@ -270,6 +233,11 @@
                 }
             })
 
+            // Workaround as new parameters don't inherit values set by defaults
+            // https://discourse.nodered.org/t/node-config-parameter-not-following-default-value/83393
+            if (this.outputPayloadOff === undefined) {
+                $('#node-input-outputPayloadOff').typedInput('value', 'false');
+            }
         }
     });
 </script>

@@ -2,7 +2,10 @@
 
 ## 1.1.0
 
-* Introducing possibility to configure output topic and payload (resolves #4)
+* Introduced possibility to configure output topic and payload (resolves #4).
+* Fixed not working node if config dialoggue was never opened (resolves #15).
+* Implemented some downward compatibility features in JS and HTML.
+* Bugfuixes regarding interpretation of strings and booleans.
 
 ## 1.0.11
 
