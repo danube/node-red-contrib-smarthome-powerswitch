@@ -8,6 +8,7 @@
 * Bugfuixes regarding interpretation of strings and booleans.
 * Added option to ignore incoming "Force On" payload while powered on by motion detector. Find checkbox "Ignore while powered on by motion" in the "Force" section. Addresses #13.
 * Added `lastReason` to context.
+* Added QR code and links to GitHub repo in the config and manual dialogue.
 
 ## 1.0.11
 

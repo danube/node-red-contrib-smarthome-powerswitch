@@ -12,7 +12,8 @@
         "timeoutoverride": "Erlaube msg.timeout im 'Aus Payload' (ms)",
         "enable": "Aktivieren",
         "time": "Zeit",
-        "motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder"
+        "motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder",
+        "codeanddiscussions": "Code & Discussions"
     },
     "head": {
         "toggle": "Eingang: Umschaltbefehl",
@@ -20,7 +21,8 @@
         "force": "Eingang: Zwangsbefehl",
         "feedback": "Eingang: Aktor-Rückmeldung",
         "abstimeout": "Maximale Einschaltdauer",
-        "output": "Ausgang"
+        "output": "Ausgang",
+        "help": "Hilfe"
     },
     "placeholder": {
         "name": "Power Switch",

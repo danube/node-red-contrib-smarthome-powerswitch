@@ -12,7 +12,8 @@
         "timeoutoverride": "Allow msg.timeout in 'Off Payload' (ms)",
         "enable": "Enable",
         "time": "Time",
-        "motionOverridesForceOn": "Ignore while powered on by motion"
+        "motionOverridesForceOn": "Ignore while powered on by motion",
+        "codeanddiscussions": "Code & Discussions"
     },
     "head": {
         "toggle": "Input: Toggle command",
@@ -20,7 +21,8 @@
         "force": "Input: Force command",
         "feedback": "Input: Device Feedback",
         "abstimeout": "Absolute timeout",
-        "output": "Output"
+        "output": "Output",
+        "help": "Help"
     },
     "placeholder": {
         "name": "Power Switch",
