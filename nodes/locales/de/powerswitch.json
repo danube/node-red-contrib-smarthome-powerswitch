@@ -11,7 +11,8 @@
         "timeout": "Laufzeit",
         "timeoutoverride": "Erlaube msg.timeout im 'Aus Payload' (ms)",
         "enable": "Aktivieren",
-        "time": "Zeit"
+        "time": "Zeit",
+        "motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder"
     },
     "head": {
         "toggle": "Eingang: Umschaltbefehl",
@@ -26,6 +27,7 @@
         "toggleTopic": "Erwarte 'toggle' wenn leer",
         "motionTopic": "Erwarte 'motion' wenn leer",
         "forceTopic": "Erwarte 'force' wenn leer",
-        "feedbackTopic": "Erwarte 'feedback' wenn leer"
+        "feedbackTopic": "Erwarte 'feedback' wenn leer",
+        "outputTopic": "Standard ist 'command'"
     }
 }

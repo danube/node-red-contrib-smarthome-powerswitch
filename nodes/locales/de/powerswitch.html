@@ -33,6 +33,7 @@
         
         <h4 style="font-weight: bolder;">Eingang: Zwangsbefehl</h4>
         <p>Mit einer entsprechenden Nachricht kannst Du den Steuerausgang ein- oder ausschalten, je nachdem ob das empfangene Payload dem konfigurierten Ein- oder Aus-Payload entspricht. Das Topic der Nachricht muss der Konfiguration entsprechen. Verwende dies zum Beispiel für einen Knopf in Deinem Heim, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest, beispielsweise einen Taster, mit dem Du alle Lichter ausschalten möchtest.</p>
+        <p>Wenn die Checkbox "Ignoriere während ein durch Bewegungsmelder" gesetzt ist (standardmäßig nicht gesetzt), wird jeder Zwangsbefehl zum Einschalten ignoriert, solange der Node durch den Bewegungsmelder eingeschaltet wurde.</p>
 
         <h4 style="font-weight: bolder;">Eingang: Aktor-Rückmeldung</h4>
         <p>Wenn das Gerät, das Du ansteuerst, eine Rückmeldung liefert, dann aktiviere diese Option und schließe Dein Signal an den Baustein an. Wenn die Option deaktiviert ist, denkt die Funktion, dass das Gerät ein- oder ausgeschaltet ist in dem Moment, in dem der Steuerbefehl gesendet wird. Wenn die Option jedoch aktiviert ist und ein Steuerbefehl gesendet wird, wartet die Funktion auf die Rückmeldung des Aktors.</p>

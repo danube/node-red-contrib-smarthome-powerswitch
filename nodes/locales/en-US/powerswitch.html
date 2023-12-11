@@ -33,6 +33,7 @@
         
         <h4 style="font-weight: bolder;">Input: Force Command</h4>
         <p>With a corresponding message you can switch the control output on or off, depending on whether the received payload corresponds to the configured on or off payload. The topic of the message must correspond to the configuration. For example, use this for a button in your home to force your devices on or off, such as a push button to turn off all the lights.</p>
+        <p>When the checkbox "Ignore while powered on by motion" is set (default is unset), any force on message will be ignored as long as the node is powered on by the motion detector.</p>
 
         <h4 style="font-weight: bolder;">Input: Device Feedback</h4>
         <p>If the device you are controlling provides feedback, enable this option and connect your signal to the node. If the option is disabled, the function thinks that the device is on or off at the moment the control command is sent. However, if the option is enabled and a control command is sent, the function waits for the actuator's feedback.</p>

@@ -17,12 +17,14 @@ module.exports = function(RED) {
 		 * @param {any} lightIsOn Received switch feedback (if configured with 'feedbackActive').
 		 * @param {any} lockedOn Switch is powered on and may not be powered off by motion timeout.
 		 * @param {any} motions Motion telegram up/down counter (+1 on true, -1 on false).
+		 * @param {any} lastReason Reason for previous message
 		 */
-		var context = this.context();
-		var nodeThis = this;
-		var err = false;
-		var absTimeoutHandle, motionTimeoutHandle;
-		var msgCmd, msgDebug = null;
+		var context = this.context()
+		var nodeThis = this
+		var err = false
+		var absTimeoutHandle, motionTimeoutHandle
+		var msgCmd, msgDebug = null
+		let lockForceOn = false
 
 		this.on('input', function(msg,send,done) {
 
@@ -114,6 +116,7 @@ module.exports = function(RED) {
 			}
 
 			function sendMsgCmdFunc(command, reason) {
+				reason == "Motion on message" && config.motionOverridesForceOn ? lockForceOn = true : lockForceOn = false
 				let convertedCommand = command
 				if (command) {		// power on
 					if (config.outputPayloadOnType == 'num') {convertedCommand = Number(config.outputPayloadOn)}
@@ -140,8 +143,13 @@ module.exports = function(RED) {
 				if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
 					context.motions = 0;
 				}
+				msgCmd = {
+					topic: "command",
+					payload: command
+				}
 				nodeThis.send(msgCmd);
-				sendMsgDebugFunc(reason);
+				if (msg.debug) {sendMsgDebugFunc(reason)}
+				context.lastReason = reason
 			}
 
 			function setNodeState() {
@@ -157,16 +165,14 @@ module.exports = function(RED) {
 			}
 
 			function sendMsgDebugFunc(reason) {
-				if (msg.debug) {
-					msgDebug = {
-						topic: "debug",
-						inmsg: msg,
-						config: config,
-						context: context,
-						reason: reason
-					}
-					nodeThis.send(msgDebug);
+				msgDebug = {
+					topic: "debug",
+					reason: reason,
+					inmsg: msg,
+					config: config,
+					context: context
 				}
+				nodeThis.send(msgDebug)
 			}
 
 			// Message: Toggle
@@ -204,13 +210,18 @@ module.exports = function(RED) {
 				if (context.motions <= 0) {
 					motionTimeoutHandle = setTimeout(motionTimeoutFunc, context.motionTimeoutValue);
 				}
-				sendMsgDebugFunc("Motion off message");
+				if (msg.debug) {sendMsgDebugFunc("Motion off message")}
 			}
 			
 			// Message: force on
 			else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
-				sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
-				context.lockedOn = true;
+				if (lockForceOn) {
+					// do nothing, https://github.com/danube/node-red-contrib-smarthome-powerswitch/issues/13
+					if (msg.debug) {nodeThis.warn("Ignoring 'force on' message while powered on (config.motionOverridesForceOn)")}
+				} else {
+					sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
+					context.lockedOn = true;
+				}
 			}
 			
 			// Message: force off
@@ -231,10 +242,17 @@ module.exports = function(RED) {
 				context.lightSetOn = false;
 				context.lockedOn = false;
 			}
-			
-			// Message: debug
-			else if (msg.debug) {
-				sendMsgDebugFunc("Debug solo");
+
+			// message: unallowed attempt to power off
+			else if (context.lockedOn && msg.debug) {
+				nodeThis.warn("Switch is powered on and may not be powered off by motion timeout (context.lockedOn)")
+			}
+
+			// message: unknown or solo debug
+			else {
+				if (msg.debug) {
+					sendMsgDebugFunc("Debug solo")
+				}
 			}
 
 			setNodeState();

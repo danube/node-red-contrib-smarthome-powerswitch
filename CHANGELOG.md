@@ -6,6 +6,8 @@
 * Fixed not working node if config dialoggue was never opened (resolves #15).
 * Implemented some downward compatibility features in JS and HTML.
 * Bugfuixes regarding interpretation of strings and booleans.
+* Added option to ignore incoming "Force On" payload while powered on by motion detector. Find checkbox "Ignore while powered on by motion" in the "Force" section. Addresses #13.
+* Added `lastReason` to context.
 
 ## 1.0.11
 
