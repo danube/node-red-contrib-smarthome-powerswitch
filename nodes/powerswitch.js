@@ -132,21 +132,22 @@ module.exports = function(RED) {
 					topic: config.outputTopic,
 					payload: convertedCommand
 				}
+
 				clearTimeout(absTimeoutHandle);
 				clearTimeout(motionTimeoutHandle);
+
 				if (command && context.absTimeoutValue > 0) {
 					absTimeoutHandle = setTimeout(absTimeoutFunc, context.absTimeoutValue);
 				}
+
 				if (!config.feedbackActive) {
 					context.lightIsOn = command;
 				}
+
 				if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
 					context.motions = 0;
 				}
-				msgCmd = {
-					topic: "command",
-					payload: command
-				}
+
 				nodeThis.send(msgCmd);
 				if (msg.debug) {sendMsgDebugFunc(reason)}
 				context.lastReason = reason

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+* Fixed bug where output topic and message configurations didn't apply.
+
 ## 1.1.0
 
 * Introduced possibility to configure output topic and payload (resolves #4).
