@@ -9,11 +9,14 @@
         "minutes": "Minute(n)",
         "hours": "Stunde(n)",
         "timeout": "Laufzeit",
-        "timeoutoverride": "Erlaube msg.timeout im 'Aus Payload' (ms)",
+        "allow": "Erlaube",
+        "timeoutoverride": " msg.timeout im 'Aus Payload' (ms)",
         "enable": "Aktivieren",
         "time": "Zeit",
         "motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder",
-        "codeanddiscussions": "Code & Discussions"
+        "codeanddiscussions": "Code & Discussions",
+        "ignoreFor": "Ignoriere",
+        "secsAfterManOff": " Sekunden nach toggle/force aus"
     },
     "head": {
         "toggle": "Eingang: Umschaltbefehl",

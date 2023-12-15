@@ -9,11 +9,14 @@
         "minutes": "Minute(s)",
         "hours": "Hour(s)",
         "timeout": "Timeout",
-        "timeoutoverride": "Allow msg.timeout in 'Off Payload' (ms)",
+        "allow": "Allow",
+        "timeoutoverride": " msg.timeout in 'Off Payload' (ms)",
         "enable": "Enable",
         "time": "Time",
         "motionOverridesForceOn": "Ignore while powered on by motion",
-        "codeanddiscussions": "Code & Discussions"
+        "codeanddiscussions": "Code & Discussions",
+        "ignoreFor": "Ignore",
+        "secsAfterManOff": " seconds after toggle/force off"
     },
     "head": {
         "toggle": "Input: Toggle command",

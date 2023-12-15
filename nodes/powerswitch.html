@@ -30,11 +30,6 @@
         <input style="width:70%" type="text" id="node-input-motionPayloadOn">
     </div>
     <div class="form-row">
-        <label><i class="fa fa-sliders"></i> Ignore for</span></label>
-        <input type="checkbox" id="node-input-motionOnIgnoreActive" style="display:inline-block; width:auto;">
-        <input type="number" id="node-input-motionOnIgnoreTime" min="1" style="text-align: end; width: 70px !important; margin-left: 5px"> Seconds after powering off
-    </div>
-    <div class="form-row">
         <label for="node-input-motionPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
         <input type="hidden" id="node-input-motionPayloadOffType">
         <input style="width:70%" type="text" id="node-input-motionPayloadOff">
@@ -49,9 +44,14 @@
         </select>
     </div>
     <div class="form-row">
-        <label></label>
+        <label><i class="fa fa-sliders"></i> <span data-i18n="common.allow"></span></label>
         <input type="checkbox" id="node-input-motionTimeoutOverride" style="margin-left:0px; vertical-align:top; width:auto !important;">
         <label style="width:auto !important;" for="node-input-motionTimeoutOverride" data-i18n="common.timeoutoverride"></label>
+    </div>
+    <div class="form-row">
+        <label><i class="fa fa-sliders"></i> <span data-i18n="common.ignoreFor"></span></label>
+        <input type="checkbox" id="node-input-motionOnIgnoreActive" style="display:inline-block; width:auto;">
+        <input type="number" id="node-input-motionOnIgnoreTime" min="1" style="text-align: end; width: 70px !important; margin-left: 5px"> <span data-i18n="common.secsAfterManOff"></span>
     </div>
     
     <!-- Force message -->

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+* Introduced delay to ignore motion events after the powerswitch has been manually been powered off (via toggle or force event) (addresses #16).
+* Improved readability of integrated documentation a bit.
+
 ## 1.1.0
 
 * Introduced possibility to configure output topic and payload (resolves #4).
