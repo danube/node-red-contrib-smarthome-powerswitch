@@ -6,6 +6,7 @@ module.exports = function(RED) {
 		 * The context of this node.
 		 * @param {any} togglePayload Expected 'toggle' payload, type converted.
 		 * @param {any} motionPayloadOn Expected 'motion on' payload, type converted.
+		 * @param {any} motionOnIgnoreTime Time how long motions are ignored after powering off, converted to miliseconds.
 		 * @param {any} motionPayloadOff Expected 'motion off' payload, type converted.
 		 * @param {any} feedbackPayloadOn Expected 'feedback on' payload, type converted.
 		 * @param {any} feedbackPayloadOff Expected 'feedback off' payload, type converted.
@@ -22,7 +23,7 @@ module.exports = function(RED) {
 		var context = this.context()
 		var nodeThis = this
 		var err = false
-		var absTimeoutHandle, motionTimeoutHandle
+		var absTimeoutHandle, motionTimeoutHandle, ignoreMotionDelayHandle
 		var msgCmd, msgDebug = null
 		let lockForceOn = false
 
@@ -95,6 +96,9 @@ module.exports = function(RED) {
 			else if (config.absTimeoutActive && config.absTimeoutUnit === "m") {context.absTimeoutValue = config.absTimeoutValue * 60000}
 			else if (config.absTimeoutActive && config.absTimeoutUnit === "s") {context.absTimeoutValue = config.absTimeoutValue * 1000}
 			else {context.absTimeoutValue = 0}
+
+			// Convert motionOnIgnoreTime to ms
+			context.motionOnIgnoreTime = config.motionOnIgnoreTime * 1000
 			
 			// Convert motionTimeout variables
 			if (config.motionTimeoutUnit === "h") {context.motionTimeoutValue = config.motionTimeoutValue * 3600000}
@@ -115,13 +119,22 @@ module.exports = function(RED) {
 				}
 			}
 
+			function ignoreMotionDelayFunc() {
+				ignoreMotionDelayHandle = null
+				nodeThis.warn("Off delay ended")
+			}
+
 			function sendMsgCmdFunc(command, reason) {
 				reason == "Motion on message" && config.motionOverridesForceOn ? lockForceOn = true : lockForceOn = false
 				let convertedCommand = command
+
 				if (command) {		// power on
 					if (config.outputPayloadOnType == 'num') {convertedCommand = Number(config.outputPayloadOn)}
 					else if (config.outputPayloadOnType == 'str') {convertedCommand = config.outputPayloadOn}
 					else if (config.outputPayloadOn == 'false') {convertedCommand = false}
+					if (ignoreMotionDelayHandle) {nodeThis.warn("Off delay cancelled")}
+					clearTimeout(ignoreMotionDelayHandle)
+					ignoreMotionDelayHandle = null
 				} else {
 					if (config.outputPayloadOffType == 'num') {convertedCommand = Number(config.outputPayloadOff)}
 					else if (config.outputPayloadOffType == 'str') {convertedCommand = config.outputPayloadOff}
@@ -132,21 +145,28 @@ module.exports = function(RED) {
 					topic: config.outputTopic,
 					payload: convertedCommand
 				}
+
 				clearTimeout(absTimeoutHandle);
 				clearTimeout(motionTimeoutHandle);
+
 				if (command && context.absTimeoutValue > 0) {
 					absTimeoutHandle = setTimeout(absTimeoutFunc, context.absTimeoutValue);
 				}
+
 				if (!config.feedbackActive) {
 					context.lightIsOn = command;
 				}
+
 				if (context.motions < 0 || !command) {		// v1.0.4: Added !command to reset counter on command. This fixes issues if telegrams are lost and counter gets fuzzed.
 					context.motions = 0;
 				}
-				msgCmd = {
-					topic: "command",
-					payload: command
+
+				// Power off via toggle or force
+				if (((reason == "Toggle message" && !command) || reason == "Force off message") && config.motionOnIgnoreActive && !ignoreMotionDelayHandle) {
+					ignoreMotionDelayHandle = setTimeout(ignoreMotionDelayFunc, context.motionOnIgnoreTime)
+					nodeThis.warn("Off delay started")
 				}
+
 				nodeThis.send(msgCmd);
 				if (msg.debug) {sendMsgDebugFunc(reason)}
 				context.lastReason = reason
@@ -183,11 +203,15 @@ module.exports = function(RED) {
 
 			// Message: Motion on
 			else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOn && !context.lockedOn) {
-				sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
-				if (isNaN(context.motions)) {
-					context.motions = 1;
+				if (ignoreMotionDelayHandle) {
+					if (msg.debug) {nodeThis.warn("Powering on not yet allowed (config.motionOnIgnoreActive)")}
 				} else {
-					context.motions += 1;
+					sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
+					if (isNaN(context.motions)) {
+						context.motions = 1;
+					} else {
+						context.motions += 1;
+					}
 				}
 			}
 			

@@ -32,5 +32,4 @@
         "feedbackTopic": "Expecting 'feedback' if left blank",
         "outputTopic": "Default is 'command'"
     }
-
 }

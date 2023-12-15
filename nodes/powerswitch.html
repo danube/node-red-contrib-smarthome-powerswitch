@@ -30,6 +30,11 @@
         <input style="width:70%" type="text" id="node-input-motionPayloadOn">
     </div>
     <div class="form-row">
+        <label><i class="fa fa-sliders"></i> Ignore for</span></label>
+        <input type="checkbox" id="node-input-motionOnIgnoreActive" style="display:inline-block; width:auto;">
+        <input type="number" id="node-input-motionOnIgnoreTime" min="1" style="text-align: end; width: 70px !important; margin-left: 5px"> Seconds after powering off
+    </div>
+    <div class="form-row">
         <label for="node-input-motionPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
         <input type="hidden" id="node-input-motionPayloadOffType">
         <input style="width:70%" type="text" id="node-input-motionPayloadOff">
@@ -145,6 +150,8 @@
             motionTopic: {value: ""},
             motionPayloadOn: {value: "true", validate: function(v) {return v != this.motionPayloadOff}},
             motionPayloadOnType: {value: "bool"},
+            motionOnIgnoreActive: {value: false},
+            motionOnIgnoreTime: {value: "10", required: true},
             motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
             motionPayloadOffType: {value: "bool"},
             motionTimeoutValue: {value: "2", required: true, validate: function(v) {return v > 0}},
@@ -242,6 +249,15 @@
                 } else {
                     $('#node-input-absTimeoutValue').prop('disabled', true);
                     $('#node-input-absTimeoutUnit').prop('disabled', true);
+                }
+            })
+
+            // disable ignore motion on config area
+            $("#node-input-motionOnIgnoreActive").on('change', function(){
+                if ($("#node-input-motionOnIgnoreActive")[0].checked) {
+                    $('#node-input-motionOnIgnoreTime').prop('disabled', false);
+                } else {
+                    $('#node-input-motionOnIgnoreTime').prop('disabled', true);
                 }
             })
 
