@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-smarthome-powerswitch",
-  "version": "1.2.0-alpha",
+  "version": "1.2.0-beta",
   "description": "This is the powerswitch node as standalone, which is part of 'node-red-contrib-smarthome'. It containes nodes for Node-RED.",
   "author": {
     "name": "Thomas Astleitner"
