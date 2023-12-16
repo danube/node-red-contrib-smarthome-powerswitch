@@ -44,9 +44,14 @@
         </select>
     </div>
     <div class="form-row">
-        <label></label>
+        <label><i class="fa fa-sliders"></i> <span data-i18n="common.allow"></span></label>
         <input type="checkbox" id="node-input-motionTimeoutOverride" style="margin-left:0px; vertical-align:top; width:auto !important;">
         <label style="width:auto !important;" for="node-input-motionTimeoutOverride" data-i18n="common.timeoutoverride"></label>
+    </div>
+    <div class="form-row">
+        <label><i class="fa fa-sliders"></i> <span data-i18n="common.ignoreFor"></span></label>
+        <input type="checkbox" id="node-input-motionOnIgnoreActive" style="display:inline-block; width:auto;">
+        <input type="number" id="node-input-motionOnIgnoreTime" min="1" style="text-align: end; width: 70px !important; margin-left: 5px"> <span data-i18n="common.secsAfterManOff"></span>
     </div>
     
     <!-- Force message -->
@@ -145,6 +150,8 @@
             motionTopic: {value: ""},
             motionPayloadOn: {value: "true", validate: function(v) {return v != this.motionPayloadOff}},
             motionPayloadOnType: {value: "bool"},
+            motionOnIgnoreActive: {value: false},
+            motionOnIgnoreTime: {value: "10", required: true},
             motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
             motionPayloadOffType: {value: "bool"},
             motionTimeoutValue: {value: "2", required: true, validate: function(v) {return v > 0}},
@@ -245,10 +252,22 @@
                 }
             })
 
+            // disable ignore motion on config area
+            $("#node-input-motionOnIgnoreActive").on('change', function(){
+                if ($("#node-input-motionOnIgnoreActive")[0].checked) {
+                    $('#node-input-motionOnIgnoreTime').prop('disabled', false);
+                } else {
+                    $('#node-input-motionOnIgnoreTime').prop('disabled', true);
+                }
+            })
+
             // Workaround as new parameters don't inherit values set by defaults
             // https://discourse.nodered.org/t/node-config-parameter-not-following-default-value/83393
             if (this.outputPayloadOff === undefined) {
                 $('#node-input-outputPayloadOff').typedInput('value', 'false');
+            }
+            if (this.motionOnIgnoreTime === undefined) {
+                $('#node-input-motionOnIgnoreTime').val(10)
             }
         }
     });
