@@ -172,14 +172,24 @@ module.exports = function(RED) {
 			}
 
 			function setNodeState() {
+				const now = new Date
+				const options = {
+					month: 'numeric',
+					day: 'numeric',
+					hour: 'numeric',
+					minute: 'numeric',
+					second: 'numeric'
+				}
+				const timestamp = now.toLocaleDateString(undefined, options)		// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+
 				if (context.lightIsOn && !context.lightSetOn) {
-					nodeThis.status({fill:"red",shape:"ring",text:"powering off"});
+					nodeThis.status({fill: "red", shape: "ring", text: "Powering Off (" + timestamp + ")"});
 				} else if (context.lightIsOn && context.lightSetOn) {
-					nodeThis.status({fill:"green",shape:"dot",text:"on"});
+					nodeThis.status({fill: "green", shape: "dot", text: "On (" + timestamp + ")"});
 				} else if (!context.lightIsOn && !context.lightSetOn) {
-					nodeThis.status({fill:"red",shape:"dot",text:"off"});
+					nodeThis.status({fill: "red", shape: "dot", text: "Off (" + timestamp + ")"});
 				} else if (!context.lightIsOn && context.lightSetOn) {
-					nodeThis.status({fill:"green",shape:"ring",text:"powering on"});
+					nodeThis.status({fill: "green", shape: "ring", text: "Powering On (" + timestamp + ")"});
 				}
 			}
 

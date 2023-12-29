@@ -4,6 +4,7 @@
 
 * Introduced delay to ignore motion events after the powerswitch has been manually been powered off (via toggle or force event) (addresses #16).
 * Improved readability of integrated documentation a bit.
+* Added timestamp to node status
 
 ## 1.1.1
 
