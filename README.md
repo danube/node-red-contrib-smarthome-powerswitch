@@ -9,7 +9,7 @@ The **node title** shows either "Power Switch" or the configured name, together 
 * "Power Switch (2m*/1h)" - No individual name given, 2 minutes timeout, override enabled, 1 hour absolute timeout.
 * "Kitchen light (3m)" - Individual name "Kitchen light given", 3 minutes timeout, no override, no absolute timeout.
 
-Once installed, find details in the node manual (or [preview raw on GitHub](https://github.com/danube/node-red-contrib-smarthome-powerswitch/blob/81de2557f156b98480ec00a5bf342f443455933e/nodes/powerswitch.html).)
+Once installed, find details in the **node's manual** within Node-RED. Click on the node and navigate to the Help section (or hit CTRL-G followed by H on your keyboard).
 
 You may also be interested in the **exmaples** coming with the installation. Once installed, in Node-RED go to "Import", choose "Examples" and expand "node-red-contrib-smarthome-powerswitch".
 
