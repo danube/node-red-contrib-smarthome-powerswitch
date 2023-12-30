@@ -1,4 +1,14 @@
 module.exports = function(RED) {
+
+	/** Config node */
+	function PowerswitchConfigNode(node) {
+		RED.nodes.createNode(this, node)
+		this.config = node
+	}
+	RED.nodes.registerType("powerswitch configuration",PowerswitchConfigNode)
+
+
+	/** Working node */
 	function PowerSwitchNode(config) {
 		RED.nodes.createNode(this, config);
 		

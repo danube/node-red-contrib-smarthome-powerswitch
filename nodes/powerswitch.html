@@ -1,136 +1,296 @@
+<!-- BEGIN configuration -->
+
+<script type="text/javascript">
+	RED.nodes.registerType ('powerswitch configuration', {
+		category: 'config',
+		defaults: {
+			name: {value: "Powerswitch configuration"},
+			toggleTopic: {value: ""},
+			togglePayload: {value: "true", validate: RED.validators.typedInput("togglePayloadType")},
+			togglePayloadType: {value: "bool"},
+			motionTopic: {value: ""},
+			motionPayloadOn: {value: "true", validate: function(v) {return v != this.motionPayloadOff}},
+			motionPayloadOnType: {value: "bool"},
+			motionOnIgnoreActive: {value: false},
+			motionOnIgnoreTime: {value: "10", required: true},
+			motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
+			motionPayloadOffType: {value: "bool"},
+			motionTimeoutValue: {value: "2", required: true, validate: function(v) {return v > 0}},
+			motionTimeoutUnit: {value: "m"},
+			motionTimeoutOverride: {value: false},
+			motionOverridesForceOn: {value: false},
+			feedbackActive: {value: ""},
+			feedbackTopic: {value: ""},
+			feedbackPayloadOn: {value: "true", validate: function(v) {return v != this.feedbackPayloadOff || !this.feedbackActive}},
+			feedbackPayloadOnType: {value: "bool"},
+			feedbackPayloadOff: {value: false, validate: function(v) {return v != this.feedbackPayloadOn || !this.feedbackActive}},
+			feedbackPayloadOffType: {value: "bool"},
+			forceTopic: {value: ""},
+			forcePayloadOn: {value: "true", validate: function(v) {return v != this.forcePayloadOff}},
+			forcePayloadOnType: {value: "bool"},
+			forcePayloadOff: {value: false, validate: function(v) {return v != this.forcePayloadOn}},
+			forcePayloadOffType: {value: "bool"},
+			absTimeoutActive: {value: false},
+			absTimeoutValue: {value: "1", required: true, validate: function(v) {
+					let motionFactor = 1
+					if (this.motionTimeoutUnit == "m") {motionFactor = 60}
+					else if (this.motionTimeoutUnit == "h") {motionFactor = 3600}
+					let absFactor = 1
+					if (this.absTimeoutUnit == "m") {absFactor = 60}
+					else if (this.absTimeoutUnit == "h") {absFactor = 3600}
+					return v * absFactor > this.motionTimeoutValue * motionFactor || !this.absTimeoutActive}},
+			absTimeoutUnit: {value: "h"},
+			outputTopic: {value: ""},
+			outputPayloadOnType: {value: "bool"},
+			outputPayloadOn: {value: "true"},
+			outputPayloadOffType: {value: "bool"},
+			outputPayloadOff: {value: "false"}
+		},
+		label: function() {		// TODO parameter auf label noch routbar?
+			return this.name || "Powerswitch configuration";
+		},
+		oneditprepare: function() {
+			// Help button
+			$('<button type="button" class="ui-button ui-corner-all ui-widget"><i class="fa fa-book"></i> Manual</button>')
+			.on("click", () => {RED.sidebar.help.show(this.type)})
+			.insertBefore($("#node-config-dialog-cancel"))
+
+			$("#node-config-input-togglePayload").typedInput({
+				typeField: $("#node-config-input-togglePayloadType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-motionPayloadOn").typedInput({
+				typeField: $("#node-config-input-motionPayloadOnType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-motionPayloadOff").typedInput({
+				typeField: $("#node-config-input-motionPayloadOffType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-feedbackPayloadOn").typedInput({
+				typeField: $("#node-config-input-feedbackPayloadOnType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-feedbackPayloadOff").typedInput({
+				typeField: $("#node-config-input-feedbackPayloadOffType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-forcePayloadOn").typedInput({
+				typeField: $("#node-config-input-forcePayloadOnType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-forcePayloadOff").typedInput({
+				typeField: $("#node-config-input-forcePayloadOffType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-outputPayloadOn").typedInput({
+				typeField: $("#node-config-input-outputPayloadOnType"),
+				types:['bool','str','num']
+			});
+			$("#node-config-input-outputPayloadOff").typedInput({
+				typeField: $("#node-config-input-outputPayloadOffType"),
+				types:['bool','str','num']
+			});
+
+			// hide feedback config area
+			$("#node-config-input-feedbackActive").on('change', function(){
+				if ($("#node-config-input-feedbackActive")[0].checked) {
+					$('#feedbackConfig').show('fast');
+				} else {
+					$('#feedbackConfig').hide('fast');
+				}
+			})
+
+			// hide absTimeout config area
+			$("#node-config-input-absTimeoutActive").on('change', function(){
+				if ($("#node-config-input-absTimeoutActive")[0].checked) {
+					$('#node-config-input-absTimeoutValue').prop('disabled', false);
+					$('#node-config-input-absTimeoutUnit').prop('disabled', false);
+				} else {
+					$('#node-config-input-absTimeoutValue').prop('disabled', true);
+					$('#node-config-input-absTimeoutUnit').prop('disabled', true);
+				}
+			})
+
+			// disable ignore motion on config area
+			$("#node-config-input-motionOnIgnoreActive").on('change', function(){
+				if ($("#node-config-input-motionOnIgnoreActive")[0].checked) {
+					$('#node-config-input-motionOnIgnoreTime').prop('disabled', false);
+				} else {
+					$('#node-config-input-motionOnIgnoreTime').prop('disabled', true);
+				}
+			})
+
+			// Workaround as new parameters don't inherit values set by defaults
+			// https://discourse.nodered.org/t/node-config-parameter-not-following-default-value/83393
+			if (this.outputPayloadOff === undefined) {
+				$('#node-config-input-outputPayloadOff').typedInput('value', 'false');
+			}
+			if (this.motionOnIgnoreTime === undefined) {
+				$('#node-config-input-motionOnIgnoreTime').val(10)
+			}
+
+		}
+	})
+</script>
+
+<script type="text/html" data-template-name="powerswitch configuration">
+
+	<!-- Name -->
+	<div class="form-row">
+		<label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.name"></span></label>
+		<input type="text" id="node-config-input-name" data-i18n="[placeholder]placeholder.name">
+	</div>
+
+	<!-- Toggle -->
+	<h3><span data-i18n="head.toggle"></span></h3>
+	<div class="form-row">
+		<label for="node-config-input-toggleTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+		<input type="text" id="node-config-input-toggleTopic" data-i18n="[placeholder]placeholder.toggleTopic">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-togglePayload"><i class="fa fa-tag"></i> <span data-i18n="common.payload"></span></label>
+		<input type="hidden" id="node-config-input-togglePayloadType">
+		<input style="width:70%" type="text" id="node-config-input-togglePayload">
+	</div>
+
+	<!-- Motion detector -->
+	<h3><span data-i18n="head.motion"></span></h3>
+	<div class="form-row">
+		<label for="node-config-input-motionTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+		<input type="text" id="node-config-input-motionTopic" data-i18n="[placeholder]placeholder.motionTopic">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-motionPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
+		<input type="hidden" id="node-config-input-motionPayloadOnType">
+		<input style="width:70%" type="text" id="node-config-input-motionPayloadOn">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-motionPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
+		<input type="hidden" id="node-config-input-motionPayloadOffType">
+		<input style="width:70%" type="text" id="node-config-input-motionPayloadOff">
+	</div>
+	<div class="form-row">
+		<label><i class="fa fa-sliders"></i> <span data-i18n="common.timeout"></span></label>
+		<input type="number" id="node-config-input-motionTimeoutValue" min="1" style="text-align: end; width: 70px !important">
+		<select id="node-config-input-motionTimeoutUnit" style="width:140px !important">
+			<option value="s" data-i18n="common.seconds"></option>
+			<option value="m" data-i18n="common.minutes"></option>
+			<option value="h" data-i18n="common.hours"></option>
+		</select>
+	</div>
+	<div class="form-row">
+		<label><i class="fa fa-sliders"></i> <span data-i18n="common.allow"></span></label>
+		<input type="checkbox" id="node-config-input-motionTimeoutOverride" style="margin-left:0px; vertical-align:top; width:auto !important;">
+		<label style="width:auto !important;" for="node-config-input-motionTimeoutOverride" data-i18n="common.timeoutoverride"></label>
+	</div>
+	<div class="form-row">
+		<label><i class="fa fa-sliders"></i> <span data-i18n="common.ignoreFor"></span></label>
+		<input type="checkbox" id="node-config-input-motionOnIgnoreActive" style="display:inline-block; width:auto;">
+		<input type="number" id="node-config-input-motionOnIgnoreTime" min="1" style="text-align: end; width: 70px !important; margin-left: 5px"> <span data-i18n="common.secsAfterManOff"></span>
+	</div>
+	
+	<!-- Force message -->
+	<h3><span data-i18n="head.force"></span></h3>
+	<div class="form-row">
+		<label for="node-config-input-forceTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+		<input type="text" id="node-config-input-forceTopic" data-i18n="[placeholder]placeholder.forceTopic">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-forcePayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
+		<input type="hidden" id="node-config-input-forcePayloadOnType">
+		<input style="width:70%" type="text" id="node-config-input-forcePayloadOn">
+	</div>
+	<div class="form-row">
+		<label></label>
+		<input type="checkbox" id="node-config-input-motionOverridesForceOn" style="margin-left:0px; vertical-align:top; width:auto !important;">
+		<label style="width:auto !important;" for="node-config-input-motionOverridesForceOn" data-i18n="common.motionOverridesForceOn"></label>
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-forcePayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
+		<input type="hidden" id="node-config-input-forcePayloadOffType">
+		<input style="width:70%" type="text" id="node-config-input-forcePayloadOff">
+	</div>
+
+	<!-- Actuator feedback message -->
+	<h3><span data-i18n="head.feedback"></span></h3>
+	<div class="form-row">
+		<label><i class="fa fa-power-off"></i> <span data-i18n="common.enable"></span></label>
+		<input type="checkbox" id="node-config-input-feedbackActive" style="display:inline-block; width:auto;">
+	</div>
+	<div id="feedbackConfig">
+		<div class="form-row">
+			<label for="node-config-input-feedbackTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+			<input type="text" id="node-config-input-feedbackTopic" data-i18n="[placeholder]placeholder.feedbackTopic">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-feedbackPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
+			<input type="hidden" id="node-config-input-feedbackPayloadOnType">
+			<input style="width:70%" type="text" id="node-config-input-feedbackPayloadOn">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-feedbackPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
+			<input type="hidden" id="node-config-input-feedbackPayloadOffType">
+			<input style="width:70%" type="text" id="node-config-input-feedbackPayloadOff">
+		</div>
+	</div>
+
+	<!-- Absolute timeout -->
+	<h3><span data-i18n="head.abstimeout"></span></h3>
+	<div class="form-row">
+		<label><i class="fa fa-sliders"></i> <span data-i18n="common.time"></span></label>
+		<input type="checkbox" id="node-config-input-absTimeoutActive" style="display:inline-block; width:auto;">
+		<input type="number" id="node-config-input-absTimeoutValue" min="1" style="text-align: end; width: 70px !important; margin-left: 5px">
+		<select id="node-config-input-absTimeoutUnit" style="width:140px !important">
+			<option value="s" data-i18n="common.seconds"></option>
+			<option value="m" data-i18n="common.minutes"></option>
+			<option value="h" data-i18n="common.hours"></option>
+		</select>
+	</div>
+
+	<!-- Output message -->
+	<h3><span data-i18n="head.output"></span></h3>
+	<div class="form-row">
+		<label for="node-config-input-outputTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
+		<input type="text" id="node-config-input-outputTopic" data-i18n="[placeholder]placeholder.outputTopic">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-outputPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
+		<input type="hidden" id="node-config-input-outputPayloadOnType"><input style="width:70%" type="text" id="node-config-input-outputPayloadOn">
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-outputPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
+		<input type="hidden" id="node-config-input-outputPayloadOffType">
+		<input style="width:70%" type="text" id="node-config-input-outputPayloadOff">
+	</div>
+
+	<!-- Help -->
+	<h3><span data-i18n="head.help"></span></h3>
+	<a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
+
+</script>
+
+<!-- END configuration -->
+
+<!-- BEGIN Node -->
+
 <script type="text/html" data-template-name="powerswitch">
 
-    <!-- Name -->
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]placeholder.name">
-    </div>
+		<!-- Name -->
+		<div class="form-row">
+				<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.name"></span></label>
+				<input type="text" id="node-input-name" data-i18n="[placeholder]placeholder.name">
+		</div>
 
-    <!-- Toggle -->
-    <h3><span data-i18n="head.toggle"></span></h3>
-    <div class="form-row">
-        <label for="node-input-toggleTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
-        <input type="text" id="node-input-toggleTopic" data-i18n="[placeholder]placeholder.toggleTopic">
-    </div>
-    <div class="form-row">
-        <label for="node-input-togglePayload"><i class="fa fa-tag"></i> <span data-i18n="common.payload"></span></label>
-        <input type="hidden" id="node-input-togglePayloadType">
-        <input style="width:70%" type="text" id="node-input-togglePayload">
-    </div>
-
-    <!-- Motion detector -->
-    <h3><span data-i18n="head.motion"></span></h3>
-    <div class="form-row">
-        <label for="node-input-motionTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
-        <input type="text" id="node-input-motionTopic" data-i18n="[placeholder]placeholder.motionTopic">
-    </div>
-    <div class="form-row">
-        <label for="node-input-motionPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
-        <input type="hidden" id="node-input-motionPayloadOnType">
-        <input style="width:70%" type="text" id="node-input-motionPayloadOn">
-    </div>
-    <div class="form-row">
-        <label for="node-input-motionPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
-        <input type="hidden" id="node-input-motionPayloadOffType">
-        <input style="width:70%" type="text" id="node-input-motionPayloadOff">
-    </div>
-    <div class="form-row">
-        <label><i class="fa fa-sliders"></i> <span data-i18n="common.timeout"></span></label>
-        <input type="number" id="node-input-motionTimeoutValue" min="1" style="text-align: end; width: 70px !important">
-        <select id="node-input-motionTimeoutUnit" style="width:140px !important">
-            <option value="s" data-i18n="common.seconds"></option>
-            <option value="m" data-i18n="common.minutes"></option>
-            <option value="h" data-i18n="common.hours"></option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label><i class="fa fa-sliders"></i> <span data-i18n="common.allow"></span></label>
-        <input type="checkbox" id="node-input-motionTimeoutOverride" style="margin-left:0px; vertical-align:top; width:auto !important;">
-        <label style="width:auto !important;" for="node-input-motionTimeoutOverride" data-i18n="common.timeoutoverride"></label>
-    </div>
-    <div class="form-row">
-        <label><i class="fa fa-sliders"></i> <span data-i18n="common.ignoreFor"></span></label>
-        <input type="checkbox" id="node-input-motionOnIgnoreActive" style="display:inline-block; width:auto;">
-        <input type="number" id="node-input-motionOnIgnoreTime" min="1" style="text-align: end; width: 70px !important; margin-left: 5px"> <span data-i18n="common.secsAfterManOff"></span>
-    </div>
-    
-    <!-- Force message -->
-    <h3><span data-i18n="head.force"></span></h3>
-    <div class="form-row">
-        <label for="node-input-forceTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
-        <input type="text" id="node-input-forceTopic" data-i18n="[placeholder]placeholder.forceTopic">
-    </div>
-    <div class="form-row">
-        <label for="node-input-forcePayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
-        <input type="hidden" id="node-input-forcePayloadOnType">
-        <input style="width:70%" type="text" id="node-input-forcePayloadOn">
-    </div>
-    <div class="form-row">
-        <label></label>
-        <input type="checkbox" id="node-input-motionOverridesForceOn" style="margin-left:0px; vertical-align:top; width:auto !important;">
-        <label style="width:auto !important;" for="node-input-motionOverridesForceOn" data-i18n="common.motionOverridesForceOn"></label>
-    </div>
-    <div class="form-row">
-        <label for="node-input-forcePayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
-        <input type="hidden" id="node-input-forcePayloadOffType">
-        <input style="width:70%" type="text" id="node-input-forcePayloadOff">
-    </div>
-
-    <!-- Actuator feedback message -->
-    <h3><span data-i18n="head.feedback"></span></h3>
-    <div class="form-row">
-        <label><i class="fa fa-power-off"></i> <span data-i18n="common.enable"></span></label>
-        <input type="checkbox" id="node-input-feedbackActive" style="display:inline-block; width:auto;">
-    </div>
-    <div id="feedbackConfig">
-        <div class="form-row">
-            <label for="node-input-feedbackTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
-            <input type="text" id="node-input-feedbackTopic" data-i18n="[placeholder]placeholder.feedbackTopic">
-        </div>
-        <div class="form-row">
-            <label for="node-input-feedbackPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
-            <input type="hidden" id="node-input-feedbackPayloadOnType">
-            <input style="width:70%" type="text" id="node-input-feedbackPayloadOn">
-        </div>
-        <div class="form-row">
-            <label for="node-input-feedbackPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
-            <input type="hidden" id="node-input-feedbackPayloadOffType">
-            <input style="width:70%" type="text" id="node-input-feedbackPayloadOff">
-        </div>
-    </div>
-
-    <!-- Absolute timeout -->
-    <h3><span data-i18n="head.abstimeout"></span></h3>
-    <div class="form-row">
-        <label><i class="fa fa-sliders"></i> <span data-i18n="common.time"></span></label>
-        <input type="checkbox" id="node-input-absTimeoutActive" style="display:inline-block; width:auto;">
-        <input type="number" id="node-input-absTimeoutValue" min="1" style="text-align: end; width: 70px !important; margin-left: 5px">
-        <select id="node-input-absTimeoutUnit" style="width:140px !important">
-            <option value="s" data-i18n="common.seconds"></option>
-            <option value="m" data-i18n="common.minutes"></option>
-            <option value="h" data-i18n="common.hours"></option>
-        </select>
-    </div>
-
-    <!-- Output message -->
-    <h3><span data-i18n="head.output"></span></h3>
-    <div class="form-row">
-        <label for="node-input-outputTopic"><i class="fa fa-tasks"></i> <span data-i18n="common.topic"></span></label>
-        <input type="text" id="node-input-outputTopic" data-i18n="[placeholder]placeholder.outputTopic">
-    </div>
-    <div class="form-row">
-        <label for="node-input-outputPayloadOn"><i class="fa fa-tag"></i> <span data-i18n="common.onPayload"></span></label>
-        <input type="hidden" id="node-input-outputPayloadOnType"><input style="width:70%" type="text" id="node-input-outputPayloadOn">
-    </div>
-    <div class="form-row">
-        <label for="node-input-outputPayloadOff"><i class="fa fa-tag"></i> <span data-i18n="common.offPayload"></span></label>
-        <input type="hidden" id="node-input-outputPayloadOffType">
-        <input style="width:70%" type="text" id="node-input-outputPayloadOff">
-    </div>
-
-    <!-- Help -->
-    <h3><span data-i18n="head.help"></span></h3>
-        <a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
+		<!-- Configuration Set -->
+		<div class="form-row">
+			<label for="node-input-configSet"><i class="fa fa-sliders"></i> funny config set</label>		<!-- TODO find proper default name -->
+			<input type="text" id="node-input-configSet">
+		</div>
+	
+		<!-- Help -->
+		<h3><span data-i18n="head.help"></span></h3>
+		<a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
 
 
 </script>
@@ -139,136 +299,26 @@
 
 <!-- node definition -->
 <script type="text/javascript">
-    RED.nodes.registerType('powerswitch',{
-        category: 'Smart Home',
-        color: '#C0DEED',
-        defaults: {
-            name: {value: ""},
-            toggleTopic: {value: ""},
-            togglePayload: {value: "true", validate: RED.validators.typedInput("togglePayloadType")},
-            togglePayloadType: {value: "bool"},
-            motionTopic: {value: ""},
-            motionPayloadOn: {value: "true", validate: function(v) {return v != this.motionPayloadOff}},
-            motionPayloadOnType: {value: "bool"},
-            motionOnIgnoreActive: {value: false},
-            motionOnIgnoreTime: {value: "10", required: true},
-            motionPayloadOff: {value: "false", validate: function(v) {return v != this.motionPayloadOn}},
-            motionPayloadOffType: {value: "bool"},
-            motionTimeoutValue: {value: "2", required: true, validate: function(v) {return v > 0}},
-            motionTimeoutUnit: {value: "m"},
-            motionTimeoutOverride: {value: false},
-            motionOverridesForceOn: {value: false},
-            feedbackActive: {value: ""},
-            feedbackTopic: {value: ""},
-            feedbackPayloadOn: {value: "true", validate: function(v) {return v != this.feedbackPayloadOff || !this.feedbackActive}},
-            feedbackPayloadOnType: {value: "bool"},
-            feedbackPayloadOff: {value: false, validate: function(v) {return v != this.feedbackPayloadOn || !this.feedbackActive}},
-            feedbackPayloadOffType: {value: "bool"},
-            forceTopic: {value: ""},
-            forcePayloadOn: {value: "true", validate: function(v) {return v != this.forcePayloadOff}},
-            forcePayloadOnType: {value: "bool"},
-            forcePayloadOff: {value: false, validate: function(v) {return v != this.forcePayloadOn}},
-            forcePayloadOffType: {value: "bool"},
-            absTimeoutActive: {value: false},
-            absTimeoutValue: {value: "1", required: true, validate: function(v) {
-                let motionFactor = 1
-                if (this.motionTimeoutUnit == "m") {motionFactor = 60}
-                else if (this.motionTimeoutUnit == "h") {motionFactor = 3600}
-                let absFactor = 1
-                if (this.absTimeoutUnit == "m") {absFactor = 60}
-                else if (this.absTimeoutUnit == "h") {absFactor = 3600}
-                return v * absFactor > this.motionTimeoutValue * motionFactor || !this.absTimeoutActive}},
-            absTimeoutUnit: {value: "h"},
-            outputTopic: {value: ""},
-            outputPayloadOnType: {value: "bool"},
-            outputPayloadOn: {value: "true"},
-            outputPayloadOffType: {value: "bool"},
-            outputPayloadOff: {value: "false"}
-        },
-        inputs: 1,
-        outputs: 1,
-        icon: "font-awesome/fa-lightbulb-o",
-        label: function() {
-            let app = this.motionTimeoutValue + this.motionTimeoutUnit
-            if (this.motionTimeoutOverride) {app = app + "*"}
-            if (this.absTimeoutActive) {app = app + "/" + this.absTimeoutValue + this.absTimeoutUnit}
-            return (this.name || "Power Switch") + " (" + app + ")"
-        },
-        oneditprepare: function() {
-            $("#node-input-togglePayload").typedInput({
-                typeField: $("#node-input-togglePayloadType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-motionPayloadOn").typedInput({
-                typeField: $("#node-input-motionPayloadOnType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-motionPayloadOff").typedInput({
-                typeField: $("#node-input-motionPayloadOffType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-feedbackPayloadOn").typedInput({
-                typeField: $("#node-input-feedbackPayloadOnType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-feedbackPayloadOff").typedInput({
-                typeField: $("#node-input-feedbackPayloadOffType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-forcePayloadOn").typedInput({
-                typeField: $("#node-input-forcePayloadOnType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-forcePayloadOff").typedInput({
-                typeField: $("#node-input-forcePayloadOffType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-outputPayloadOn").typedInput({
-                typeField: $("#node-input-outputPayloadOnType"),
-                types:['bool','str','num']
-            });
-            $("#node-input-outputPayloadOff").typedInput({
-                typeField: $("#node-input-outputPayloadOffType"),
-                types:['bool','str','num']
-            });
-
-            // hide feedback config area
-            $("#node-input-feedbackActive").on('change', function(){
-                if ($("#node-input-feedbackActive")[0].checked) {
-                    $('#feedbackConfig').show('fast');
-                } else {
-                    $('#feedbackConfig').hide('fast');
-                }
-            })
-
-            // hide absTimeout config area
-            $("#node-input-absTimeoutActive").on('change', function(){
-                if ($("#node-input-absTimeoutActive")[0].checked) {
-                    $('#node-input-absTimeoutValue').prop('disabled', false);
-                    $('#node-input-absTimeoutUnit').prop('disabled', false);
-                } else {
-                    $('#node-input-absTimeoutValue').prop('disabled', true);
-                    $('#node-input-absTimeoutUnit').prop('disabled', true);
-                }
-            })
-
-            // disable ignore motion on config area
-            $("#node-input-motionOnIgnoreActive").on('change', function(){
-                if ($("#node-input-motionOnIgnoreActive")[0].checked) {
-                    $('#node-input-motionOnIgnoreTime').prop('disabled', false);
-                } else {
-                    $('#node-input-motionOnIgnoreTime').prop('disabled', true);
-                }
-            })
-
-            // Workaround as new parameters don't inherit values set by defaults
-            // https://discourse.nodered.org/t/node-config-parameter-not-following-default-value/83393
-            if (this.outputPayloadOff === undefined) {
-                $('#node-input-outputPayloadOff').typedInput('value', 'false');
-            }
-            if (this.motionOnIgnoreTime === undefined) {
-                $('#node-input-motionOnIgnoreTime').val(10)
-            }
-        }
-    });
+	RED.nodes.registerType('powerswitch',{
+		category: 'Smart Home',
+		color: '#C0DEED',
+		defaults: {
+			name: {value: ""},
+			configSet: {type: "powerswitch configuration"},
+		},
+		inputs: 1,
+		outputs: 1,
+		icon: "font-awesome/fa-lightbulb-o",
+		label: function() {
+			return this.name || "Powerswitch"
+		},
+		oneditprepare: function() {
+			// Help button
+			$('<button type="button" class="ui-button ui-corner-all ui-widget"><i class="fa fa-book"></i> Manual</button>')
+			.on("click", () => {RED.sidebar.help.show(this.type)})
+			.insertBefore($("#node-dialog-cancel"))
+		}
+	});
 </script>
+
+<!-- END Node -->
