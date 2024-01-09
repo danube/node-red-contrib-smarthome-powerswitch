@@ -1,38 +1,47 @@
 {
-    "common": {
-        "name": "Name",
-        "topic": "Topic",
-        "payload": "Payload",
-        "onPayload": "On Payload",
-        "offPayload": "Off Payload",
-        "seconds": "Second(s)",
-        "minutes": "Minute(s)",
-        "hours": "Hour(s)",
-        "timeout": "Timeout",
-        "allow": "Allow",
-        "timeoutoverride": " msg.timeout in 'Off Payload' (ms)",
-        "enable": "Enable",
-        "time": "Time",
-        "motionOverridesForceOn": "Ignore while powered on by motion",
-        "codeanddiscussions": "Code & Discussions",
-        "ignoreFor": "Ignore",
-        "secsAfterManOff": " seconds after toggle/force off"
-    },
-    "head": {
-        "toggle": "Input: Toggle command",
-        "motion": "Input: Motion detector",
-        "force": "Input: Force command",
-        "feedback": "Input: Device Feedback",
-        "abstimeout": "Absolute timeout",
-        "output": "Output",
-        "help": "Help"
-    },
-    "placeholder": {
-        "name": "Power Switch",
-        "toggleTopic": "Expecting 'toggle' if left blank",
-        "motionTopic": "Expecting 'motion' if left blank",
-        "forceTopic": "Expecting 'force' if left blank",
-        "feedbackTopic": "Expecting 'feedback' if left blank",
-        "outputTopic": "Default is 'command'"
-    }
+	"common": {
+		"name": "Name",
+		"configSet": "Configuration",
+		"topic": "Topic",
+		"payload": "Payload",
+		"payloadType": "Payload Type",
+		"onPayload": "On Payload",
+		"offPayload": "Off Payload",
+		"seconds": "Second(s)",
+		"minutes": "Minute(s)",
+		"hours": "Hour(s)",
+		"timeout": "Timeout",
+		"allow": "Allow",
+		"timeoutoverride": " msg.timeout in 'Off Payload' (ms)",
+		"enable": "Enable",
+		"time": "Time",
+		"motionOverridesForceOn": "Ignore while powered on by motion",
+		"codeanddiscussions": "Code & Discussions",
+		"ignoreFor": "Ignore",
+		"secsAfterManOff": " seconds after toggle/force off"
+	},
+	"head": {
+		"toggle": "Input: Toggle Command",
+		"motion": "Input: Motion Detector",
+		"force": "Input: Force Command",
+		"feedback": "Input: Device Feedback",
+		"abstimeout": "Absolute Timeout",
+		"output": "Output"
+	},
+	"placeholder": {
+		"name": "Powerswitch",
+		"configSetName": "Powerswitch Configuration",
+		"toggleTopic": "Expecting 'toggle' if left blank",
+		"motionTopic": "Expecting 'motion' if left blank",
+		"forceTopic": "Expecting 'force' if left blank",
+		"feedbackTopic": "Expecting 'feedback' if left blank",
+		"outputTopic": "Default is 'command'"
+	},
+	"specifics": {
+		"v1updatedMsg1": "You have updated from version 1, where you found all your settings at this position. Now there's this weired message.",
+		"v1updatedLink": "Learn more.",
+		"v1updatedMsg2": "Your previous settings",
+		"v1dismissButton1": "Dismiss these data",
+		"v1dismissButton2": "Sure?"
+	}
 }

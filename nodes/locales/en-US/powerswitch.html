@@ -1,64 +1,67 @@
 <script type="text/html" data-help-name="powerswitch">
-    <p>Power switch (on-/off switch) for lights, smart plugs or anything else supporting on/off commands.</p>
-    <p>Control the output with a pushbutton, motion detector, over the web or whatever.</p>
-    <p>The node title shows either "Power Switch" or the configured name, together with the time settings. First value shows the configured timeout, followed by a star, if the option "Override with msg.timeout at 'Off Payload'" is enabled. Second value shows the absolute timeout, if enabled.</p>
+	<p>Power switch (on-/off switch) for lights, smart plugs or anything else supporting on/off commands.</p>
+	<p>Control the output with a pushbutton, motion detector, over the web or whatever.</p>
+	<a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
+</script>
 
-    <h3>Inputs</h3>
-    <!-- TODO msg.debug beschreiben -->
-    <dl class="message-properties">
-        <dt>topic<span class="property-type">String</span></dt>
-        <dd>Can be a pushbutton, motion detector, the feedback signal from an actuator or a force command. Find more details about messages in the 'Configuration' section below.</dd>
-        <dt>payload<span class="property-type">as configured</span></dt>
-        <dd>Value must meet the configuration. Default values are <code>true</code> and <code>false</code>.</dd>
-        <dt>timeout<span class="property-type">Number</span></dt>
-        <dd>If the 'Off Payload' message contains such a parameter, the configured timeout will be overwritten with this value. It must be positive and is evaluated in miliseconds (1000 = 1s). If the value is not a number, zero or negative, the value from the node configuration will be used and a warning will be sent.</dd>
-    </dl>
+<script type="text/html" data-help-name="powerswitch configuration">
+	<p>The node title shows either "Power Switch" or the configured name, together with the time settings. First value shows the configured timeout, followed by a star, if the option "Override with msg.timeout at 'Off Payload'" is enabled. Second value shows the absolute timeout, if enabled.</p>
 
-    <h3>Output</h3>
-    <dl class="message-properties">
-        <dt>topic<span class="property-type">string</span></dt>
-        <dd>Default <code>command</code>. Can be configured, see below.</dd>
-        <dt>payload<span class="property-type">Bool</span></dt>
-        <dd>Default <code>true</code> or <code>false</code>. Can be configred, see below.</dd>
-    </dl>
-    
-    <h3>Configuration</h3>
-        <h4 style="font-weight: bolder;">Name</h4>
-        <p>Defines the name of the function as it appears on your board.</p>
-        
-        <h4 style="font-weight: bolder;">Input: Toggle Command</h4>
-        <p>Configure <strong>topic</strong> and <strong>payload</strong> of an incoming message to invert the control output.</p>
-        <p>If the <strong>feedback option</strong> is enabled, the output sends the inverted signal of the last received feedback signal.</p>
-        <p>If the <strong>feedback option</strong> is disabled, the output sends the inverted signal of the last sent control output.</p>
-            
-        <h4 style="font-weight: bolder;">Input: Motion Detector</h4>
-        <p>Configure <strong>topic</strong> and <strong>payload</strong> of an incoming message suiting the message of your motion detector.</p>
-        <p><strong>'On payload'</strong> is the coming (motion started), <strong>'Off payload'</strong> is the going (motion ended) event of the motion detector. The control output is powered on when an 'on message' is received.</p>
-        <p>The configured <strong>timeout</strong> starts to count down when the 'off message' is received, after which the control output turns off. The timeout can be manipulated with a message (see 'Inputs', msg.timeout).</p>
-        <p>With the parameter "<strong>Ignore for [n] seconds after toggle/force off</strong>", any motion message to power on the powerswitch will be suppressed for the given time. The time starts, after the powerswitch has been powered off either with a toggle or force message.</p>
-        
-        <h4 style="font-weight: bolder;">Input: Force Command</h4>
-        <p>With a corresponding <strong>message</strong> you can switch the control output on or off, depending on whether the received payload corresponds to the configured on or off payload.</p>
-        <p>The <strong>topic</strong> of the message must correspond to the configuration.</p>
-        <p>For example, use this for a button in your home to force your devices on or off, such as a push button to turn off all the lights.</p>
-        <p>When the checkbox <strong>"Ignore while powered on by motion"</strong> is set (default is unset), any 'force on message' will be ignored as long as the node is powered on by the motion detector.</p>
+	<h3>Inputs</h3>
+	<!-- TODO msg.debug beschreiben -->
+	<dl class="message-properties">
+		<dt>topic<span class="property-type">String</span></dt>
+		<dd>Can be a pushbutton, motion detector, the feedback signal from an actuator or a force command. Find more details about messages in the 'Configuration' section below.</dd>
+		<dt>payload<span class="property-type">as configured</span></dt>
+		<dd>Value must meet the configuration. Default values are <code>true</code> and <code>false</code>.</dd>
+		<dt>timeout<span class="property-type">Number</span></dt>
+		<dd>If the 'Off Payload' message contains such a parameter, the configured timeout will be overwritten with this value. It must be positive and is evaluated in miliseconds (1000 = 1s). If the value is not a number, zero or negative, the value from the node configuration will be used and a warning will be sent.</dd>
+	</dl>
 
-        <h4 style="font-weight: bolder;">Input: Device Feedback</h4>
-        <p>If the device you are controlling provides feedback, enable this option and connect your signal to the node.</p>
-        <p>If the <strong>option is disabled</strong>, the function assumes that the device is on or off at the moment the control command is sent.</p>
-        <p>However, if the <strong>option is enabled</strong> and a control command is sent, the function waits for the actuator's feedback.</p>
+	<h3>Output</h3>
+	<dl class="message-properties">
+		<dt>topic<span class="property-type">string</span></dt>
+		<dd>Default <code>command</code>. Can be configured, see below.</dd>
+		<dt>payload<span class="property-type">Bool</span></dt>
+		<dd>Default <code>true</code> or <code>false</code>. Can be configred, see below.</dd>
+	</dl>
+	
+	<h3>Configuration</h3>
+		<h4 style="font-weight: bolder;">Name</h4>
+		<p>Defines the name of the function as it appears on your board.</p>
+		
+		<h4 style="font-weight: bolder;">Input: Toggle Command</h4>
+		<p>Configure <strong>topic</strong> and <strong>payload</strong> of an incoming message to invert the control output.</p>
+		<p>If the <strong>feedback option</strong> is enabled, the output sends the inverted signal of the last received feedback signal.</p>
+		<p>If the <strong>feedback option</strong> is disabled, the output sends the inverted signal of the last sent control output.</p>
 
-        <h4 style="font-weight: bolder;">Absolute Timeout</h4>
-        <p>Activate this option if you want to configure an absolute timeout. The control output will then never be on longer than this time.</p>
-        <p>If the device is now powered on, this time starts to run. After the time has ended, the device will be powered off.</p>
-        <p>Use this option to never again forget to turn off a device.</p>
+		<h4 style="font-weight: bolder;">Input: Motion Detector</h4>
+		<p>Configure <strong>topic</strong> and <strong>payload</strong> of an incoming message suiting the message of your motion detector.</p>
+		<p><strong>'On payload'</strong> is the coming (motion started), <strong>'Off payload'</strong> is the going (motion ended) event of the motion detector. The control output is powered on when an 'on message' is received.</p>
+		<p>The configured <strong>timeout</strong> starts to count down when the 'off message' is received, after which the control output turns off. The timeout can be manipulated with a message (see 'Inputs', msg.timeout).</p>
+		<p>With the parameter "<strong>Ignore for [n] seconds after toggle/force off</strong>", any motion message to power on the powerswitch will be suppressed for the given time. The time starts, after the powerswitch has been powered off either with a toggle or force message.</p>
+		
+		<h4 style="font-weight: bolder;">Input: Force Command</h4>
+		<p>With a corresponding <strong>message</strong> you can switch the control output on or off, depending on whether the received payload corresponds to the configured on or off payload.</p>
+		<p>The <strong>topic</strong> of the message must correspond to the configuration.</p>
+		<p>For example, use this for a button in your home to force your devices on or off, such as a push button to turn off all the lights.</p>
+		<p>When the checkbox <strong>"Ignore while powered on by motion"</strong> is set (default is unset), any 'force on message' will be ignored as long as the node is powered on by the motion detector.</p>
 
-        <h4 style="font-weight: bolder;">Output</h4>
-        <p>Both <strong>topic</strong> and <strong>payload</strong> of the outgoing message can be configured.</p>
-        <p>By default, <code>msg.topic</code> is <code>command</code> and <code>msg.payload</code> is <code>true</code> when powering on or <code>false</code> for powering off.</p>
-        <p>Variations of booleans, strings or numbers are possible.</p>
+		<h4 style="font-weight: bolder;">Input: Device Feedback</h4>
+		<p>If the device you are controlling provides feedback, enable this option and connect your signal to the node.</p>
+		<p>If the <strong>option is disabled</strong>, the function assumes that the device is on or off at the moment the control command is sent.</p>
+		<p>However, if the <strong>option is enabled</strong> and a control command is sent, the function waits for the actuator's feedback.</p>
 
-        <h3>Help</h3>
-            <a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" alt="Code & Discussions" width="200px"></a>
+		<h4 style="font-weight: bolder;">Absolute Timeout</h4>
+		<p>Activate this option if you want to configure an absolute timeout. The control output will then never be on longer than this time.</p>
+		<p>If the device is now powered on, this time starts to run. After the time has ended, the device will be powered off.</p>
+		<p>Use this option to never again forget to turn off a device.</p>
+
+		<h4 style="font-weight: bolder;">Output</h4>
+		<p>Both <strong>topic</strong> and <strong>payload</strong> of the outgoing message can be configured.</p>
+		<p>By default, <code>msg.topic</code> is <code>command</code> and <code>msg.payload</code> is <code>true</code> when powering on or <code>false</code> for powering off.</p>
+		<p>Variations of booleans, strings or numbers are possible.</p>
+
+		<a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
 
 </script>

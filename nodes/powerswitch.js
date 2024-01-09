@@ -7,13 +7,18 @@ module.exports = function(RED) {
 	}
 	RED.nodes.registerType("powerswitch configuration",PowerswitchConfigNode)
 
-
+	
 	/** Working node */
-	function PowerSwitchNode(config) {
-		RED.nodes.createNode(this, config);
+	function PowerSwitchNode(node) {
+		RED.nodes.createNode(this, node);
+		const that = this
+		
+		/** This is the content of the associated configuration node, including all necessary conversions. */
+		let config = {}
+		config = RED.nodes.getNode(node.configSet).config
 		
 		/**
-		 * The context of this node.
+		 * The context of this node
 		 * @param {any} togglePayload Expected 'toggle' payload, type converted.
 		 * @param {any} motionPayloadOn Expected 'motion on' payload, type converted.
 		 * @param {any} motionOnIgnoreTime Time how long motions are ignored after powering off, converted to miliseconds.
@@ -31,7 +36,6 @@ module.exports = function(RED) {
 		 * @param {any} lastReason Reason for previous message
 		 */
 		var context = this.context()
-		var nodeThis = this
 		var err = false
 		var absTimeoutHandle, motionTimeoutHandle, ignoreMotionDelayHandle
 		var msgCmd, msgDebug = null
@@ -131,7 +135,7 @@ module.exports = function(RED) {
 
 			function ignoreMotionDelayFunc() {
 				ignoreMotionDelayHandle = null
-				nodeThis.warn("Off delay ended")
+				that.warn("Off delay ended")
 			}
 
 			function sendMsgCmdFunc(command, reason) {
@@ -142,7 +146,7 @@ module.exports = function(RED) {
 					if (config.outputPayloadOnType == 'num') {convertedCommand = Number(config.outputPayloadOn)}
 					else if (config.outputPayloadOnType == 'str') {convertedCommand = config.outputPayloadOn}
 					else if (config.outputPayloadOn == 'false') {convertedCommand = false}
-					if (ignoreMotionDelayHandle) {nodeThis.warn("Off delay cancelled")}
+					if (ignoreMotionDelayHandle) {that.warn("Off delay cancelled")}
 					clearTimeout(ignoreMotionDelayHandle)
 					ignoreMotionDelayHandle = null
 				} else {
@@ -173,10 +177,10 @@ module.exports = function(RED) {
 				// Power off via toggle or force
 				if (((reason == "Toggle message" && !command) || reason == "Force off message") && config.motionOnIgnoreActive && !ignoreMotionDelayHandle) {
 					ignoreMotionDelayHandle = setTimeout(ignoreMotionDelayFunc, context.motionOnIgnoreTime)
-					nodeThis.warn("Off delay started")
+					that.warn("Off delay started")
 				}
 
-				nodeThis.send(msgCmd);
+				that.send(msgCmd);
 				if (msg.debug) {sendMsgDebugFunc(reason)}
 				context.lastReason = reason
 			}
@@ -193,13 +197,13 @@ module.exports = function(RED) {
 				const timestamp = now.toLocaleDateString(undefined, options)		// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
 
 				if (context.lightIsOn && !context.lightSetOn) {
-					nodeThis.status({fill: "red", shape: "ring", text: "Powering Off (" + timestamp + ")"});
+					that.status({fill: "red", shape: "ring", text: "Powering Off (" + timestamp + ")"});
 				} else if (context.lightIsOn && context.lightSetOn) {
-					nodeThis.status({fill: "green", shape: "dot", text: "On (" + timestamp + ")"});
+					that.status({fill: "green", shape: "dot", text: "On (" + timestamp + ")"});
 				} else if (!context.lightIsOn && !context.lightSetOn) {
-					nodeThis.status({fill: "red", shape: "dot", text: "Off (" + timestamp + ")"});
+					that.status({fill: "red", shape: "dot", text: "Off (" + timestamp + ")"});
 				} else if (!context.lightIsOn && context.lightSetOn) {
-					nodeThis.status({fill: "green", shape: "ring", text: "Powering On (" + timestamp + ")"});
+					that.status({fill: "green", shape: "ring", text: "Powering On (" + timestamp + ")"});
 				}
 			}
 
@@ -211,7 +215,7 @@ module.exports = function(RED) {
 					config: config,
 					context: context
 				}
-				nodeThis.send(msgDebug)
+				that.send(msgDebug)
 			}
 
 			// Message: Toggle
@@ -223,7 +227,7 @@ module.exports = function(RED) {
 			// Message: Motion on
 			else if (msg.topic === config.motionTopic && msg.payload === context.motionPayloadOn && !context.lockedOn) {
 				if (ignoreMotionDelayHandle) {
-					if (msg.debug) {nodeThis.warn("Powering on not yet allowed (config.motionOnIgnoreActive)")}
+					if (msg.debug) {that.warn("Powering on not yet allowed (config.motionOnIgnoreActive)")}
 				} else {
 					sendMsgCmdFunc(context.lightSetOn = true, "Motion on message");
 					if (isNaN(context.motions)) {
@@ -239,13 +243,13 @@ module.exports = function(RED) {
 				context.motions -= 1;
 				if (config.motionTimeoutOverride) {
 					if (msg.timeout === 0) {
-						nodeThis.warn("msg.timeout is zero which is invalid. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
+						that.warn("msg.timeout is zero which is invalid. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
 					} else if (!msg.timeout) {
-						nodeThis.warn("msg.timeout not set in message. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
+						that.warn("msg.timeout not set in message. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
 					} else if (typeof(msg.timeout) != "number") {
-						nodeThis.warn("msg.timeout must be of type 'number' but is '" + typeof(msg.timeout) + "'")
+						that.warn("msg.timeout must be of type 'number' but is '" + typeof(msg.timeout) + "'")
 					} else if (msg.timeout < 0) {
-						nodeThis.warn("msg.timeout is negative (" + msg.timeout + ") which is invalid. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
+						that.warn("msg.timeout is negative (" + msg.timeout + ") which is invalid. Falling back to configured value (" + context.motionTimeoutValue + "ms).")
 					} else {
 						context.motionTimeoutValue = msg.timeout
 					}
@@ -260,7 +264,7 @@ module.exports = function(RED) {
 			else if (msg.topic === config.forceTopic && msg.payload === context.forcePayloadOn) {
 				if (lockForceOn) {
 					// do nothing, https://github.com/danube/node-red-contrib-smarthome-powerswitch/issues/13
-					if (msg.debug) {nodeThis.warn("Ignoring 'force on' message while powered on (config.motionOverridesForceOn)")}
+					if (msg.debug) {that.warn("Ignoring 'force on' message while powered on (config.motionOverridesForceOn)")}
 				} else {
 					sendMsgCmdFunc(context.lightSetOn = true, "Force on message");
 					context.lockedOn = true;
@@ -288,7 +292,7 @@ module.exports = function(RED) {
 
 			// message: unallowed attempt to power off
 			else if (context.lockedOn && msg.debug) {
-				nodeThis.warn("Switch is powered on and may not be powered off by motion timeout (context.lockedOn)")
+				that.warn("Switch is powered on and may not be powered off by motion timeout (context.lockedOn)")
 			}
 
 			// message: unknown or solo debug

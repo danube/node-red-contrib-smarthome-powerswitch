@@ -1,63 +1,68 @@
 <script type="text/html" data-help-name="powerswitch">
-    <p>Power Switch (Ein-/Ausschalter) für Lichter, smarte Steckdosen oder alles andere, das ein/aus Kommandos untertstützt.</p>
-    <p>Steuere den Ausgang mit Tastern, Bewegungsmeldern, über das Web oder was auch immer.</p>
-    <p>Der node Titel zeigt entweder "Power Switch" oder den konfigurierten Namen an, gefolgt von den Zeiteinstellungen. Der erste Wert zeigt die konfigurierte Laufzeit, gefolgt von einem Sternchen, wenn die Option "Überschreibe mit msg.timeout im 'Aus Payload'" aktiviert wurde. Der zweite Wert zeigt die eingestellte maximale Einschaltdauer, sofern diese aktiviert wurde.</p>
+	<p>Power Switch (Ein-/Ausschalter) für Lichter, smarte Steckdosen oder alles andere, das ein/aus Kommandos untertstützt.</p>
+	<p>Steuere den Ausgang mit Tastern, Bewegungsmeldern, über das Web oder was auch immer.</p>
+	<a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
+</script>
 
-    <h3>Eingänge</h3>
-    <dl class="message-properties">
-        <dt>topic<span class="property-type">String</span></dt>
-        <dd>Kann ein Taster, ein Bewegungsmelder, die Rückmeldung des Aktors oder ein Zwangsbefehl sein. Weitere Informationen findest Du unter 'Konfiguration' unten.</dd>
-        <dt>payload<span class="property-type">wie konfiguriert</span></dt>
-        <dd>Der Wert muss den Einstellungen entsprechen. Die Standard-Werte sind <code>true</code> bzw. <code>false</code>.</dd>
-        <dt>timeout<span class="property-type">Number</span></dt>
-        <dd>Enthält die 'Aus Payload' Nachricht diesen Parameter, dann wird die Laufzeit Konfiguration mit diesem Wert überschrieben. Dieser muss positiv sein und ist in Milisekunden anzugeben (1000 = 1s). Wenn der Wert keine Nummer, Null oder ein negativer Wert ist, wird die Einstellung der Node Konfiguration verwendet und eine Warnung ausgegeben.</dd>
-    </dl>
+<script type="text/html" data-help-name="powerswitch configuration">
+	<p>Power Switch (Ein-/Ausschalter) für Lichter, smarte Steckdosen oder alles andere, das ein/aus Kommandos untertstützt.</p>
+	<p>Steuere den Ausgang mit Tastern, Bewegungsmeldern, über das Web oder was auch immer.</p>
+	<p>Der node Titel zeigt entweder "Power Switch" oder den konfigurierten Namen an, gefolgt von den Zeiteinstellungen. Der erste Wert zeigt die konfigurierte Laufzeit, gefolgt von einem Sternchen, wenn die Option "Überschreibe mit msg.timeout im 'Aus Payload'" aktiviert wurde. Der zweite Wert zeigt die eingestellte maximale Einschaltdauer, sofern diese aktiviert wurde.</p>
 
-    <h3>Ausgang</h3>
-    <dl class="message-properties">
-        <dt>topic<span class="property-type">string</span></dt>
-        <dd>Der Standard-Wert ist <code>command</code>. Dieser ist konfigurierbar, siehe unten.</dd>
-        <dt>payload<span class="property-type">Bool</span></dt>
-        <dd>Der Standard-Wert ist <code>true</code> oder <code>false</code>. Dieser ist konfigurierbar, siehe unten.</dd>
-    </dl>
-    
-    <h3>Konfiguration</h3>
-        <h4 style="font-weight: bolder;">Name</h4>
-        <p>Legt den Namen der Funktion fest, wie er auf Deinem Board dargestellt wird.</p>
-        
-        <h4 style="font-weight: bolder;">Eingang: Umschaltbefehl</h4>
-        <p>Lege <strong>Topic</strong> und <strong>Payload</strong> einer eingehenden Nachricht fest, um den Steuerausgang umzuschalten.</p>
-        <p>Wenn die Option <strong>"Aktor-Rückmeldung"</strong> aktiv ist, sendet der Ausgang das invertierte Signal des hierauf zuletzt empfangenen Status aus.</p>
-        <p>Wenn die Option <strong>"Aktor-Rückmeldung"</strong> nicht aktiv ist, sendet der Ausgang das invertierte Signal des zuletzt gesendeten Steuerausgans.</p>
-        
-        <h4 style="font-weight: bolder;">Eingang: Bewegungsmelder</h4>
-        <p>Lege <strong>Topic</strong> und <strong>Payload</strong> der Nachricht Deines Bewegungsmelders fest.</p>
-        <p><strong>'Ein Payload'</strong> ist das kommende (Bewegung erkannt), <strong>'Aus Payload'</strong> das gehende (keine Bewegung mehr erkannt) Ereignis des Bewegungsmelders. Der Steuerausgang wird eingeschaltet bei kommendem Ereignis.</p>
-        <p>Die konfigurierte <strong>Laufzeit</strong> beginnt bei gehendem Ereignis, woraufhin der Steuerausgang abschaltet. Die Laufzeit kann über eine Nachricht verändert werden (siehe 'Eingänge', msg.timeout).</p>
-        <p>Mit dem Parameter "<strong>Ignoriere [n] Sekunden nach toggle/force aus</strong>" wird jede Bewegungsmelder Nachricht für die angegebene Zeit unterdrückt. Die Zeit beginnt zu laufen, nachdem der powerswitch mit einem Umschalt- oder Zwangsbefehl ausgeschaltet wurde.</p>
+	<h3>Eingänge</h3>
+	<dl class="message-properties">
+		<dt>topic<span class="property-type">String</span></dt>
+		<dd>Kann ein Taster, ein Bewegungsmelder, die Rückmeldung des Aktors oder ein Zwangsbefehl sein. Weitere Informationen findest Du unter 'Konfiguration' unten.</dd>
+		<dt>payload<span class="property-type">wie konfiguriert</span></dt>
+		<dd>Der Wert muss den Einstellungen entsprechen. Die Standard-Werte sind <code>true</code> bzw. <code>false</code>.</dd>
+		<dt>timeout<span class="property-type">Number</span></dt>
+		<dd>Enthält die 'Aus Payload' Nachricht diesen Parameter, dann wird die Laufzeit Konfiguration mit diesem Wert überschrieben. Dieser muss positiv sein und ist in Milisekunden anzugeben (1000 = 1s). Wenn der Wert keine Nummer, Null oder ein negativer Wert ist, wird die Einstellung der Node Konfiguration verwendet und eine Warnung ausgegeben.</dd>
+	</dl>
 
-        <h4 style="font-weight: bolder;">Eingang: Zwangsbefehl</h4>
-        <p>Mit einer entsprechenden <strong>Nachricht</strong> kannst Du den Steuerausgang ein- oder ausschalten, je nachdem ob das empfangene Payload dem konfigurierten Ein- oder Aus-Payload entspricht.</p>
-        <p>Das <strong>Topic</strong> der Nachricht muss der Konfiguration entsprechen.</p>
-        <p>Verwende dies zum Beispiel für einen Knopf in Deinem Heim, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest, beispielsweise einen Taster, mit dem Du alle Lichter ausschalten möchtest.</p>
-        <p>Wenn die Checkbox <strong>"Ignoriere während ein durch Bewegungsmelder"</strong> gesetzt ist (standardmäßig nicht gesetzt), wird jeder Zwangsbefehl zum Einschalten ignoriert, solange der Node durch den Bewegungsmelder eingeschaltet wurde.</p>
+	<h3>Ausgang</h3>
+	<dl class="message-properties">
+		<dt>topic<span class="property-type">string</span></dt>
+		<dd>Der Standard-Wert ist <code>command</code>. Dieser ist konfigurierbar, siehe unten.</dd>
+		<dt>payload<span class="property-type">Bool</span></dt>
+		<dd>Der Standard-Wert ist <code>true</code> oder <code>false</code>. Dieser ist konfigurierbar, siehe unten.</dd>
+	</dl>
+	
+	<h3>Konfiguration</h3>
+		<h4 style="font-weight: bolder;">Name</h4>
+		<p>Legt den Namen der Funktion fest, wie er auf Deinem Board dargestellt wird.</p>
+		
+		<h4 style="font-weight: bolder;">Eingang: Umschaltbefehl</h4>
+		<p>Lege <strong>Topic</strong> und <strong>Payload</strong> einer eingehenden Nachricht fest, um den Steuerausgang umzuschalten.</p>
+		<p>Wenn die Option <strong>"Aktor-Rückmeldung"</strong> aktiv ist, sendet der Ausgang das invertierte Signal des hierauf zuletzt empfangenen Status aus.</p>
+		<p>Wenn die Option <strong>"Aktor-Rückmeldung"</strong> nicht aktiv ist, sendet der Ausgang das invertierte Signal des zuletzt gesendeten Steuerausgans.</p>
+		
+		<h4 style="font-weight: bolder;">Eingang: Bewegungsmelder</h4>
+		<p>Lege <strong>Topic</strong> und <strong>Payload</strong> der Nachricht Deines Bewegungsmelders fest.</p>
+		<p><strong>'Ein Payload'</strong> ist das kommende (Bewegung erkannt), <strong>'Aus Payload'</strong> das gehende (keine Bewegung mehr erkannt) Ereignis des Bewegungsmelders. Der Steuerausgang wird eingeschaltet bei kommendem Ereignis.</p>
+		<p>Die konfigurierte <strong>Laufzeit</strong> beginnt bei gehendem Ereignis, woraufhin der Steuerausgang abschaltet. Die Laufzeit kann über eine Nachricht verändert werden (siehe 'Eingänge', msg.timeout).</p>
+		<p>Mit dem Parameter "<strong>Ignoriere [n] Sekunden nach toggle/force aus</strong>" wird jede Bewegungsmelder Nachricht für die angegebene Zeit unterdrückt. Die Zeit beginnt zu laufen, nachdem der powerswitch mit einem Umschalt- oder Zwangsbefehl ausgeschaltet wurde.</p>
 
-        <h4 style="font-weight: bolder;">Eingang: Aktor-Rückmeldung</h4>
-        <p>Wenn das Gerät, das Du ansteuerst, eine Rückmeldung liefert, dann aktiviere diese Option und schließe Dein Signal an den Baustein an.</p>
-        <p>Wenn die <strong>Option deaktiviert</strong> ist, denkt die Funktion, dass das Gerät ein- oder ausgeschaltet ist in dem Moment, in dem der Steuerbefehl gesendet wird.</p>
-        <p>Wenn die <strong>Option aktiviert</strong> ist und ein Steuerbefehl gesendet wird, wartet die Funktion auf die Rückmeldung des Aktors.</p>
+		<h4 style="font-weight: bolder;">Eingang: Zwangsbefehl</h4>
+		<p>Mit einer entsprechenden <strong>Nachricht</strong> kannst Du den Steuerausgang ein- oder ausschalten, je nachdem ob das empfangene Payload dem konfigurierten Ein- oder Aus-Payload entspricht.</p>
+		<p>Das <strong>Topic</strong> der Nachricht muss der Konfiguration entsprechen.</p>
+		<p>Verwende dies zum Beispiel für einen Knopf in Deinem Heim, mit dem Du Deine Geräte gezwungen ein- oder ausschaltest, beispielsweise einen Taster, mit dem Du alle Lichter ausschalten möchtest.</p>
+		<p>Wenn die Checkbox <strong>"Ignoriere während ein durch Bewegungsmelder"</strong> gesetzt ist (standardmäßig nicht gesetzt), wird jeder Zwangsbefehl zum Einschalten ignoriert, solange der Node durch den Bewegungsmelder eingeschaltet wurde.</p>
 
-        <h4 style="font-weight: bolder;">Zeitabschaltung</h4>
-        <p>Aktiviere diese Option, wenn Du ein absolutes Timeout konfigurieren möchtest. Der Steuerausgang wird dann nie länger eingeschaltet sein als diese Zeit.</p>
-        <p>Wenn das Gerät nun eingeschaltet wird, beginnt diese Zeit zu laufen. Bei Ablauf wird das Gerät abgeschaltet.</p>
-        <p>Verwende diese Option, um so nie wieder zu vergessen, ein Gerät auszuschalten.</p>
+		<h4 style="font-weight: bolder;">Eingang: Aktor-Rückmeldung</h4>
+		<p>Wenn das Gerät, das Du ansteuerst, eine Rückmeldung liefert, dann aktiviere diese Option und schließe Dein Signal an den Baustein an.</p>
+		<p>Wenn die <strong>Option deaktiviert</strong> ist, denkt die Funktion, dass das Gerät ein- oder ausgeschaltet ist in dem Moment, in dem der Steuerbefehl gesendet wird.</p>
+		<p>Wenn die <strong>Option aktiviert</strong> ist und ein Steuerbefehl gesendet wird, wartet die Funktion auf die Rückmeldung des Aktors.</p>
 
-        <h4 style="font-weight: bolder;">Ausgang</h4>
-        <p>Sowohl das <strong>topic</strong> als auch das <strong>payload</strong> einer Nachricht kann konfiguriert werden.</p>
-        <p>Der Standard-Wert für <code>msg.topic</code> ist <code>command</code> und für <code>msg.payload</code> ist <code>true</code> für das Einschalten bzw. <code>false</code> für das Ausschalten.</p>
-        <p>Es kann zwischen boolschen, strings und numerischen Formaten gewählt werden.</p>
+		<h4 style="font-weight: bolder;">Zeitabschaltung</h4>
+		<p>Aktiviere diese Option, wenn Du ein absolutes Timeout konfigurieren möchtest. Der Steuerausgang wird dann nie länger eingeschaltet sein als diese Zeit.</p>
+		<p>Wenn das Gerät nun eingeschaltet wird, beginnt diese Zeit zu laufen. Bei Ablauf wird das Gerät abgeschaltet.</p>
+		<p>Verwende diese Option, um so nie wieder zu vergessen, ein Gerät auszuschalten.</p>
 
-    <h3>Hilfe</h3>
-        <a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" alt="Code & Diskussionen" width="200px"></a>
+		<h4 style="font-weight: bolder;">Ausgang</h4>
+		<p>Sowohl das <strong>topic</strong> als auch das <strong>payload</strong> einer Nachricht kann konfiguriert werden.</p>
+		<p>Der Standard-Wert für <code>msg.topic</code> ist <code>command</code> und für <code>msg.payload</code> ist <code>true</code> für das Einschalten bzw. <code>false</code> für das Ausschalten.</p>
+		<p>Es kann zwischen boolschen, strings und numerischen Formaten gewählt werden.</p>
 
+		<a href="https://kutt.it/qrTETQ" target="_blank"><img src="https://raw.githubusercontent.com/danube/node-red-contrib-smarthome-powerswitch/main/files/qr.png" data-i18n="[alt]common.codeanddiscussions" width="200px"></a>
+	
 </script>

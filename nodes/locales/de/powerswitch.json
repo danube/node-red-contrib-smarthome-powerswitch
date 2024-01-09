@@ -1,38 +1,47 @@
 {
-    "common": {
-        "name": "Name",
-        "topic": "Topic",
-        "payload": "Payload",
-        "onPayload": "Ein Payload",
-        "offPayload": "Aus Payload",
-        "seconds": "Sekunde(n)",
-        "minutes": "Minute(n)",
-        "hours": "Stunde(n)",
-        "timeout": "Laufzeit",
-        "allow": "Erlaube",
-        "timeoutoverride": " msg.timeout im 'Aus Payload' (ms)",
-        "enable": "Aktivieren",
-        "time": "Zeit",
-        "motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder",
-        "codeanddiscussions": "Code & Discussions",
-        "ignoreFor": "Ignoriere",
-        "secsAfterManOff": " Sekunden nach toggle/force aus"
-    },
-    "head": {
-        "toggle": "Eingang: Umschaltbefehl",
-        "motion": "Eingang: Bewegungsmelder",
-        "force": "Eingang: Zwangsbefehl",
-        "feedback": "Eingang: Aktor-Rückmeldung",
-        "abstimeout": "Maximale Einschaltdauer",
-        "output": "Ausgang",
-        "help": "Hilfe"
-    },
-    "placeholder": {
-        "name": "Power Switch",
-        "toggleTopic": "Erwarte 'toggle' wenn leer",
-        "motionTopic": "Erwarte 'motion' wenn leer",
-        "forceTopic": "Erwarte 'force' wenn leer",
-        "feedbackTopic": "Erwarte 'feedback' wenn leer",
-        "outputTopic": "Standard ist 'command'"
-    }
+	"common": {
+		"name": "Name",
+		"configSet": "Konfiguration",
+		"topic": "Topic",
+		"payload": "Payload",
+		"payloadType": "Payload Typ",
+		"onPayload": "Ein Payload",
+		"offPayload": "Aus Payload",
+		"seconds": "Sekunde(n)",
+		"minutes": "Minute(n)",
+		"hours": "Stunde(n)",
+		"timeout": "Laufzeit",
+		"allow": "Erlaube",
+		"timeoutoverride": " msg.timeout im 'Aus Payload' (ms)",
+		"enable": "Aktivieren",
+		"time": "Zeit",
+		"motionOverridesForceOn": "Ignoriere während ein durch Bewegungsmelder",
+		"codeanddiscussions": "Code & Discussions",
+		"ignoreFor": "Ignoriere",
+		"secsAfterManOff": " Sekunden nach toggle/force aus"
+	},
+	"head": {
+		"toggle": "Eingang: Umschaltbefehl",
+		"motion": "Eingang: Bewegungsmelder",
+		"force": "Eingang: Zwangsbefehl",
+		"feedback": "Eingang: Aktor-Rückmeldung",
+		"abstimeout": "Maximale Einschaltdauer",
+		"output": "Ausgang"
+	},
+	"placeholder": {
+		"name": "Powerswitch",
+		"configSetName": "Powerswitch Configuration",
+		"toggleTopic": "Erwarte 'toggle' wenn leer",
+		"motionTopic": "Erwarte 'motion' wenn leer",
+		"forceTopic": "Erwarte 'force' wenn leer",
+		"feedbackTopic": "Erwarte 'feedback' wenn leer",
+		"outputTopic": "Standard ist 'command'"
+	},
+	"specifics": {
+		"v1updatedMsg1": "Du hast von Version 1 aktualisiert, wo Du Deine Einstellungen hier vorgenommen hast. Jetzt steht da diese Meldung.",
+		"v1updatedLink": "Erfahre mehr.",
+		"v1updatedMsg2": "Deine bisherigen Einstellungen",
+		"v1dismissButton1": "Entferne diese Daten",
+		"v1dismissButton2": "Sicher?"
+	}
 }
