@@ -135,7 +135,7 @@ module.exports = function(RED) {
 
 			function ignoreMotionDelayFunc() {
 				ignoreMotionDelayHandle = null
-				that.warn("Off delay ended")
+				// that.warn("Off delay ended")		// TODO needed?
 			}
 
 			function sendMsgCmdFunc(command, reason) {
@@ -146,7 +146,7 @@ module.exports = function(RED) {
 					if (config.outputPayloadOnType == 'num') {convertedCommand = Number(config.outputPayloadOn)}
 					else if (config.outputPayloadOnType == 'str') {convertedCommand = config.outputPayloadOn}
 					else if (config.outputPayloadOn == 'false') {convertedCommand = false}
-					if (ignoreMotionDelayHandle) {that.warn("Off delay cancelled")}
+					// if (ignoreMotionDelayHandle) {that.warn("Off delay cancelled")}		// TODO needed?
 					clearTimeout(ignoreMotionDelayHandle)
 					ignoreMotionDelayHandle = null
 				} else {
@@ -177,7 +177,7 @@ module.exports = function(RED) {
 				// Power off via toggle or force
 				if (((reason == "Toggle message" && !command) || reason == "Force off message") && config.motionOnIgnoreActive && !ignoreMotionDelayHandle) {
 					ignoreMotionDelayHandle = setTimeout(ignoreMotionDelayFunc, context.motionOnIgnoreTime)
-					that.warn("Off delay started")
+					// that.warn("Off delay started")		// TODO needed?
 				}
 
 				that.send(msgCmd);
