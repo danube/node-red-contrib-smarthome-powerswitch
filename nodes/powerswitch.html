@@ -310,69 +310,6 @@
 		<input type="text" id="node-input-configSet">
 	</div>
 
-	<!-- Present old settings -->
-	<div class="form-tips" id="v1settings" style="display:none">
-
-		<p>
-			<span data-i18n="specifics.v1updatedMsg1"></span>
-			<a href="#" target="_blank"><span data-i18n="specifics.v1updatedLink"></span></a>		<!-- TODO Richtigen Link einfügen -->
-		</p>
-		<p>
-			<h2><span data-i18n="specifics.v1updatedMsg2"></span></h2>
-		</p>
-
-
-		<div id="v1settings-toggle" style="display:none">
-			<h3><span data-i18n="head.toggle"></span></h3>
-			<div id="v1settings-toggleTopic" style="display:none"><span data-i18n="common.topic"></span>: <code><span id="v1settings-toggleTopicValue"></span></code><br></div>
-			<div id="v1settings-togglePayload" style="display:none"><span data-i18n="common.payload"></span>: <code><span id="v1settings-togglePayloadValue"></span></code></div>
-		</div>
-
-		<div id="v1settings-motion" style="display:none">
-			<h3><span data-i18n="head.motion"></span></h3>
-			<div id="v1settings-motionTopic" style="display:none"><span data-i18n="common.topic"></span>: <code><span id="v1settings-motionTopicValue"></span></code><br></div>
-			<div id="v1settings-motionOnPayload" style="display:none"><span data-i18n="common.onPayload"></span>: <code><span id="v1settings-motionOnPayloadValue"></span></code><br></div>
-			<div id="v1settings-motionOffPayload" style="display:none"><span data-i18n="common.offPayload"></span>: <code><span id="v1settings-motionOffPayloadValue"></span></code><br></div>
-			<div id="v1settings-motionTimeout" style="display:none"><span data-i18n="common.timeout"></span>: <code><span id="v1settings-motionTimeoutValue"></span></code><br></div>
-			<div id="v1settings-motionAllowTimeoutOverride" style="display:none"><span data-i18n="common.allow"></span> <span data-i18n="common.timeoutoverride"></span>: <code><span id="v1settings-motionAllowTimeoutOverrideValue"></span></code><br></div>
-			<div id="v1settings-motionIgnoreForSecsAfterManOff" style="display:none"><span data-i18n="common.ignoreFor"></span> <span data-i18n="common.secsAfterManOff"></span>: <code><span id="v1settings-motionIgnoreForSecsAfterManOffValue"></span> <span data-i18n="common.seconds"></span></code></div>
-		</div>
-
-		<div id="v1settings-force" style="display:none">
-			<h3><span data-i18n="head.force"></span></h3>
-			<div id="v1settings-forceTopic" style="display:none"><span data-i18n="common.topic"></span>: <code><span id="v1settings-forceTopicValue"></span></code><br></div>
-			<div id="v1settings-forceOnPayload" style="display:none"><span data-i18n="common.onPayload"></span>: <code><span id="v1settings-forceOnPayloadValue"></span></code><br></div>
-			<div id="v1settings-forceMotionOverridesForceOn" style="display:none"><span data-i18n="common.motionOverridesForceOn"></span>: <code><span id="v1settings-forceMotionOverridesForceOnValue"></span></code><br></div>
-			<div id="v1settings-forceOffPayload" style="display:none"><span data-i18n="common.offPayload"></span>: <code><span id="v1settings-forceOffPayloadValue"></span></code></div>
-		</div>
-
-		<div id="v1settings-feedback" style="display:none">
-			<h3><span data-i18n="head.feedback"></span></h3>
-			<span data-i18n="common.enable"></span>: <code><span id="v1settings-feedbackActiveValue"></span></code><br>
-			<div id="v1settings-feedbackTopic" style="display:none"><span data-i18n="common.topic"></span>: <code><span id="v1settings-feedbackTopicValue"></span></code><br></div>
-			<div id="v1settings-feedbackOnPayload" style="display:none"><span data-i18n="common.onPayload"></span>: <code><span id="v1settings-feedbackOnPayloadValue"></span></code><br></div>
-			<div id="v1settings-feedbackOffPayload" style="display:none"><span data-i18n="common.offPayload"></span>: <code><span id="v1settings-feedbackOffPayloadValue"></span></code></div>
-		</div>
-
-		<div id="v1settings-abstimeout" style="display:none">
-			<h3><span data-i18n="head.abstimeout"></span></h3>
-			<span data-i18n="common.time"></span>: <code><span id="v1settings-abstimeoutTimeValue"></span></code>
-		</div>
-
-		<div id="v1settings-output" style="display:none">
-			<h3><span data-i18n="head.output"></span></h3>
-			<div id="v1settings-outputTopic" style="display:none"><span data-i18n="common.topic"></span>: <code><span id="v1settings-outputTopicValue"></span></code><br></div>
-			<div id="v1settings-outputOnPayload" style="display:none"><span data-i18n="common.onPayload"></span>: <code><span id="v1settings-outputOnPayloadValue"></span></code><br></div>
-			<div id="v1settings-outputOffPayload" style="display:none"><span data-i18n="common.offPayload"></span>: <code><span id="v1settings-outputOffPayloadValue"></span></code></div>
-		</div>
-
-		<br>
-
-		<button type="button" id="v1settings-dismissButton1" style="width: 200px"><span data-i18n="specifics.v1dismissButton1"></span></button>
-		<button type="button" id="v1settings-dismissButton2" style="display:none; width: 200px;"><span data-i18n="specifics.v1dismissButton2"></span></button>
-		<!-- TODO Set node to dirty when clicked -->
-	</div>
-
 </script>
 
 <script type="text/javascript">
@@ -382,7 +319,6 @@
 		defaults: {
 			name: {value: ""},
 			configSet: {type: "powerswitch configuration"},
-
 			// BEGIN Toggle
 			toggleTopic: {},
 			togglePayload: {},
@@ -422,7 +358,6 @@
 			outputPayloadOn: {},
 			outputPayloadOffType: {},
 			outputPayloadOff: {}
-
 		},
 		inputs: 1,
 		outputs: 1,
@@ -436,175 +371,47 @@
 			.on("click", () => {RED.sidebar.help.show(this.type)})
 			.insertBefore($("#node-dialog-cancel"))
 
-			// Present read-only settings from prrevious version
+			// Create configSet from v1 settings
+			let hasConfigSet = this.configSet.length > 0
+			let hasV1Parameters = false
+			if (
+				(this.toggleTopic && this.toggleTopic != "toggle") ||
+				(this.togglePayload && (this.togglePayloadType != "bool" || this.togglePayload != "true")) ||
+				(this.motionTopic && this.motionTopic != "motion") ||
+				(this.motionPayloadOn && (this.motionPayloadOnType != "bool" || this.motionPayloadOn != "true")) ||
+				(this.motionPayloadOff && (this.motionPayloadOffType != "bool" || this.motionPayloadOff != "false")) ||
+				((this.motionTimeoutValue || this.motionTimeoutUnit) && (this.motionTimeoutValue != 2 || this.motionTimeoutUnit != "m")) ||
+				(this.motionTimeoutOverride) ||
+				(this.motionOnIgnoreActive) ||
+				(this.forceTopic && this.forceTopic != "force") ||
+				(this.forcePayloadOn && (this.forcePayloadOnType != "bool" || this.forcePayloadOn != "true")) ||
+				(this.motionOverridesForceOn) ||
+				(this.forcePayloadOff && (this.forcePayloadOffType != "bool" || this.forcePayloadOff != "false")) ||
+				(this.feedbackActive) ||
+				(this.feedbackTopic && this.feedbackTopic != "feedback") ||
+				(this.feedbackPayloadOn && (this.feedbackPayloadOnType != "bool" || this.feedbackPayloadOn != "true")) ||
+				(this.feedbackPayloadOff && (this.feedbackPayloadOffType != "bool" || this.feedbackPayloadOff != "false")) ||
+				(this.absTimeoutActive) ||
+				(this.outputTopic && this.outputTopic != "command") ||
+				(this.outputPayloadOn && (this.outputPayloadOnType != "bool" || this.outputPayloadOn != "true")) ||
+				(this.outputPayloadOff && (this.outputPayloadOffType != "bool" || this.outputPayloadOff != "false"))
+			) { hasV1Parameters = true }
 
-			// TOGGLE
-			if (this.toggleTopic && this.toggleTopic != "toggle") {
-				$('#v1settings').show()
-				$('#v1settings-toggle').show()
-				$('#v1settings-toggleTopic').show()
-				$('#v1settings-toggleTopicValue').append(this.toggleTopic)
-			}
+			console.log("DEBUG: has v1 parameters: " + hasV1Parameters)
+			console.log("DEBUG: has configSet: " + hasConfigSet)
 
-			if (this.togglePayload && (this.togglePayloadType != "bool" || this.togglePayload != "true")) {
-				$('#v1settings').show()
-				$('#v1settings-toggle').show()
-				$('#v1settings-togglePayload').show()
-				$('#v1settings-togglePayloadValue').append(this.togglePayloadType + ' ' + this.togglePayload)
-			}
-
-			// MOTION
-			if (this.motionTopic && this.motionTopic != "motion") {
-				$('#v1settings').show()
-				$('#v1settings-motion').show()
-				$('#v1settings-motionTopic').show()
-				$('#v1settings-motionTopicValue').append(this.motionTopic)
-			}
-			if (this.motionPayloadOn && (this.motionPayloadOnType != "bool" || this.motionPayloadOn != "true")) {
-				$('#v1settings').show()
-				$('#v1settings-motion').show()
-				$('#v1settings-motionOnPayload').show()
-				$('#v1settings-motionOnPayloadValue').append(this.motionPayloadOnType + ' ' + this.motionPayloadOn)
-			}
-			if (this.motionPayloadOff && (this.motionPayloadOffType != "bool" || this.motionPayloadOff != "false")) {
-				$('#v1settings').show()
-				$('#v1settings-motion').show()
-				$('#v1settings-motionOffPayload').show()
-				$('#v1settings-motionOffPayloadValue').append(this.motionPayloadOffType + ' ' + this.motionPayloadOff)
-			}
-			if ((this.motionTimeoutValue || this.motionTimeoutUnit) && (this.motionTimeoutValue != 2 || this.motionTimeoutUnit != "m")) {
-				$('#v1settings').show()
-				$('#v1settings-motion').show()
-				$('#v1settings-motionTimeout').show()
-				$('#v1settings-motionTimeoutValue').append((this.motionTimeoutValue || 2) + ' ' + (this.motionTimeoutUnit || "m"))		// TODO veroderung testen
-			}
-			if (this.motionTimeoutOverride) {
-				$('#v1settings').show()
-				$('#v1settings-motion').show()
-				$('#v1settings-motionAllowTimeoutOverride').show()
-				$('#v1settings-motionAllowTimeoutOverrideValue').append(this.motionTimeoutOverride)
-			}
-			if (this.motionOnIgnoreActive) {
-				$('#v1settings').show()
-				$('#v1settings-motion').show()
-				$('#v1settings-motionIgnoreForSecsAfterManOff').show()
-				$('#v1settings-motionIgnoreForSecsAfterManOffValue').append(this.motionOnIgnoreTime)
-			}
-
-			// FORCE
-			if (this.forceTopic && this.forceTopic != "force") {
-				$('#v1settings').show()
-				$('#v1settings-force').show()
-				$('#v1settings-forceTopic').show()
-				$('#v1settings-forceTopicValue').append(this.forceTopic)
-			}
-			if (this.forcePayloadOn && (this.forcePayloadOnType != "bool" || this.forcePayloadOn != "true")) {
-				$('#v1settings').show()
-				$('#v1settings-force').show()
-				$('#v1settings-forceOnPayload').show()
-				$('#v1settings-forceOnPayloadValue').append(this.forcePayloadOnType + ' ' + this.forcePayloadOn)
-			}
-			if (this.motionOverridesForceOn) {
-				$('#v1settings').show()
-				$('#v1settings-force').show()
-				$('#v1settings-forceMotionOverridesForceOn').show()
-				$('#v1settings-forceMotionOverridesForceOnValue').append(this.motionOverridesForceOn)
-			}
-			if (this.forcePayloadOff && (this.forcePayloadOffType != "bool" || this.forcePayloadOff != "false")) {
-				$('#v1settings').show()
-				$('#v1settings-force').show()
-				$('#v1settings-forceOffPayload').show()
-				$('#v1settings-forceOffPayloadValue').append(this.forcePayloadOffType + ' ' + this.forcePayloadOff)
-			}
-			
-			// FEEDBACK
-			if (this.feedbackActive) {
-				$('#v1settings').show()
-				$('#v1settings-feedback').show()
-				$('#v1settings-feedbackActiveValue').append(this.feedbackActive)
-
-				if (this.feedbackTopic && this.feedbackTopic != "feedback") {
-					$('#v1settings-feedbackTopic').show()
-					$('#v1settings-feedbackTopicValue').append(this.feedbackTopic)
+			if (!hasConfigSet && hasV1Parameters) {
+				const configNode = {
+					_def: RED.nodes.getType("powerswitch configuration"),
+					type: "powerswitch configuration",
+					name: "",
+					toggleTopic: "suchAtoggleTOPIC",
+					users: []
 				}
-				if (this.feedbackPayloadOn && (this.feedbackPayloadOnType != "bool" || this.feedbackPayloadOn != "true")) {
-					$('#v1settings-feedbackOnPayload').show()
-					$('#v1settings-feedbackOnPayloadValue').append(this.feedbackPayloadOnType + ' ' + this.feedbackPayloadOn)
-				}
-				if (this.feedbackPayloadOff && (this.feedbackPayloadOffType != "bool" || this.feedbackPayloadOff != "false")) {
-					$('#v1settings-feedbackOffPayload').show()
-					$('#v1settings-feedbackOffPayloadValue').append(this.feedbackPayloadOffType + ' ' + this.feedbackPayloadOff)
-				}
+				RED.nodes.add(configNode)
+				RED.nodes.dirty(true)
+				console.log("DEBUG: ADDED!")
 			}
-				
-			// ABSOLUTE TIMEOUT
-			if (this.absTimeoutActive) {
-				$('#v1settings').show()
-				$('#v1settings-abstimeout').show()
-				$('#v1settings-abstimeoutTimeValue').append((this.absTimeoutValue || 1) + ' ' + (this.absTimeoutUnit || "h"))		// TODO veroderung testen
-			}
-			
-			// OUTPUT
-			if (this.outputTopic && this.outputTopic != "command") {
-				$('#v1settings').show()
-				$('#v1settings-output').show()
-				$('#v1settings-outputTopic').show()
-				$('#v1settings-outputTopicValue').append(this.outputTopic)
-			}
-			if (this.outputPayloadOn && (this.outputPayloadOnType != "bool" || this.outputPayloadOn != "true")) {
-				$('#v1settings').show()
-				$('#v1settings-output').show()
-				$('#v1settings-outputOnPayload').show()
-				$('#v1settings-outputOnPayloadValue').append(this.outputPayloadOnType + ' ' + this.outputPayloadOn)
-			}
-			if (this.outputPayloadOff && (this.outputPayloadOffType != "bool" || this.outputPayloadOff != "false")) {
-				$('#v1settings').show()
-				$('#v1settings-output').show()
-				$('#v1settings-outputOffPayload').show()
-				$('#v1settings-outputOffPayloadValue').append(this.outputPayloadOffType + ' ' + this.outputPayloadOff)
-			}
-
-			$('#v1settings-dismissButton1').on("click",() => {
-				$('#v1settings-dismissButton1').hide()
-				$('#v1settings-dismissButton2').show()
-			})
-
-			$('#v1settings-dismissButton2').on("click",() => {
-				this.toggleTopic = undefined
-				this.togglePayload = undefined
-				this.togglePayloadType = undefined
-				this.motionTopic = undefined
-				this.motionPayloadOn = undefined
-				this.motionPayloadOnType = undefined
-				this.motionPayloadOff = undefined
-				this.motionPayloadOffType = undefined
-				this.motionTimeoutValue = undefined
-				this.motionTimeoutUnit = undefined
-				this.motionTimeoutOverride = undefined
-				this.motionOnIgnoreActive = undefined
-				this.motionOnIgnoreTime = undefined
-				this.forceTopic = undefined
-				this.forcePayloadOn = undefined
-				this.forcePayloadOnType = undefined
-				this.motionOverridesForceOn = undefined
-				this.forcePayloadOff = undefined
-				this.forcePayloadOffType = undefined
-				this.feedbackActive = undefined
-				this.feedbackTopic = undefined
-				this.feedbackPayloadOn = undefined
-				this.feedbackPayloadOnType = undefined
-				this.feedbackPayloadOff = undefined
-				this.feedbackPayloadOffType = undefined
-				this.absTimeoutActive = undefined
-				this.absTimeoutValue = undefined
-				this.absTimeoutUnit = undefined
-				this.outputTopic = undefined
-				this.outputPayloadOnType = undefined
-				this.outputPayloadOn = undefined
-				this.outputPayloadOffType = undefined
-				this.outputPayloadOff = undefined
-				$('#v1settings').hide(300)
-			})
 
 		}
 	});
